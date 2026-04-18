@@ -1,0 +1,48 @@
+{
+  "name": "@wrldinc/design-system",
+  "version": "0.1.0",
+  "description": "Canonical design system for WRLD Inc. and all WRLD brands — tokens, logos, briefs, and reference implementations.",
+  "license": "SEE LICENSE IN LICENSE",
+  "author": "Ridgeway Lawrence <ridge@wrld.tech>",
+  "homepage": "https://github.com/WRLDInc/DesignSystem",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WRLDInc/DesignSystem.git"
+  },
+  "bugs": {
+    "url": "https://github.com/WRLDInc/DesignSystem/issues"
+  },
+  "keywords": [
+    "wrld",
+    "design-system",
+    "brand",
+    "tokens",
+    "msp",
+    "hosting"
+  ],
+  "main": "tokens/tokens.ts",
+  "types": "tokens/tokens.ts",
+  "exports": {
+    ".": "./tokens/tokens.ts",
+    "./tokens.css": "./tokens/tokens.css",
+    "./tokens.json": "./tokens/tokens.json"
+  },
+  "files": [
+    "brand",
+    "tokens",
+    "logos",
+    "styleguide",
+    "docs",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "styleguide": "python3 -m http.server 4747 --directory styleguide",
+    "build:favicons": "python3 scripts/render_logo_pngs.py",
+    "lint:tokens": "node scripts/validate_tokens.mjs",
+    "check": "npm run lint:tokens"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -1,0 +1,38 @@
+name: validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  tokens:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Validate design tokens are in sync
+        run: node scripts/validate_tokens.mjs
+
+  logos:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install rendering deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libcairo2
+          pip install cairosvg pillow
+      - name: Regenerate SVGs and diff
+        run: |
+          python3 scripts/generate_svgs.py
+          git diff --exit-code logos/svg/ || {
+            echo "::error::SVGs are out of sync with generator. Run scripts/generate_svgs.py and commit."
+            exit 1
+          }

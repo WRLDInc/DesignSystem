@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WRLD Design System · Styleguide</title>
+  <meta name="description" content="Reference style guide for the WRLD design system — colors, typography, logos, and interaction patterns." />
+  <link rel="icon" type="image/png" sizes="32x32" href="../logos/favicons/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="../logos/favicons/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="../logos/favicons/apple-touch-icon.png" />
+  <link rel="manifest" href="../logos/favicons/site.webmanifest" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Ubuntu:wght@300;400;500;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet" />
+
+  <!-- Tokens — the source of truth -->
+  <link rel="stylesheet" href="../tokens/tokens.css" />
+
+  <style>
+    /* ==========================================================
+       Styleguide scaffolding — not for consumption in apps.
+       All consumable styling lives in ../tokens/tokens.css.
+       ========================================================== */
+    *,
+    *::before,
+    *::after { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--wrld-bg);
+      color: var(--wrld-fg);
+      font-family: var(--wrld-font-body);
+      font-size: var(--wrld-fs-body);
+      line-height: var(--wrld-lh-body);
+      -webkit-font-smoothing: antialiased;
+      transition: background var(--wrld-duration-default) var(--wrld-ease-standard),
+                  color var(--wrld-duration-default) var(--wrld-ease-standard);
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: var(--wrld-font-display);
+      letter-spacing: var(--wrld-ls-display);
+      line-height: var(--wrld-lh-heading);
+      margin: 0 0 var(--wrld-space-4);
+      font-weight: var(--wrld-fw-semibold);
+    }
+
+    .shell {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--wrld-space-12) var(--wrld-space-6);
+    }
+
+    /* ---- Top bar ---------------------------------------------------- */
+    header.top {
+      position: sticky;
+      top: 0;
+      z-index: var(--wrld-z-sticky);
+      background: color-mix(in srgb, var(--wrld-bg) 88%, transparent);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: var(--wrld-border-hairline) solid var(--wrld-border);
+    }
+    header.top .inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--wrld-space-6);
+      padding: var(--wrld-space-4) var(--wrld-space-6);
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    header.top .brand {
+      display: flex;
+      align-items: center;
+      gap: var(--wrld-space-3);
+      color: var(--wrld-logo);
+    }
+    header.top .brand svg { width: 36px; height: 36px; }
+    header.top .brand .name {
+      font-family: var(--wrld-font-display);
+      font-weight: var(--wrld-fw-bold);
+      letter-spacing: var(--wrld-ls-caps-xl);
+      font-size: var(--wrld-fs-h4);
+    }
+    header.top nav {
+      display: flex;
+      gap: var(--wrld-space-5);
+      font-size: var(--wrld-fs-body-sm);
+    }
+    header.top nav a {
+      color: var(--wrld-fg-muted);
+      text-decoration: none;
+      transition: color var(--wrld-duration-micro) var(--wrld-ease-standard);
+    }
+    header.top nav a:hover { color: var(--wrld-fg); }
+
+    /* ---- Theme toggle ---------------------------------------------- */
+    .theme-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--wrld-space-2);
+      padding: var(--wrld-space-2) var(--wrld-space-4);
+      background: transparent;
+      color: var(--wrld-fg);
+      border: var(--wrld-border-hairline) solid var(--wrld-border-strong);
+      border-radius: var(--wrld-radius-pill);
+      font: inherit;
+      font-size: var(--wrld-fs-body-sm);
+      cursor: pointer;
+      transition: border-color var(--wrld-duration-default) var(--wrld-ease-standard),
+                  box-shadow var(--wrld-duration-default) var(--wrld-ease-standard);
+    }
+    .theme-toggle:hover {
+      border-color: var(--wrld-accent-primary);
+      box-shadow: var(--wrld-shadow-accent-primary);
+    }
+    .theme-toggle:focus-visible { outline: none; box-shadow: var(--wrld-focus-ring); }
+
+    /* ---- Sections -------------------------------------------------- */
+    section {
+      padding: var(--wrld-space-16) 0;
+      border-bottom: var(--wrld-border-hairline) solid var(--wrld-border);
+    }
+    section:last-of-type { border-bottom: none; }
+
+    .eyebrow {
+      font-family: var(--wrld-font-display);
+      font-weight: var(--wrld-fw-medium);
+      font-size: var(--wrld-fs-caption);
+      letter-spacing: var(--wrld-ls-eyebrow);
+      text-transform: uppercase;
+      color: var(--wrld-fg-subtle);
+      margin-bottom: var(--wrld-space-3);
+    }
+    .section-title {
+      font-size: var(--wrld-fs-display-md);
+      font-weight: var(--wrld-fw-semibold);
+      margin-bottom: var(--wrld-space-8);
+    }
+
+    /* ---- Hero ------------------------------------------------------ */
+    .hero {
+      padding: var(--wrld-space-20) 0 var(--wrld-space-16);
+    }
+    .hero h1 {
+      font-size: var(--wrld-fs-display-xl);
+      font-weight: var(--wrld-fw-bold);
+      max-width: 18ch;
+      margin-bottom: var(--wrld-space-6);
+    }
+    .hero p.lede {
+      font-size: var(--wrld-fs-body-lg);
+      color: var(--wrld-fg-muted);
+      max-width: 60ch;
+      margin-bottom: var(--wrld-space-8);
+    }
+
+    /* ---- Hero interactive wordmark (the signature moment) --------- */
+    .wrldmark-interactive {
+      display: inline-block;
+      font-family: var(--wrld-font-display);
+      font-weight: var(--wrld-fw-bold);
+      font-size: clamp(6rem, 14vw, 14rem);
+      letter-spacing: var(--wrld-ls-display);
+      color: var(--wrld-fg);
+      cursor: pointer;
+      position: relative;
+      transition: text-shadow var(--wrld-duration-emphasis) var(--wrld-ease-standard),
+                  color var(--wrld-duration-emphasis) var(--wrld-ease-standard);
+      user-select: none;
+      line-height: 1;
+    }
+    .wrldmark-interactive::before {
+      content: '';
+      position: absolute;
+      inset: -2rem -1rem;
+      pointer-events: none;
+      background: var(--wrld-accent-gradient);
+      opacity: 0;
+      filter: blur(60px);
+      transition: opacity var(--wrld-duration-emphasis) var(--wrld-ease-standard);
+      z-index: -1;
+    }
+    .wrldmark-interactive:hover {
+      animation: wrld-glow-cycle 2.4s var(--wrld-ease-standard) infinite;
+    }
+    .wrldmark-interactive:hover::before { opacity: 0.45; }
+
+    @keyframes wrld-glow-cycle {
+      0%   { text-shadow: 0 0 40px rgb(var(--wrld-accent-primary-rgb) / 0.55),
+                          0 0 2px rgb(var(--wrld-accent-primary-rgb) / 0.35); }
+      50%  { text-shadow: 0 0 40px rgb(var(--wrld-accent-secondary-rgb) / 0.55),
+                          0 0 2px rgb(var(--wrld-accent-secondary-rgb) / 0.35); }
+      100% { text-shadow: 0 0 40px rgb(var(--wrld-accent-warm-rgb) / 0.55),
+                          0 0 2px rgb(var(--wrld-accent-warm-rgb) / 0.35); }
+    }
+
+    /* ---- Color swatches ------------------------------------------- */
+    .swatches {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: var(--wrld-space-3);
+    }
+    .swatch {
+      border: var(--wrld-border-hairline) solid var(--wrld-border);
+      border-radius: var(--wrld-radius-md);
+      overflow: hidden;
+      background: var(--wrld-bg-elevated);
+    }
+    .swatch .chip {
+      height: 80px;
+    }
+    .swatch .meta {
+      padding: var(--wrld-space-3);
+      font-size: var(--wrld-fs-caption);
+    }
+    .swatch .meta .name {
+      font-weight: var(--wrld-fw-semibold);
+      display: block;
+      margin-bottom: 2px;
+    }
+    .swatch .meta .hex {
+      font-family: var(--wrld-font-mono);
+      color: var(--wrld-fg-muted);
+    }
+
+    .swatch-group { margin-bottom: var(--wrld-space-10); }
+    .swatch-group h3 {
+      font-size: var(--wrld-fs-h4);
+      margin-bottom: var(--wrld-space-2);
+    }
+    .swatch-group p.hint {
+      color: var(--wrld-fg-muted);
+      font-size: var(--wrld-fs-body-sm);
+      margin: 0 0 var(--wrld-space-4);
+    }
+
+    /* ---- Type specimens ------------------------------------------- */
+    .type-row {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: var(--wrld-space-6);
+      padding: var(--wrld-space-4) 0;
+      border-bottom: var(--wrld-border-hairline) solid var(--wrld-border);
+      align-items: baseline;
+    }
+    .type-row:last-child { border-bottom: none; }
+    .type-row .label {
+      font-family: var(--wrld-font-mono);
+      font-size: var(--wrld-fs-caption);
+      color: var(--wrld-fg-muted);
+      letter-spacing: var(--wrld-ls-eyebrow);
+      text-transform: uppercase;
+    }
+
+    /* ---- Buttons -------------------------------------------------- */
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--wrld-space-4);
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--wrld-space-2);
+      padding: var(--wrld-space-3) var(--wrld-space-6);
+      font-family: var(--wrld-font-body);
+      font-weight: var(--wrld-fw-medium);
+      font-size: var(--wrld-fs-body-sm);
+      text-decoration: none;
+      border-radius: var(--wrld-radius-sm);
+      cursor: pointer;
+      border: var(--wrld-border-hairline) solid transparent;
+      transition: all var(--wrld-duration-default) var(--wrld-ease-standard);
+    }
+    .btn-primary {
+      background: var(--wrld-fg);
+      color: var(--wrld-fg-inverse);
+    }
+    .btn-primary:hover {
+      box-shadow: var(--wrld-shadow-accent-primary);
+      transform: translateY(-1px);
+    }
+    .btn-primary:focus-visible { outline: none; box-shadow: var(--wrld-focus-ring); }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--wrld-fg);
+      border-color: var(--wrld-border-strong);
+    }
+    .btn-ghost:hover {
+      border-color: var(--wrld-accent-primary);
+      box-shadow: var(--wrld-shadow-accent-primary);
+    }
+
+    .btn-commerce {
+      background: transparent;
+      color: var(--wrld-fg);
+      border-color: var(--wrld-border-strong);
+    }
+    .btn-commerce:hover {
+      border-color: var(--wrld-accent-warm);
+      box-shadow: var(--wrld-shadow-accent-warm);
+    }
+
+    /* ---- Logo gallery --------------------------------------------- */
+    .logo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: var(--wrld-space-6);
+    }
+    .logo-card {
+      border: var(--wrld-border-hairline) solid var(--wrld-border);
+      border-radius: var(--wrld-radius-md);
+      padding: var(--wrld-space-6);
+      background: var(--wrld-bg-elevated);
+      display: flex;
+      flex-direction: column;
+      gap: var(--wrld-space-4);
+      min-height: 200px;
+      justify-content: space-between;
+    }
+    .logo-card.inverse {
+      background: var(--wrld-fg);
+      border-color: var(--wrld-fg);
+    }
+    .logo-card.inverse .meta, .logo-card.inverse .meta .path {
+      color: var(--wrld-fg-inverse);
+    }
+    .logo-card .art {
+      flex: 1;
+      display: grid;
+      place-items: center;
+      min-height: 100px;
+    }
+    .logo-card .art img, .logo-card .art svg {
+      max-width: 100%;
+      max-height: 100px;
+      height: auto;
+    }
+    .logo-card .meta {
+      font-size: var(--wrld-fs-caption);
+      color: var(--wrld-fg-muted);
+    }
+    .logo-card .meta .name {
+      display: block;
+      font-weight: var(--wrld-fw-semibold);
+      color: var(--wrld-fg);
+      margin-bottom: 2px;
+    }
+    .logo-card.inverse .meta .name { color: var(--wrld-fg-inverse); }
+    .logo-card .meta .path {
+      font-family: var(--wrld-font-mono);
+      font-size: 11px;
+    }
+
+    /* ---- Spacing scale visual ------------------------------------- */
+    .space-row {
+      display: flex;
+      align-items: center;
+      gap: var(--wrld-space-4);
+      padding: var(--wrld-space-2) 0;
+      font-family: var(--wrld-font-mono);
+      font-size: var(--wrld-fs-caption);
+    }
+    .space-row .bar {
+      background: var(--wrld-fg);
+      height: 8px;
+      border-radius: 2px;
+    }
+    .space-row .caption { color: var(--wrld-fg-muted); min-width: 10ch; }
+
+    /* ---- Cards ---------------------------------------------------- */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: var(--wrld-space-6);
+    }
+    .card {
+      padding: var(--wrld-space-6);
+      border: var(--wrld-border-hairline) solid var(--wrld-border);
+      border-radius: var(--wrld-radius-md);
+      background: var(--wrld-bg-elevated);
+      transition: border-color var(--wrld-duration-default) var(--wrld-ease-standard),
+                  box-shadow var(--wrld-duration-default) var(--wrld-ease-standard),
+                  transform var(--wrld-duration-default) var(--wrld-ease-standard);
+    }
+    .card:hover {
+      border-color: var(--wrld-accent-primary);
+      box-shadow: var(--wrld-shadow-accent-primary);
+      transform: translateY(-2px);
+    }
+    .card h3 {
+      font-size: var(--wrld-fs-h4);
+      margin-bottom: var(--wrld-space-2);
+    }
+    .card p {
+      color: var(--wrld-fg-muted);
+      font-size: var(--wrld-fs-body-sm);
+      margin: 0;
+    }
+
+    /* ---- Footer --------------------------------------------------- */
+    footer {
+      padding: var(--wrld-space-12) 0;
+      color: var(--wrld-fg-subtle);
+      font-size: var(--wrld-fs-body-sm);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: var(--wrld-space-4);
+    }
+    footer code {
+      font-family: var(--wrld-font-mono);
+      color: var(--wrld-fg-muted);
+    }
+
+    /* ---- Small utilities ----------------------------------------- */
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--wrld-space-2);
+      padding: 4px 10px;
+      font-size: var(--wrld-fs-caption);
+      font-family: var(--wrld-font-mono);
+      border: var(--wrld-border-hairline) solid var(--wrld-border-strong);
+      border-radius: var(--wrld-radius-pill);
+      color: var(--wrld-fg-muted);
+    }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <div class="inner">
+      <a class="brand" href="#top" aria-label="WRLD Design System home">
+        <svg viewBox="0 0 200 200" aria-hidden="true" fill="currentColor"><use href="#wrld-mark" /></svg>
+        <span class="name">WRLD · DESIGN SYSTEM</span>
+      </a>
+      <nav>
+        <a href="#colors">Colors</a>
+        <a href="#type">Typography</a>
+        <a href="#logos">Logos</a>
+        <a href="#spacing">Spacing</a>
+        <a href="#components">Components</a>
+      </nav>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+        <span id="themeIcon" aria-hidden="true">◐</span>
+        <span id="themeLabel">Dark</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Inlined mark — referenced by <use> elsewhere -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="wrld-mark" viewBox="0 0 200 200"></symbol>
+  </svg>
+
+  <main class="shell" id="top">
+
+    <!-- ====== HERO ====== -->
+    <section class="hero">
+      <div class="eyebrow">WRLD · Design System · v0.1.0</div>
+      <h1>Hover the wordmark.</h1>
+      <p class="lede">
+        WRLD's visual system is dark/light-mode monochromatic. Accents live in the interaction layer —
+        a hover glow on the wordmark, a focus ring on a CTA, a gradient sweep on a page transition.
+        Static surfaces stay quiet; brand energy arrives on interaction.
+      </p>
+      <div class="wrldmark-interactive" tabindex="0">WRLD</div>
+    </section>
+
+    <!-- ====== COLORS ====== -->
+    <section id="colors">
+      <div class="eyebrow">01 · Color</div>
+      <h2 class="section-title">A monochrome system with three interactive accents.</h2>
+
+      <div class="swatch-group">
+        <h3>Monochrome scale</h3>
+        <p class="hint">The full range. Semantic tokens map to these — swap mode to see them re-anchor.</p>
+        <div class="swatches" id="swatchMono"></div>
+      </div>
+
+      <div class="swatch-group">
+        <h3>Accent colors <span class="tag">interactive only</span></h3>
+        <p class="hint">Used on hover, focus, motion, gradients — never as static page fills.</p>
+        <div class="swatches" id="swatchAccent"></div>
+      </div>
+
+      <div class="swatch-group">
+        <h3>Semantic (current theme)</h3>
+        <p class="hint">Mode-aware. Toggle theme above to see these re-map.</p>
+        <div class="swatches" id="swatchSemantic"></div>
+      </div>
+    </section>
+
+    <!-- ====== TYPE ====== -->
+    <section id="type">
+      <div class="eyebrow">02 · Typography</div>
+      <h2 class="section-title">Montserrat display · Ubuntu body · Inter fallback.</h2>
+
+      <div class="type-row">
+        <span class="label">display / xl</span>
+        <span style="font-family: var(--wrld-font-display); font-size: var(--wrld-fs-display-xl); font-weight:700; line-height:1;">Strategic partner.</span>
+      </div>
+      <div class="type-row">
+        <span class="label">display / lg</span>
+        <span style="font-family: var(--wrld-font-display); font-size: var(--wrld-fs-display-lg); font-weight:600; line-height:1.05;">Tech that moves with you.</span>
+      </div>
+      <div class="type-row">
+        <span class="label">h1 · 2.5rem</span>
+        <h1 style="font-size: var(--wrld-fs-h1); margin:0;">Move with urgency and focus.</h1>
+      </div>
+      <div class="type-row">
+        <span class="label">h2 · 2rem</span>
+        <h2 style="font-size: var(--wrld-fs-h2); margin:0;">Innovation at the edge.</h2>
+      </div>
+      <div class="type-row">
+        <span class="label">h3 · 1.5rem</span>
+        <h3 style="font-size: var(--wrld-fs-h3); margin:0;">Foundational integrity.</h3>
+      </div>
+      <div class="type-row">
+        <span class="label">body / lg</span>
+        <p style="font-size: var(--wrld-fs-body-lg); margin:0; max-width:60ch;">
+          Technology should work for your business — not the other way around. WRLD partners with
+          growing businesses to build IT that's reliable, secure, and ready for what's next.
+        </p>
+      </div>
+      <div class="type-row">
+        <span class="label">body</span>
+        <p style="margin:0; max-width:60ch;">
+          We're not a helpdesk. We're the technology arm of your business. We attend to infrastructure
+          the way a CFO attends to finances — proactively, strategically, and with an eye on growth.
+        </p>
+      </div>
+      <div class="type-row">
+        <span class="label">caption</span>
+        <span style="font-size: var(--wrld-fs-caption); color: var(--wrld-fg-muted);">
+          Small-print for footnotes, metadata, and form hints.
+        </span>
+      </div>
+      <div class="type-row">
+        <span class="label">mono</span>
+        <code style="font-family: var(--wrld-font-mono); background: var(--wrld-bg-muted); padding: 4px 8px; border-radius: 4px;">npm install @wrldinc/design-system</code>
+      </div>
+    </section>
+
+    <!-- ====== LOGOS ====== -->
+    <section id="logos">
+      <div class="eyebrow">03 · Logos</div>
+      <h2 class="section-title">Dark logo on light. Light logo on dark.</h2>
+
+      <div class="logo-grid">
+        <div class="logo-card">
+          <div class="art"><img src="../logos/svg/wrld-lockup-dark.svg" alt="WRLD dark lockup" /></div>
+          <div class="meta"><span class="name">Full lockup — dark</span><span class="path">logos/svg/wrld-lockup-dark.svg</span></div>
+        </div>
+        <div class="logo-card inverse">
+          <div class="art"><img src="../logos/svg/wrld-lockup-light.svg" alt="WRLD light lockup" /></div>
+          <div class="meta"><span class="name">Full lockup — light</span><span class="path">logos/svg/wrld-lockup-light.svg</span></div>
+        </div>
+        <div class="logo-card">
+          <div class="art"><img src="../logos/svg/wrld-mark-dark.svg" alt="WRLD mark only" style="max-height:120px;" /></div>
+          <div class="meta"><span class="name">Mark only — dark</span><span class="path">logos/svg/wrld-mark-dark.svg</span></div>
+        </div>
+        <div class="logo-card inverse">
+          <div class="art"><img src="../logos/svg/wrld-mark-light.svg" alt="WRLD mark only, light" style="max-height:120px;" /></div>
+          <div class="meta"><span class="name">Mark only — light</span><span class="path">logos/svg/wrld-mark-light.svg</span></div>
+        </div>
+        <div class="logo-card">
+          <div class="art"><img src="../logos/svg/wrld-tech-dark.svg" alt="WRLD Tech lockup" /></div>
+          <div class="meta"><span class="name">WRLD Tech</span><span class="path">logos/svg/wrld-tech-dark.svg</span></div>
+        </div>
+        <div class="logo-card">
+          <div class="art"><img src="../logos/svg/wrld-host-dark.svg" alt="WRLD Host lockup" /></div>
+          <div class="meta"><span class="name">WRLD Host</span><span class="path">logos/svg/wrld-host-dark.svg</span></div>
+        </div>
+        <div class="logo-card">
+          <div class="art"><img src="../logos/svg/wrld-design-dark.svg" alt="WRLD Design lockup" /></div>
+          <div class="meta"><span class="name">WRLD Design</span><span class="path">logos/svg/wrld-design-dark.svg</span></div>
+        </div>
+        <div class="logo-card">
+          <div class="art"><img src="../logos/svg/wrld-ai-dark.svg" alt="WRLD AI lockup" /></div>
+          <div class="meta"><span class="name">WRLD AI</span><span class="path">logos/svg/wrld-ai-dark.svg</span></div>
+        </div>
+        <div class="logo-card">
+          <div class="art"><img src="../logos/svg/wrld-services-dark.svg" alt="WRLD Services lockup" /></div>
+          <div class="meta"><span class="name">WRLD Services</span><span class="path">logos/svg/wrld-services-dark.svg</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== SPACING ====== -->
+    <section id="spacing">
+      <div class="eyebrow">04 · Spacing</div>
+      <h2 class="section-title">4px base — 12 steps.</h2>
+      <div id="spacingScale"></div>
+    </section>
+
+    <!-- ====== COMPONENTS ====== -->
+    <section id="components">
+      <div class="eyebrow">05 · Components</div>
+      <h2 class="section-title">Buttons, cards, focus states.</h2>
+
+      <h3 style="font-size: var(--wrld-fs-h4); margin-bottom: var(--wrld-space-4);">Buttons</h3>
+      <div class="btn-row" style="margin-bottom: var(--wrld-space-10);">
+        <button class="btn btn-primary">Start a conversation</button>
+        <button class="btn btn-ghost">Learn more</button>
+        <button class="btn btn-commerce">Upgrade plan</button>
+      </div>
+
+      <h3 style="font-size: var(--wrld-fs-h4); margin-bottom: var(--wrld-space-4);">Hoverable cards</h3>
+      <div class="card-grid">
+        <div class="card">
+          <h3>Proactive monitoring</h3>
+          <p>We see the issue before your team does. 24/7 coverage, guaranteed response SLAs, real humans.</p>
+        </div>
+        <div class="card">
+          <h3>Strategic partnership</h3>
+          <p>Not a vendor. Not a break-fix shop. A technology partner that treats your infrastructure as its own.</p>
+        </div>
+        <div class="card">
+          <h3>One-stop technology</h3>
+          <p>From hosting to hardware, design to dev, AI to automation — under one roof, one invoice, one team.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== FOOTER ====== -->
+    <footer>
+      <div>
+        <strong>WRLD Design System</strong> · v0.1.0 · <code>github.com/WRLDInc/DesignSystem</code>
+      </div>
+      <div>© WRLD Inc. · Dallas, TX · <code>ridge@wrld.tech</code></div>
+    </footer>
+  </main>
+
+  <script>
+    // ---------- Theme toggle ----------
+    const root = document.documentElement;
+    const toggle = document.getElementById('themeToggle');
+    const icon = document.getElementById('themeIcon');
+    const label = document.getElementById('themeLabel');
+
+    function setTheme(mode) {
+      root.setAttribute('data-theme', mode);
+      icon.textContent = mode === 'dark' ? '●' : '◐';
+      label.textContent = mode === 'dark' ? 'Light' : 'Dark';
+      try { window.__wrldTheme = mode; } catch(e) {}
+    }
+    toggle.addEventListener('click', () => {
+      const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      setTheme(next);
+    });
+
+    // ---------- Populate mark into header via inline SVG ----------
+    // (Replaces the <use>-reference with the full path so no external fetch is needed.)
+    fetch('../logos/svg/wrld-mark-mono.svg')
+      .then(r => r.ok ? r.text() : null)
+      .then(svg => {
+        if (!svg) return;
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(svg, 'image/svg+xml');
+        const src = doc.querySelector('svg');
+        if (!src) return;
+        document.querySelectorAll('header.top .brand svg').forEach(el => {
+          el.innerHTML = src.innerHTML;
+        });
+      })
+      .catch(() => {/* file:// may block fetch; graceful noop */});
+
+    // ---------- Swatches ----------
+    const mono = [
+      ['mono-0','#ffffff'], ['mono-50','#fafafa'], ['mono-100','#f4f4f5'],
+      ['mono-200','#e4e4e7'], ['mono-300','#d4d4d8'], ['mono-400','#a1a1aa'],
+      ['mono-500','#71717a'], ['mono-600','#52525b'], ['mono-700','#3f3f46'],
+      ['mono-800','#27272a'], ['mono-900','#18181b'], ['mono-950','#0a0a0a'],
+    ];
+    const accents = [
+      ['accent-primary','#007fee'],
+      ['accent-secondary','#00adee'],
+      ['accent-warm','#EE9300'],
+    ];
+    const semantic = ['bg','bg-subtle','bg-muted','fg','fg-muted','fg-subtle','border','logo'];
+
+    function chipHtml(name, value, style = '') {
+      return `
+        <div class="swatch">
+          <div class="chip" style="background:${value}; ${style}"></div>
+          <div class="meta">
+            <span class="name">${name}</span>
+            <span class="hex">${value}</span>
+          </div>
+        </div>`;
+    }
+    document.getElementById('swatchMono').innerHTML =
+      mono.map(([n,v]) => chipHtml(n, v, 'border-bottom: 1px solid rgba(0,0,0,0.05)')).join('');
+    document.getElementById('swatchAccent').innerHTML =
+      accents.map(([n,v]) => chipHtml(n, v)).join('');
+
+    function renderSemantic() {
+      const root = getComputedStyle(document.documentElement);
+      document.getElementById('swatchSemantic').innerHTML =
+        semantic.map(s => {
+          const v = root.getPropertyValue('--wrld-' + s).trim();
+          return chipHtml(s, v || '—', 'border: 1px solid var(--wrld-border);');
+        }).join('');
+    }
+    renderSemantic();
+    new MutationObserver(renderSemantic).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+    // ---------- Spacing visual ----------
+    const spaceScale = [0,1,2,3,4,5,6,8,10,12,16,20,30];
+    const remPx = parseFloat(getComputedStyle(document.documentElement).fontSize);
+    document.getElementById('spacingScale').innerHTML = spaceScale.map(step => {
+      const rem = step * 0.25;
+      const px = Math.round(rem * remPx);
+      return `
+        <div class="space-row">
+          <span class="caption">space-${step}</span>
+          <span class="bar" style="width: ${rem}rem"></span>
+          <span class="caption">${rem}rem · ${px}px</span>
+        </div>`;
+    }).join('');
+  </script>
+</body>
+</html>
