@@ -1,0 +1,25 @@
+<!doctype html>
+<html data-theme="light"><head><meta charset="utf-8"><link rel="stylesheet" href="_shared.css"></head>
+<body><div class="card">
+  <div class="label-row"><div class="eyebrow">Buttons</div><div class="meta">primary · secondary · ghost · commerce</div></div>
+  <style>
+    .b { font-family: var(--font-body); font-size: 14px; font-weight: 500; padding: 10px 18px; border-radius: 4px; cursor: pointer; transition: all 200ms cubic-bezier(.2,.8,.2,1); border: 1px solid transparent; }
+    .b-primary { background:#0a0a0a;color:#fff;border-color:#0a0a0a }
+    .b-primary:hover { box-shadow:0 10px 40px -8px rgb(0 127 238 / 0.32) }
+    .b-secondary { background:transparent;color:#0a0a0a;border-color:#d4d4d8 }
+    .b-secondary:hover { border-color:#0a0a0a }
+    .b-ghost { background:transparent;color:#0a0a0a;border-color:transparent }
+    .b-ghost:hover { color:#007fee }
+    .b-warm { background:#0a0a0a;color:#fff;border-color:#0a0a0a }
+    .b-warm:hover { box-shadow:0 10px 40px -8px rgb(238 147 0 / 0.32) }
+    .b-disabled { background:#f4f4f5;color:#a1a1aa;border-color:#e4e4e7;cursor:not-allowed }
+  </style>
+  <div class="row">
+    <button class="b b-primary">Start a conversation →</button>
+    <button class="b b-secondary">See if we're a fit</button>
+    <button class="b b-ghost">Learn more →</button>
+    <button class="b b-warm">Upgrade plan</button>
+    <button class="b b-disabled" disabled>Disabled</button>
+  </div>
+  <div class="caption" style="margin:0;font-family:var(--font-mono)">hover lifts with accent-tinted shadow · primary uses #007FEE · commerce uses #EE9300</div>
+</div></body></html>

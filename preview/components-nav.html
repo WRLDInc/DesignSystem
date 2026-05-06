@@ -1,0 +1,319 @@
+<!doctype html>
+<html data-theme="light"><head><meta charset="utf-8"><link rel="stylesheet" href="_shared.css">
+<style>
+  .nav-frame {
+    border: 1px solid #e4e4e7;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #fafafa;
+  }
+  /* Sliding viewport: nav + submenu live in one tall column that translates up on hover */
+  .nav-stage {
+    position: relative;
+    overflow: hidden;
+    height: 64px;
+    transition: height 320ms cubic-bezier(.2,.7,.2,1);
+  }
+  .nav-track {
+    transform: translateY(0);
+    transition: transform 320ms cubic-bezier(.2,.7,.2,1);
+  }
+  .nav-stage.is-open { height: 168px; }
+  .nav-stage.is-open .nav-track { transform: translateY(-64px); }
+
+  .topnav {
+    height: 64px;
+    background: #fff;
+    border-bottom: 1px solid #e4e4e7;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    gap: 20px;
+    white-space: nowrap;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 0 0 auto;
+  }
+  .brand img { height: 22px; width: 22px; object-fit: contain; display: block; }
+  .brand .wordmark {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 17px;
+    letter-spacing: 0.04em;
+    color: #000;
+    line-height: 1;
+  }
+
+  .links {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    font-size: 14px;
+    color: #0a0a0a;
+    font-weight: 500;
+    margin-left: 12px;
+    min-width: 0;
+  }
+  .links .item {
+    cursor: default;
+    padding: 4px 0;
+    position: relative;
+    transition: color 160ms ease;
+  }
+  .links .item.has-menu::after {
+    content: "";
+    width: 4px;
+    height: 4px;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    display: inline-block;
+    transform: translateY(-2px) rotate(45deg);
+    margin-left: 6px;
+    opacity: 0.5;
+    transition: transform 240ms ease, opacity 240ms ease;
+  }
+  .nav-stage.is-open .links .item.has-menu::after {
+    transform: translateY(0) rotate(-135deg);
+    opacity: 0.9;
+  }
+  .links .item.is-active { color: #007fee; }
+
+  .ctas {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 0 0 auto;
+  }
+  .btn {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 14px;
+    border-radius: 4px;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .btn-ghost { border: 1px solid #d4d4d8; background: #fff; color: #0a0a0a; }
+  .btn-solid { border: 1px solid #0a0a0a; background: #0a0a0a; color: #fff; }
+  .btn .arrow { font-size: 11px; opacity: 0.7; }
+
+  /* Responsive label: full → short → icon */
+  .btn-portal .lbl-full { display: inline; }
+  .btn-portal .lbl-short, .btn-portal .lbl-icon { display: none; }
+
+  /* Submenu — sits directly below the nav row inside the same track */
+  .submenu {
+    height: 104px;
+    background: #fff;
+    border-bottom: 1px solid #e4e4e7;
+    display: flex;
+    align-items: stretch;
+    padding: 16px 20px 18px;
+    gap: 32px;
+  }
+  .submenu .sub-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #71717a;
+    margin-bottom: 10px;
+  }
+  .submenu-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0 28px;
+    flex: 1 1 auto;
+    align-content: start;
+  }
+  .submenu-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 6px 0;
+  }
+  .submenu-item .t {
+    font-size: 13px;
+    font-weight: 600;
+    color: #0a0a0a;
+    letter-spacing: -0.005em;
+  }
+  .submenu-item .d {
+    font-size: 12px;
+    color: #71717a;
+    line-height: 1.35;
+  }
+
+  /* Compact frame demo — narrower viewport collapses portal label */
+  .narrow .btn-portal .lbl-full { display: none; }
+  .narrow .btn-portal .lbl-short { display: inline; }
+  .narrowest .btn-portal .lbl-short { display: none; }
+  .narrowest .btn-portal .lbl-icon { display: inline-flex; }
+  .narrow .links { gap: 16px; }
+  .narrow .topnav { gap: 14px; padding: 0 16px; }
+  .narrowest .links .item:not(.is-active):not(.has-menu) { display: none; }
+
+  .frame-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: #71717a;
+    padding: 6px 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-bottom: 1px solid #e4e4e7;
+    background: #f4f4f5;
+  }
+</style>
+</head>
+<body><div class="card">
+  <div class="label-row">
+    <div class="eyebrow">Top nav</div>
+    <div class="meta">sticky · 64px · hover reveals submenu · responsive CTAs</div>
+  </div>
+
+  <!-- Default width -->
+  <div class="nav-frame">
+    <div class="frame-label">Default · ≥ 960px · hover “AI”</div>
+    <div class="nav-stage" id="stage-default">
+      <div class="nav-track">
+        <nav class="topnav">
+          <div class="brand">
+            <img src="../assets/logos/wrld-mark-black.png" alt=""/>
+            <span class="wordmark">WRLD</span>
+          </div>
+          <div class="links">
+            <span class="item">Services</span>
+            <span class="item">Hosting</span>
+            <span class="item">Design</span>
+            <span class="item is-active has-menu" data-menu>AI</span>
+            <span class="item">About</span>
+          </div>
+          <div class="ctas">
+            <button class="btn btn-ghost btn-portal">
+              <span class="lbl-full">Client portal</span>
+              <span class="lbl-short">Portal</span>
+              <span class="lbl-icon" aria-label="Client portal">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="6" r="2.5"/><path d="M3 13c.8-2.4 2.8-3.5 5-3.5s4.2 1.1 5 3.5"/></svg>
+              </span>
+              <span class="arrow">↗</span>
+            </button>
+            <button class="btn btn-solid">Start a conversation</button>
+          </div>
+        </nav>
+        <div class="submenu" role="region" aria-label="AI submenu">
+          <div class="submenu-grid">
+            <a class="submenu-item" href="#">
+              <span class="t">AI strategy</span>
+              <span class="d">Roadmaps, tooling audits, model selection</span>
+            </a>
+            <a class="submenu-item" href="#">
+              <span class="t">Agentic interfaces</span>
+              <span class="d">Chat, copilots, autonomous workflows</span>
+            </a>
+            <a class="submenu-item" href="#">
+              <span class="t">Evals &amp; safety</span>
+              <span class="d">Benchmarks, guardrails, red-teaming</span>
+            </a>
+            <a class="submenu-item" href="#">
+              <span class="t">Retrieval &amp; data</span>
+              <span class="d">RAG, vector stores, knowledge ops</span>
+            </a>
+            <a class="submenu-item" href="#">
+              <span class="t">Fine-tuning</span>
+              <span class="d">Domain models, distillation, hosting</span>
+            </a>
+            <a class="submenu-item" href="#">
+              <span class="t">Case studies</span>
+              <span class="d">Selected work shipping in production</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Narrow: portal label collapses to "Portal" -->
+  <div class="nav-frame narrow" style="max-width:640px">
+    <div class="frame-label">Narrow · ≤ 720px · “Client portal” → “Portal”</div>
+    <div class="nav-stage">
+      <div class="nav-track">
+        <nav class="topnav">
+          <div class="brand">
+            <img src="../assets/logos/wrld-mark-black.png" alt=""/>
+            <span class="wordmark">WRLD</span>
+          </div>
+          <div class="links">
+            <span class="item">Services</span>
+            <span class="item">Hosting</span>
+            <span class="item">Design</span>
+            <span class="item is-active has-menu">AI</span>
+            <span class="item">About</span>
+          </div>
+          <div class="ctas">
+            <button class="btn btn-ghost btn-portal">
+              <span class="lbl-full">Client portal</span>
+              <span class="lbl-short">Portal</span>
+              <span class="arrow">↗</span>
+            </button>
+            <button class="btn btn-solid">Start</button>
+          </div>
+        </nav>
+      </div>
+    </div>
+  </div>
+
+  <!-- Narrowest: portal becomes icon-only, secondary links hide -->
+  <div class="nav-frame narrow narrowest" style="max-width:420px">
+    <div class="frame-label">Compact · ≤ 480px · icon-only portal</div>
+    <div class="nav-stage">
+      <div class="nav-track">
+        <nav class="topnav">
+          <div class="brand">
+            <img src="../assets/logos/wrld-mark-black.png" alt=""/>
+            <span class="wordmark">WRLD</span>
+          </div>
+          <div class="links">
+            <span class="item is-active has-menu">AI</span>
+          </div>
+          <div class="ctas">
+            <button class="btn btn-ghost btn-portal" aria-label="Client portal">
+              <span class="lbl-full">Client portal</span>
+              <span class="lbl-short">Portal</span>
+              <span class="lbl-icon">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="6" r="2.5"/><path d="M3 13c.8-2.4 2.8-3.5 5-3.5s4.2 1.1 5 3.5"/></svg>
+              </span>
+            </button>
+            <button class="btn btn-solid">Start</button>
+          </div>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Hover-to-open on the default frame; the whole nav slides up to reveal the submenu.
+  const stage = document.getElementById('stage-default');
+  const trigger = stage.querySelector('[data-menu]');
+  let closeTimer = null;
+
+  function open() { clearTimeout(closeTimer); stage.classList.add('is-open'); }
+  function scheduleClose() {
+    clearTimeout(closeTimer);
+    closeTimer = setTimeout(() => stage.classList.remove('is-open'), 140);
+  }
+
+  // Open from the trigger; keep open while inside the stage; close on leave.
+  trigger.addEventListener('mouseenter', open);
+  stage.addEventListener('mouseleave', scheduleClose);
+  stage.addEventListener('mouseenter', () => clearTimeout(closeTimer));
+</script>
+</body></html>

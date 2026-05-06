@@ -1,0 +1,63 @@
+<!doctype html>
+<html data-theme="light">
+<head>
+<meta charset="utf-8">
+<title>WRLD.AI — agent dashboard</title>
+<link rel="icon" href="../../assets/logos/favicons/favicon-32x32.png">
+<link rel="stylesheet" href="../../colors_and_type.css">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="../_shared/Lockup.jsx"></script>
+<script type="text/babel" src="Sidebar.jsx"></script>
+<script type="text/babel" src="TopBar.jsx"></script>
+<script type="text/babel" src="StatCard.jsx"></script>
+<script type="text/babel" src="AgentList.jsx"></script>
+<script type="text/babel" src="RunHistory.jsx"></script>
+<script type="text/babel" src="AgentDetail.jsx"></script>
+<script type="text/babel">
+  const AGENTS = [
+    { id: 'a-01', name: 'Daily client digest', icon: 'mail', summary: 'Summarizes Outlook + ClickUp into a 9am brief', status: 'healthy', runs: 284, lastRun: '14m ago',
+      description: 'Pulls Outlook threads and ClickUp tickets touched in the last 24h. Drafts a status update grouped by client.' },
+    { id: 'a-02', name: 'Ticket triage assistant', icon: 'tag', summary: 'Auto-tags + assigns inbound Syncro tickets', status: 'healthy', runs: 1842, lastRun: '2m ago',
+      description: 'Reads inbound tickets, classifies severity and skill match, suggests an assignee.' },
+    { id: 'a-03', name: 'Quarterly QBR drafter', icon: 'file-text', summary: 'Generates QBR slide decks from MSP metrics', status: 'degraded', runs: 12, lastRun: '1d ago',
+      description: 'Pulls KPIs from CloudRadial, drafts QBR talking points and slide outline.' },
+    { id: 'a-04', name: 'Onboarding checklist', icon: 'list-checks', summary: 'New-client setup walker', status: 'off', runs: 4, lastRun: '5d ago',
+      description: 'Steps through onboarding tasks, prompts for missing info.' },
+  ];
+  const RUNS = [
+    { status: 'success', summary: 'Drafted digest for 14 clients · 28 threads consolidated', duration: '4.1s', time: '14m ago' },
+    { status: 'success', summary: 'Drafted digest for 14 clients · 31 threads consolidated', duration: '3.8s', time: '24h ago' },
+    { status: 'failed',  summary: 'Outlook OAuth token expired · refresh required', duration: '0.6s', time: '2d ago' },
+    { status: 'success', summary: 'Drafted digest for 13 clients · 22 threads consolidated', duration: '3.2s', time: '3d ago' },
+    { status: 'running', summary: 'Drafting digest for 14 clients...', duration: '—', time: 'now' },
+  ];
+
+  function App() {
+    const [route, setRoute] = React.useState('agents');
+    const [activeId, setActiveId] = React.useState('a-01');
+    const active = AGENTS.find(a => a.id === activeId);
+    React.useEffect(() => { lucide.createIcons(); });
+
+    return (
+      <div data-screen-label="01 WRLD.AI dashboard" style={{ display: 'flex', minHeight: '100vh' }}>
+        <Sidebar active={route} onNavigate={setRoute} />
+        <main style={{ flex: 1, minWidth: 0 }}>
+          <TopBar title="Agents" subtitle="WRLD.AI · Acme Roofing" />
+          <div style={{ display: 'grid', gridTemplateColumns: '380px 1fr', gap: 32, padding: 32 }}>
+            <AgentList agents={AGENTS} activeId={activeId} onSelect={setActiveId} />
+            <AgentDetail agent={active} runs={RUNS} />
+          </div>
+        </main>
+      </div>
+    );
+  }
+  ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

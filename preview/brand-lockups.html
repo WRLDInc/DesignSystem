@@ -1,0 +1,63 @@
+<!doctype html>
+<html data-theme="light">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="_shared.css">
+<style>
+  .lockup-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  .lockup {
+    background: #fff; border: 1px solid #e4e4e7; border-radius: 8px;
+    padding: 14px 16px; display: flex; align-items: center; gap: 2px; height: 72px;
+  }
+  .lockup img.mark { height: 40px; width: 40px; flex-shrink: 0; object-fit: contain; margin: 0; padding: 0; display: block; }
+  .lockup .text {
+    flex: 1; min-width: 0; display: flex; flex-direction: column;
+    line-height: 1; padding-right: 4.2em;
+  }
+  .lockup .wordmark {
+    font-family: 'Montserrat', sans-serif; font-weight: 700;
+    font-size: 22px; letter-spacing: 0.04em; color: #000;
+  }
+  .lockup .sub {
+    font-family: 'Montserrat', sans-serif; font-weight: 500;
+    font-size: 11px; letter-spacing: 0.18em; color: #52525b;
+    margin-top: 4px; text-transform: uppercase;
+  }
+  .lockup.parent .wordmark { font-size: 24px; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="label-row">
+    <div class="eyebrow">Logo lockups</div>
+    <div class="meta">official mark · sub-brand text right-aligned</div>
+  </div>
+  <div class="lockup-grid">
+    <div class="lockup parent">
+      <img class="mark" src="../assets/logos/wrld-mark-black.png" alt="WRLD">
+      <div class="text"><div class="wordmark">WRLD</div></div>
+    </div>
+    <div class="lockup">
+      <img class="mark" src="../assets/logos/wrld-mark-black.png" alt="">
+      <div class="text"><div class="wordmark">WRLD</div><div class="sub">TECH</div></div>
+    </div>
+    <div class="lockup">
+      <img class="mark" src="../assets/logos/wrld-mark-black.png" alt="">
+      <div class="text"><div class="wordmark">WRLD</div><div class="sub">HOST</div></div>
+    </div>
+    <div class="lockup">
+      <img class="mark" src="../assets/logos/wrld-mark-black.png" alt="">
+      <div class="text"><div class="wordmark">WRLD</div><div class="sub">DESIGN</div></div>
+    </div>
+    <div class="lockup">
+      <img class="mark" src="../assets/logos/wrld-mark-black.png" alt="">
+      <div class="text"><div class="wordmark">WRLD</div><div class="sub">AI</div></div>
+    </div>
+    <div class="lockup">
+      <img class="mark" src="../assets/logos/wrld-mark-black.png" alt="">
+      <div class="text"><div class="wordmark">WRLD</div><div class="sub">SERVICES</div></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

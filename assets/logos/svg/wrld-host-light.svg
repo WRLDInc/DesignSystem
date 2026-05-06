@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 240" role="img" aria-label="WRLD Host">
+  <title>WRLD Host</title>
+  <g fill="#fafafa" fill-rule="evenodd">
+    <path transform="translate(20,20.0)" d="M94.14,4.18 L122.41,6.65 L100.27,94.01 L99.73,94.01 Z"></path>
+    <path transform="translate(20,20.0)" d="M127.27,7.95 L152.99,19.95 L102.30,94.46 L101.80,94.28 Z"></path>
+    <path transform="translate(20,20.0)" d="M157.10,22.83 L177.17,42.90 L104.06,95.58 L103.65,95.24 Z"></path>
+    <path transform="translate(20,20.0)" d="M180.05,47.01 L192.05,72.73 L105.32,97.23 L105.06,96.77 Z"></path>
+    <path transform="translate(20,20.0)" d="M193.35,77.59 L195.82,105.86 L105.95,99.22 L105.86,98.70 Z"></path>
+    <path transform="translate(20,20.0)" d="M195.38,110.87 L188.04,138.28 L105.86,101.30 L105.95,100.78 Z"></path>
+    <path transform="translate(20,20.0)" d="M185.91,142.83 L169.64,166.08 L105.06,103.23 L105.32,102.77 Z"></path>
+    <path transform="translate(20,20.0)" d="M166.08,169.64 L142.83,185.91 L103.65,104.76 L104.06,104.42 Z"></path>
+    <path transform="translate(20,20.0)" d="M138.28,188.04 L110.87,195.38 L101.80,105.72 L102.30,105.54 Z"></path>
+    <path transform="translate(20,20.0)" d="M105.86,195.82 L77.59,193.35 L99.73,105.99 L100.27,105.99 Z"></path>
+    <path transform="translate(20,20.0)" d="M72.73,192.05 L47.01,180.05 L97.70,105.54 L98.20,105.72 Z"></path>
+    <path transform="translate(20,20.0)" d="M42.90,177.17 L22.83,157.10 L95.94,104.42 L96.35,104.76 Z"></path>
+    <path transform="translate(20,20.0)" d="M19.95,152.99 L7.95,127.27 L94.68,102.77 L94.94,103.23 Z"></path>
+    <path transform="translate(20,20.0)" d="M6.65,122.41 L4.18,94.14 L94.05,100.78 L94.14,101.30 Z"></path>
+    <path transform="translate(20,20.0)" d="M4.62,89.13 L11.96,61.72 L94.14,98.70 L94.05,99.22 Z"></path>
+    <path transform="translate(20,20.0)" d="M14.09,57.17 L30.36,33.92 L94.94,96.77 L94.68,97.23 Z"></path>
+    <path transform="translate(20,20.0)" d="M33.92,30.36 L57.17,14.09 L96.35,95.24 L95.94,95.58 Z"></path>
+    <path transform="translate(20,20.0)" d="M61.72,11.96 L89.13,4.62 L98.20,94.28 L97.70,94.46 Z"></path>
+  </g>
+  <text x="260" y="152" font-family="&#39;Montserrat&#39;, &#39;Helvetica Neue&#39;, Arial, sans-serif" font-weight="700" font-size="180" letter-spacing="-6" fill="#fafafa">WRLD</text>
+  <text x="264" y="210" font-family="&#39;Montserrat&#39;, &#39;Helvetica Neue&#39;, Arial, sans-serif" font-weight="500" font-size="56" letter-spacing="14" fill="#fafafa" opacity="0.85">HOST</text>
+</svg>
