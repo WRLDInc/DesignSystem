@@ -13,7 +13,7 @@ export interface AgentListProps {
   agents: Agent[];
   /** id of the currently-selected agent. */
   activeId?: string;
-  onSelect?: (id: string) => void;
+  onSelect: (id: string) => void;
 }
 
 /** Selectable list of AI agents with status dot, summary, and run counts. */

@@ -39,7 +39,30 @@ CI, and `tokens/tokens.ts` — were preserved; the design project does not carry
 - Single-file builds (`WRLD Design System (standalone).html`, `… PDF.html`, `WRLD.AI Dashboard (standalone).html`)
   exceed the sync API's 256 KiB per-file ceiling and must come from a ZIP export.
 - `assets/logos/svg/` uses `-black`/`-white` suffixes in the design project but `-dark`/`-light` here, and this
-  repo carries 24 sub-brand variants against the project's 8. Left untouched pending a naming decision.
+  repo carries 24 sub-brand variants against the project's 8. The **assets** are left untouched pending a naming
+  decision; only the *references* were repointed (see Fixed below). Anything re-synced from the project will
+  arrive with `-black`/`-white` again until the naming is reconciled upstream.
+
+### Fixed during review
+
+- **Broken logo references.** The synced `styleguide/index.html` and `preview/svg-check.html` pointed at
+  `assets/logos/svg/wrld-{mark,tech,lockup}-{black,white}.svg`, which do not exist in this repo — 10 broken
+  images in total. Repointed to the checked-in `-dark`/`-light` files. Mapping verified against fill values,
+  not guessed: repo `-dark` is `#0a0a0a` and `-light` is `#fafafa`, so the rename carries no change of meaning.
+  (Pre-sync, the styleguide used the `assets/logos/*.png` rasters; upstream moved these to SVG.)
+- **Broken favicon references.** `styleguide/index.html` pointed all four favicon links at
+  `assets/logos/favicons/`, which holds only `favicon-32x32.png` and `favicon-180x180.png` — so
+  `favicon-16x16.png`, `apple-touch-icon.png`, and `site.webmanifest` were all 404s. Repointed to
+  `logos/favicons/`, which carries the complete generated set. Found by sweeping every local `src`/`href` in
+  the synced HTML rather than only the files review flagged; all 83 local references now resolve.
+- **False type contracts.** `AgentList.onSelect`, `Sidebar.onNavigate`, and `Header.onNavigate` were declared
+  optional while their components invoke them unconditionally — a consumer trusting the typings got a runtime
+  `TypeError` on first click. Made required. Types-only; no runtime behaviour changed. `Button.onClick` is
+  correctly optional and was left alone: it is spread onto a DOM `<button>`, never called directly.
+- **Wrong duration values in `_ds_manifest.json`.** All four `--wrld-duration-*` tokens were recorded as `1ms`.
+  That is the `prefers-reduced-motion` override, not the base value — the generator appears to take the last
+  declaration and drop the media-query scope. Restored to `120ms` / `200ms` / `320ms` / `600ms`. This is a
+  **generated** file, so the fix will be undone by the next export until the generator is corrected upstream.
 
 ## [0.1.0] — 2026-04-18
 
