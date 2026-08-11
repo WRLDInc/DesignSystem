@@ -1,4 +1,4 @@
-function Footer() {
+export function Footer() {
   const cols = [
     { title: 'Services', items: ['Hosting', 'Design', 'AI', 'Managed IT', 'Support', 'Press'] },
     { title: 'Company', items: ['About', 'Values', 'Contact', 'Careers'] },

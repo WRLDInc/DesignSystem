@@ -87,9 +87,13 @@ Three legacy colors survive as **interactive accents**, applied subtly and only 
 | Role | Family | Fallback stack |
 |---|---|---|
 | Display / headings | **Montserrat** | `'Montserrat', 'Helvetica Neue', Arial, sans-serif` |
-| Body (primary) | **Ubuntu** | `'Ubuntu', 'Inter', system-ui, sans-serif` |
-| Body (alt) | **Inter** | `'Inter', 'Ubuntu', system-ui, sans-serif` |
-| Mono | **JetBrains Mono** | `'JetBrains Mono', 'Fira Code', ui-monospace, monospace` |
+| Body (primary) | **Ubuntu** | `'Ubuntu', system-ui, -apple-system, sans-serif` |
+| Body (alt) | **Ubuntu** | `'Ubuntu', system-ui, -apple-system, sans-serif` |
+| Mono | **Ubuntu Mono** | `'Ubuntu Mono', ui-monospace, SFMono-Regular, Menlo, monospace` |
+
+The type system is deliberately **two families only** — Montserrat for display, Ubuntu (and Ubuntu Mono) for
+everything else. Inter, JetBrains Mono, and Fira Code were dropped: every font the system needs is vendored
+under `fonts/`, so third-party fallbacks added supply-chain surface and rendering drift for no gain.
 
 - Montserrat weights: 400, 500, 600, 700. Prefer 600 for h1–h3, 500 for h4–h6.
 - Ubuntu weights: 300, 400, 500, 700.

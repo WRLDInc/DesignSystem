@@ -1,4 +1,4 @@
-function Sidebar({ active, onNavigate }) {
+export function Sidebar({ active, onNavigate }) {
   const items = [
     { id: 'agents', label: 'Agents', icon: 'bot' },
     { id: 'runs', label: 'Run history', icon: 'activity' },

@@ -1,4 +1,4 @@
-function Button({ variant = 'primary', children, onClick, ...rest }) {
+export function Button({ variant = 'primary', children, onClick, ...rest }) {
   const base = {
     fontFamily: 'var(--font-body)', fontSize: 14, fontWeight: 500,
     padding: '10px 18px', borderRadius: 4, cursor: 'pointer',

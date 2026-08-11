@@ -1,4 +1,4 @@
-function ValuesStrip() {
+export function ValuesStrip() {
   const values = [
     { num: '01', title: 'Move with urgency', body: 'Responsiveness is a feature, not a favor.' },
     { num: '02', title: 'Innovation at the edge', body: 'Adopt new tools early — but ship, don\u2019t experiment.' },

@@ -37,11 +37,11 @@
      Apply only on hover, focus, active, motion, gradients.
      Never as static fills on page surfaces. */
   --wrld-accent-primary:       #007fee; /* WRLD blue — default hover/focus */
-  --wrld-accent-primary-rgb:   0 127 238;
+  --wrld-accent-primary-rgb:   0 127 238; /* @kind color */
   --wrld-accent-secondary:     #00adee; /* original sky blue — gradient companion */
-  --wrld-accent-secondary-rgb: 0 173 238;
+  --wrld-accent-secondary-rgb: 0 173 238; /* @kind color */
   --wrld-accent-warm:          #EE9300; /* orange — commerce/sales CTA */
-  --wrld-accent-warm-rgb:      238 147 0;
+  --wrld-accent-warm-rgb:      238 147 0; /* @kind color */
 
   /* Gradient sweep — reserved for motion moments only */
   --wrld-accent-gradient: linear-gradient(
@@ -49,7 +49,7 @@
     var(--wrld-accent-primary) 0%,
     var(--wrld-accent-secondary) 50%,
     var(--wrld-accent-warm) 100%
-  );
+  ); /* @kind color */
 
   /* ---------- System semantic (status, not brand) ---------- */
   --wrld-status-success: #10b981;
@@ -59,42 +59,42 @@
 
   /* ---------- Typography ---------- */
   --wrld-font-display: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
-  --wrld-font-body:    'Ubuntu', 'Inter', system-ui, -apple-system, sans-serif;
-  --wrld-font-body-alt:'Inter', 'Ubuntu', system-ui, -apple-system, sans-serif;
-  --wrld-font-mono:    'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --wrld-font-body:    'Ubuntu', system-ui, -apple-system, sans-serif;
+  --wrld-font-body-alt:'Ubuntu', system-ui, -apple-system, sans-serif;
+  --wrld-font-mono:    'Ubuntu Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
   /* Type scale (fluid with clamp for display; fixed for UI) */
-  --wrld-fs-display-xl: clamp(3rem, 2rem + 4vw, 6rem);     /* 48 → 96px */
-  --wrld-fs-display-lg: clamp(2.25rem, 1.5rem + 3vw, 4.25rem); /* 36 → 68 */
-  --wrld-fs-display-md: clamp(1.75rem, 1.25rem + 2vw, 3rem);   /* 28 → 48 */
-  --wrld-fs-h1: 2.5rem;    /* 40 */
-  --wrld-fs-h2: 2rem;      /* 32 */
-  --wrld-fs-h3: 1.5rem;    /* 24 */
-  --wrld-fs-h4: 1.25rem;   /* 20 */
-  --wrld-fs-h5: 1.125rem;  /* 18 */
-  --wrld-fs-h6: 1rem;      /* 16 */
-  --wrld-fs-body-lg: 1.125rem; /* 18 */
-  --wrld-fs-body:    1rem;     /* 16 */
-  --wrld-fs-body-sm: 0.875rem; /* 14 */
-  --wrld-fs-caption: 0.75rem;  /* 12 */
+  --wrld-fs-display-xl: clamp(3rem, 2rem + 4vw, 6rem); /* @kind other */     /* 48 → 96px */
+  --wrld-fs-display-lg: clamp(2.25rem, 1.5rem + 3vw, 4.25rem); /* @kind other */ /* 36 → 68 */
+  --wrld-fs-display-md: clamp(1.75rem, 1.25rem + 2vw, 3rem); /* @kind other */   /* 28 → 48 */
+  --wrld-fs-h1: 2.5rem; /* @kind font */    /* 40 */
+  --wrld-fs-h2: 2rem; /* @kind font */      /* 32 */
+  --wrld-fs-h3: 1.5rem; /* @kind font */    /* 24 */
+  --wrld-fs-h4: 1.25rem; /* @kind font */   /* 20 */
+  --wrld-fs-h5: 1.125rem; /* @kind font */  /* 18 */
+  --wrld-fs-h6: 1rem; /* @kind font */      /* 16 */
+  --wrld-fs-body-lg: 1.125rem; /* @kind font */ /* 18 */
+  --wrld-fs-body:    1rem; /* @kind font */     /* 16 */
+  --wrld-fs-body-sm: 0.875rem; /* @kind font */ /* 14 */
+  --wrld-fs-caption: 0.75rem; /* @kind font */  /* 12 */
 
   /* Weights */
-  --wrld-fw-regular:  400;
-  --wrld-fw-medium:   500;
-  --wrld-fw-semibold: 600;
-  --wrld-fw-bold:     700;
+  --wrld-fw-regular:  400; /* @kind font */
+  --wrld-fw-medium:   500; /* @kind font */
+  --wrld-fw-semibold: 600; /* @kind font */
+  --wrld-fw-bold:     700; /* @kind font */
 
   /* Line heights */
-  --wrld-lh-display: 1.05;
-  --wrld-lh-heading: 1.2;
-  --wrld-lh-body:    1.6;
-  --wrld-lh-ui:      1.4;
+  --wrld-lh-display: 1.05; /* @kind font */
+  --wrld-lh-heading: 1.2; /* @kind font */
+  --wrld-lh-body:    1.6; /* @kind font */
+  --wrld-lh-ui:      1.4; /* @kind font */
 
   /* Letter spacing */
-  --wrld-ls-display:  -0.02em;
-  --wrld-ls-body:     0;
-  --wrld-ls-eyebrow:  0.12em;  /* for uppercase WRLD-as-type, labels */
-  --wrld-ls-caps-xl:  0.28em;  /* tall, spaced "WRLD" wordmark treatment */
+  --wrld-ls-display:  -0.02em; /* @kind font */
+  --wrld-ls-body:     0; /* @kind font */
+  --wrld-ls-eyebrow:  0.12em; /* @kind font */  /* for uppercase WRLD-as-type, labels */
+  --wrld-ls-caps-xl:  0.28em; /* @kind font */  /* tall, spaced "WRLD" wordmark treatment */
 
   /* ---------- Spacing (4px base) ---------- */
   --wrld-space-0:   0;
@@ -119,35 +119,35 @@
   --wrld-radius-pill: 9999px;
 
   /* ---------- Border widths ---------- */
-  --wrld-border-hairline: 1px;
-  --wrld-border-standard: 2px;
-  --wrld-border-emphasis: 3px;
+  --wrld-border-hairline: 1px; /* @kind other */
+  --wrld-border-standard: 2px; /* @kind other */
+  --wrld-border-emphasis: 3px; /* @kind other */
 
   /* ---------- Motion ---------- */
-  --wrld-duration-micro:    120ms;
-  --wrld-duration-default:  200ms;
-  --wrld-duration-emphasis: 320ms;
-  --wrld-duration-reveal:   600ms;
-  --wrld-ease-standard: cubic-bezier(0.2, 0.8, 0.2, 1);
-  --wrld-ease-enter:    cubic-bezier(0.4, 0, 0.2, 1);
-  --wrld-ease-exit:     cubic-bezier(0.4, 0, 1, 1);
-  --wrld-ease-precise:  cubic-bezier(0.83, 0, 0.17, 1);
+  --wrld-duration-micro:    120ms; /* @kind other */
+  --wrld-duration-default:  200ms; /* @kind other */
+  --wrld-duration-emphasis: 320ms; /* @kind other */
+  --wrld-duration-reveal:   600ms; /* @kind other */
+  --wrld-ease-standard: cubic-bezier(0.2, 0.8, 0.2, 1); /* @kind other */
+  --wrld-ease-enter:    cubic-bezier(0.4, 0, 0.2, 1); /* @kind other */
+  --wrld-ease-exit:     cubic-bezier(0.4, 0, 1, 1); /* @kind other */
+  --wrld-ease-precise:  cubic-bezier(0.83, 0, 0.17, 1); /* @kind other */
 
   /* ---------- Z-index ---------- */
-  --wrld-z-base:     0;
-  --wrld-z-raised:   10;
-  --wrld-z-sticky:   100;
-  --wrld-z-overlay:  1000;
-  --wrld-z-modal:    1100;
-  --wrld-z-toast:    1200;
-  --wrld-z-tooltip:  1300;
+  --wrld-z-base:     0; /* @kind other */
+  --wrld-z-raised:   10; /* @kind other */
+  --wrld-z-sticky:   100; /* @kind other */
+  --wrld-z-overlay:  1000; /* @kind other */
+  --wrld-z-modal:    1100; /* @kind other */
+  --wrld-z-toast:    1200; /* @kind other */
+  --wrld-z-tooltip:  1300; /* @kind other */
 
   /* ---------- Breakpoints (reference; CSS can't use as @media) ---------- */
-  --wrld-bp-sm:  40rem;   /* 640 */
-  --wrld-bp-md:  48rem;   /* 768 */
-  --wrld-bp-lg:  64rem;   /* 1024 */
-  --wrld-bp-xl:  80rem;   /* 1280 */
-  --wrld-bp-2xl: 96rem;   /* 1536 */
+  --wrld-bp-sm:  40rem; /* @kind other */   /* 640 */
+  --wrld-bp-md:  48rem; /* @kind other */   /* 768 */
+  --wrld-bp-lg:  64rem; /* @kind other */   /* 1024 */
+  --wrld-bp-xl:  80rem; /* @kind other */   /* 1280 */
+  --wrld-bp-2xl: 96rem; /* @kind other */   /* 1536 */
 }
 
 /* ============================================================
@@ -247,9 +247,9 @@
    ============================================================ */
 @media (prefers-reduced-motion: reduce) {
   :root {
-    --wrld-duration-micro:    1ms;
-    --wrld-duration-default:  1ms;
-    --wrld-duration-emphasis: 1ms;
-    --wrld-duration-reveal:   1ms;
+    --wrld-duration-micro:    1ms; /* @kind other */
+    --wrld-duration-default:  1ms; /* @kind other */
+    --wrld-duration-emphasis: 1ms; /* @kind other */
+    --wrld-duration-reveal:   1ms; /* @kind other */
   }
 }

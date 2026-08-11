@@ -1,4 +1,4 @@
-function AgentDetail({ agent, runs }) {
+export function AgentDetail({ agent, runs }) {
   if (!agent) return null;
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>

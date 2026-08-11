@@ -1,4 +1,4 @@
-function CTA() {
+export function CTA() {
   return (
     <section style={{ padding: '0 32px' }}>
       <div style={{
