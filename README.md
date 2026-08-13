@@ -140,7 +140,7 @@ WRLD is a federation of brands under one parent. Names matter.
 
 - **Display / headings:** Montserrat, weight 500–700, `letter-spacing: -0.02em`, line-height \~1.05–1.2.
 - **Body:** Ubuntu, weight 300–500, body line-height 1.6.
-- **Mono:** Ubuntu Mono, weights 400/700 (replaces the brief's "JetBrains Mono", which is not bundled and is no longer referenced anywhere).
+- **Mono:** Ubuntu Mono, weights 400/700 (replaces the brief's "JetBrains Mono", which is not bundled and is no longer used in the font stacks).
 - **Eyebrow labels & tall wordmark:** uppercase Montserrat with `letter-spacing: 0.12em` (eyebrow) or `0.28em` (wordmark-as-type).
 
 ### Spacing
