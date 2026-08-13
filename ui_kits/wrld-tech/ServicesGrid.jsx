@@ -19,7 +19,7 @@ function ServiceCard({ sub, body, href }) {
   );
 }
 
-function ServicesGrid() {
+export function ServicesGrid() {
   const services = [
     { sub: 'HOST',     body: 'Clustered, ethically-operated hosting. Reserved for clients and approved partners.', href: 'https://wrld.host' },
     { sub: 'DESIGN',   body: 'Design that ships. We build the sites we design, and we build them to work.',       href: 'https://wrld.design' },

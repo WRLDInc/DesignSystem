@@ -1,4 +1,4 @@
-function TopBar({ title, subtitle }) {
+export function TopBar({ title, subtitle }) {
   return (
     <div style={{ borderBottom: '1px solid var(--border)', padding: '24px 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
       <div>

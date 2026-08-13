@@ -33,7 +33,7 @@ const D_CHROME    = 480;     // header padding-bottom
 const STAGGER     = 55;      // per-submenu-item delay
 const SETTLE_HOLD = 120;     // ms to hold close before re-opening on rapid switch
 
-function Header({ activeRoute, onNavigate }) {
+export function Header({ activeRoute, onNavigate }) {
   // hoverId   — what the user is currently pointed at (intent)
   // visibleId — what's actually visible / animating (state machine)
   // phase     — 'idle' | 'opening' | 'open' | 'closing'
@@ -48,7 +48,6 @@ function Header({ activeRoute, onNavigate }) {
 
   // For the traveling underline
   const navRef     = React.useRef(null);
-  const headerRef  = React.useRef(null);
   const itemRefs   = React.useRef({});
   const [indicator, setIndicator] = React.useState({ left: 0, width: 0, opacity: 0 });
 
@@ -156,16 +155,13 @@ function Header({ activeRoute, onNavigate }) {
   // Reserve a fixed bottom slot equal to the tallest possible submenu so
   // the chrome doesn't bounce as different menus open. Submenu is now a
   // horizontal row that wraps at most twice (height ~ 2 rows).
-  // Submenu always renders as a single horizontal row beneath the nav,
-  // spanning the full nav width. Reserve exactly one row's worth of
-  // chrome so the header doesn't bounce.
   const SUBMENU_ROW_H = 22;
-  const submenuSlotH = SUBMENU_ROW_H + 28;
+  const SUBMENU_MAX_ROWS = 2;
+  const submenuSlotH = SUBMENU_ROW_H * SUBMENU_MAX_ROWS + 28;
 
   if (!narrow) {
     return (
       <header
-        ref={headerRef}
         onMouseLeave={scheduleClose}
         style={{
           position: 'sticky', top: 0, zIndex: 100,
@@ -199,7 +195,7 @@ function Header({ activeRoute, onNavigate }) {
           }}>
             {/* Traveling underline — single element, slides between items */}
             <span aria-hidden style={{
-              position: 'absolute', top: 42, height: 1,
+              position: 'absolute', top: 32, height: 1,
               background: 'var(--accent-primary)',
               left: indicator.left, width: indicator.width,
               opacity: indicator.opacity,
@@ -234,21 +230,21 @@ function Header({ activeRoute, onNavigate }) {
                       color: (isActive || owns || isHover) ? 'var(--accent-primary)' : 'var(--fg)',
                       transition: `color ${D_FADE_OUT}ms ${EASE}`,
                       display: 'inline-block',
-                      WebkitTextDecorationLine: 'none',
-                      textDecorationLine: 'none',
                     }}>
                     {l.label}
                   </a>
 
-                  {/* Submenu — single horizontal row spanning the full nav
-                      width, anchored to the parent link's left edge. Items
-                      are nowrap so they never stack vertically. */}
+                  {/* Submenu — horizontal row, same type spec & gap as the
+                      top nav. Starts from this cell's left edge; if its
+                      intrinsic width can't fit between here and the nav's
+                      right edge, anchors to the right edge of this cell
+                      instead (last item ends at parent's right edge). If
+                      even right-anchor overflows, flex-wrap drops to row 2. */}
                   {l.submenu && isVisible && (
                     <Submenu
                       items={l.submenu}
                       isShowing={isShowing}
                       navRef={navRef}
-                      headerRef={headerRef}
                       cellLeft={itemRefs.current[l.id]}
                       onMouseEnter={() => open(l.id)}
                       onMouseLeave={scheduleClose}
@@ -342,50 +338,42 @@ window.Header = Header;
 //      parent link's right edge).
 //   3. Otherwise, set width to max-available and let flex-wrap drop to a
 //      second row.
-function Submenu({ items, isShowing, navRef, headerRef, cellLeft, onMouseEnter, onMouseLeave }) {
+function Submenu({ items, isShowing, navRef, cellLeft, onMouseEnter, onMouseLeave }) {
   const ref = React.useRef(null);
-  // Submenu always left-aligns with the nav row itself (i.e. with the
-  // leftmost top link), regardless of which parent triggered it. This
-  // keeps a stable horizontal baseline as the user moves between menus,
-  // instead of the submenu jumping around mid-screen.
-  const [offset, setOffset] = React.useState(0);
-
-  // Wrap budget = full header content area (logo → CTAs), measured by
-  // the header element's inner width minus its horizontal padding. We
-  // align the submenu's left to the nav's left edge by default, but
-  // allow it to extend rightward across the entire header width so it
-  // never gets clipped under the CTAs or off-screen.
-  const [maxW, setMaxW] = React.useState(undefined);
+  const [anchor, setAnchor] = React.useState({ side: 'left', width: null });
 
   React.useLayoutEffect(() => {
     if (!ref.current || !navRef.current || !cellLeft) return;
     const el = ref.current;
     const navR = navRef.current.getBoundingClientRect();
-    const cellR = cellLeft.getBoundingClientRect();
-    const headerR = headerRef?.current?.getBoundingClientRect() || navR;
-    // Match the header inner padding (32px each side) used by the grid.
-    const HEADER_PAD = 32;
-    const headerLeft  = headerR.left + HEADER_PAD;
-    const headerRight = headerR.right - HEADER_PAD;
+    const parentR = cellLeft.getBoundingClientRect();
 
-    // Measure intrinsic width with no wrap.
-    const prev = el.style.cssText;
+    // Measure intrinsic width by temporarily releasing the wrap constraint.
+    const prevWidth = el.style.width;
+    const prevFlexWrap = el.style.flexWrap;
     el.style.width = 'max-content';
     el.style.flexWrap = 'nowrap';
     const intrinsic = el.scrollWidth;
-    el.style.cssText = prev;
+    el.style.width = prevWidth;
+    el.style.flexWrap = prevFlexWrap;
 
-    const cellLeftFromNav = cellR.left - navR.left;
-    // Center the submenu under the nav. If it would overflow either side
-    // of the header content area, clamp to fit.
-    const navCenter = navR.left + navR.width / 2;
-    let startVp = navCenter - intrinsic / 2;
-    if (startVp + intrinsic > headerRight) startVp = headerRight - intrinsic;
-    if (startVp < headerLeft) startVp = headerLeft;
-    const startFromNav = startVp - navR.left;
-    setOffset(startFromNav - cellLeftFromNav);
-    setMaxW(Math.min(intrinsic, headerRight - startVp));
-  }, [items, isShowing, navRef, headerRef, cellLeft]);
+    const availLeft  = navR.right - parentR.left;          // L→R from parent
+    const availRight = parentR.right - navR.left;          // R→L from parent
+
+    if (intrinsic <= availLeft) {
+      setAnchor({ side: 'left', width: null });
+    } else if (intrinsic <= availRight) {
+      setAnchor({ side: 'right', width: null });
+    } else {
+      // Wraps. Choose the side with more room and cap width to that side.
+      if (availLeft >= availRight) setAnchor({ side: 'left',  width: availLeft });
+      else                          setAnchor({ side: 'right', width: availRight });
+    }
+  }, [items, isShowing, navRef, cellLeft]);
+
+  const posStyle = anchor.side === 'right'
+    ? { right: 0, left: 'auto' }
+    : { left: 0,  right: 'auto' };
 
   return (
     <div
@@ -396,16 +384,16 @@ function Submenu({ items, isShowing, navRef, headerRef, cellLeft, onMouseEnter, 
       style={{
         position: 'absolute',
         top: '100%',
-        left: offset,
-        right: 'auto',
-        width: maxW,
-        paddingTop: 4,
-        marginTop: -8,
+        ...posStyle,
+        paddingTop: 14,
         display: 'flex',
         flexDirection: 'row',
-        flexWrap: 'nowrap',
-        justifyContent: 'flex-start',
+        flexWrap: 'wrap',
+        justifyContent: anchor.side === 'right' ? 'flex-end' : 'flex-start',
         gap: 36,
+        rowGap: 10,
+        width: anchor.width || undefined,
+        maxWidth: navRef.current ? navRef.current.getBoundingClientRect().width : undefined,
         pointerEvents: isShowing ? 'auto' : 'none',
       }}>
       {items.map((item, i) => {
@@ -415,8 +403,6 @@ function Submenu({ items, isShowing, navRef, headerRef, cellLeft, onMouseEnter, 
           <a key={item}
             style={{
               cursor: 'pointer', textDecoration: 'none',
-              WebkitTextDecorationLine: 'none',
-              textDecorationLine: 'none',
               fontFamily: 'var(--font-body)',
               fontSize: 12, fontWeight: 500,
               letterSpacing: '0.18em', textTransform: 'uppercase',

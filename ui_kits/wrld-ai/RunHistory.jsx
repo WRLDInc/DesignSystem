@@ -1,4 +1,4 @@
-function RunHistory({ runs }) {
+export function RunHistory({ runs }) {
   const statusBg = {
     success: { bg: '#ecfdf5', fg: '#065f46', dot: 'var(--status-success)' },
     running: { bg: 'var(--bg-muted)', fg: 'var(--fg)', dot: 'var(--accent-secondary)' },

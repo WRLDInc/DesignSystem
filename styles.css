@@ -1,0 +1,14 @@
+/* ============================================================
+   WRLD Design System — global entry stylesheet
+   Consumers link this ONE file; it pulls in the full foundation.
+
+     <link rel="stylesheet" href="styles.css">
+
+   Order matters: the full token suite loads first (radii, shadows,
+   motion, z-index, breakpoints), then colors_and_type.css layers the
+   @font-face declarations, color/type re-declarations, and semantic
+   element styles (h1–h6, p, code, .eyebrow, …) on top.
+   ============================================================ */
+
+@import url('./tokens/tokens.css');
+@import url('./colors_and_type.css');

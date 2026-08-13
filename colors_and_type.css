@@ -83,18 +83,18 @@
 
   /* Interactive accents (hover / focus / motion only — never static fills) */
   --accent-primary:       #007fee; /* WRLD blue — default hover/focus */
-  --accent-primary-rgb:   0 127 238;
+  --accent-primary-rgb:   0 127 238; /* @kind color */
   --accent-secondary:     #00adee; /* sky blue — gradient companion */
-  --accent-secondary-rgb: 0 173 238;
+  --accent-secondary-rgb: 0 173 238; /* @kind color */
   --accent-warm:          #EE9300; /* orange — commerce/sales CTA */
-  --accent-warm-rgb:      238 147 0;
+  --accent-warm-rgb:      238 147 0; /* @kind color */
 
   --accent-gradient: linear-gradient(
     90deg,
     var(--accent-primary) 0%,
     var(--accent-secondary) 50%,
     var(--accent-warm) 100%
-  );
+  ); /* @kind color */
 
   /* Status (system semantic, not brand) */
   --status-success: #10b981;
@@ -104,39 +104,39 @@
 
   /* Type families */
   --font-display: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
-  --font-body:    'Ubuntu', 'Inter', system-ui, -apple-system, sans-serif;
-  --font-mono:    'Ubuntu Mono', 'JetBrains Mono', 'Fira Code', ui-monospace, Menlo, monospace;
+  --font-body:    'Ubuntu', system-ui, -apple-system, sans-serif;
+  --font-mono:    'Ubuntu Mono', ui-monospace, Menlo, monospace;
 
   /* Type scale */
-  --fs-display-xl: clamp(3rem, 2rem + 4vw, 6rem);     /* 48 → 96 */
-  --fs-display-lg: clamp(2.25rem, 1.5rem + 3vw, 4.25rem); /* 36 → 68 */
-  --fs-display-md: clamp(1.75rem, 1.25rem + 2vw, 3rem);   /* 28 → 48 */
-  --fs-h1: 2.5rem;     /* 40 */
-  --fs-h2: 2rem;       /* 32 */
-  --fs-h3: 1.5rem;     /* 24 */
-  --fs-h4: 1.25rem;    /* 20 */
-  --fs-h5: 1.125rem;   /* 18 */
-  --fs-h6: 1rem;       /* 16 */
-  --fs-body-lg: 1.125rem; /* 18 */
-  --fs-body:    1rem;     /* 16 */
-  --fs-body-sm: 0.875rem; /* 14 */
-  --fs-caption: 0.75rem;  /* 12 */
+  --fs-display-xl: clamp(3rem, 2rem + 4vw, 6rem); /* @kind other */     /* 48 → 96 */
+  --fs-display-lg: clamp(2.25rem, 1.5rem + 3vw, 4.25rem); /* @kind other */ /* 36 → 68 */
+  --fs-display-md: clamp(1.75rem, 1.25rem + 2vw, 3rem); /* @kind other */   /* 28 → 48 */
+  --fs-h1: 2.5rem; /* @kind font */     /* 40 */
+  --fs-h2: 2rem; /* @kind font */       /* 32 */
+  --fs-h3: 1.5rem; /* @kind font */     /* 24 */
+  --fs-h4: 1.25rem; /* @kind font */    /* 20 */
+  --fs-h5: 1.125rem; /* @kind font */   /* 18 */
+  --fs-h6: 1rem; /* @kind font */       /* 16 */
+  --fs-body-lg: 1.125rem; /* @kind font */ /* 18 */
+  --fs-body:    1rem; /* @kind font */     /* 16 */
+  --fs-body-sm: 0.875rem; /* @kind font */ /* 14 */
+  --fs-caption: 0.75rem; /* @kind font */  /* 12 */
 
-  --fw-light:    300;
-  --fw-regular:  400;
-  --fw-medium:   500;
-  --fw-semibold: 600;
-  --fw-bold:     700;
+  --fw-light:    300; /* @kind font */
+  --fw-regular:  400; /* @kind font */
+  --fw-medium:   500; /* @kind font */
+  --fw-semibold: 600; /* @kind font */
+  --fw-bold:     700; /* @kind font */
 
-  --lh-display: 1.05;
-  --lh-heading: 1.2;
-  --lh-body:    1.6;
-  --lh-ui:      1.4;
+  --lh-display: 1.05; /* @kind font */
+  --lh-heading: 1.2; /* @kind font */
+  --lh-body:    1.6; /* @kind font */
+  --lh-ui:      1.4; /* @kind font */
 
-  --ls-display: -0.02em;
-  --ls-body:     0;
-  --ls-eyebrow:  0.12em;  /* uppercase WRLD-as-type, eyebrow labels */
-  --ls-caps-xl:  0.28em;  /* tall, spaced WRLD wordmark treatment */
+  --ls-display: -0.02em; /* @kind font */
+  --ls-body:     0; /* @kind font */
+  --ls-eyebrow:  0.12em; /* @kind font */  /* uppercase WRLD-as-type, eyebrow labels */
+  --ls-caps-xl:  0.28em; /* @kind font */  /* tall, spaced WRLD wordmark treatment */
 }
 
 /* -------- Semantic surfaces — light (default) -------- */

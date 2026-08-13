@@ -2,7 +2,7 @@
 // `sub` can be a string (always shown) or null/undefined (hidden).
 // `animated` (boolean): when true, sub-label fades + wordmark nudges up smoothly when sub is set.
 //   Use `animated` for nav lockups that morph on hover. Static lockups (footer, sub-cards) leave it off.
-function Lockup({ sub, theme = 'dark', size = 24, animated = false, style }) {
+export function Lockup({ sub, theme = 'dark', size = 24, animated = false, style }) {
   const markSrc = theme === 'light'
     ? '../../assets/logos/wrld-mark-white.png'
     : '../../assets/logos/wrld-mark-black.png';

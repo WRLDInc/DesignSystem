@@ -1,4 +1,4 @@
-function StatCard({ label, value, delta, deltaPositive }) {
+export function StatCard({ label, value, delta, deltaPositive }) {
   return (
     <div style={{ border: '1px solid var(--border)', borderRadius: 8, padding: 20, background: 'var(--bg-elevated)' }}>
       <div className="eyebrow" style={{ fontFamily: 'var(--font-body)', fontSize: 11, fontWeight: 500, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--fg-muted)', marginBottom: 10 }}>{label}</div>

@@ -1,4 +1,4 @@
-function Hero() {
+export function Hero() {
   return (
     <section style={{ padding: '120px 32px 80px', maxWidth: 1280, margin: '0 auto' }}>
       <Eyebrow>WRLD · Tech · Design · Support</Eyebrow>

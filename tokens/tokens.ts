@@ -43,9 +43,9 @@ export const status = {
 
 export const font = {
   display:   "Montserrat, 'Helvetica Neue', Arial, sans-serif",
-  body:      'Ubuntu, Inter, system-ui, sans-serif',
-  bodyAlt:   'Inter, Ubuntu, system-ui, sans-serif',
-  mono:      "'JetBrains Mono', 'Fira Code', ui-monospace, monospace",
+  body:      'Ubuntu, system-ui, sans-serif',
+  bodyAlt:   'Ubuntu, system-ui, sans-serif',
+  mono:      "'Ubuntu Mono', ui-monospace, monospace",
 } as const;
 
 export const weight = {

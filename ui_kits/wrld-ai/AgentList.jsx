@@ -29,7 +29,7 @@ function AgentRow({ agent, active, onSelect }) {
   );
 }
 
-function AgentList({ agents, activeId, onSelect }) {
+export function AgentList({ agents, activeId, onSelect }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
       {agents.map(a => <AgentRow key={a.id} agent={a} active={activeId === a.id} onSelect={onSelect} />)}
