@@ -1,0 +1,7 @@
+# wrld.design — WRLD design system
+# Public reference material; crawling is welcome.
+
+User-agent: *
+Allow: /
+
+Sitemap: https://wrld.design/sitemap.xml

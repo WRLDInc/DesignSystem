@@ -38,9 +38,16 @@
   ],
   "scripts": {
     "styleguide": "python3 -m http.server 4747 --directory styleguide",
+    "build": "node scripts/build_site.mjs",
     "build:favicons": "python3 scripts/render_logo_pngs.py",
+    "serve": "python3 -m http.server 4748 --directory dist",
+    "dev": "npm run build && npx wrangler dev",
+    "deploy": "npm run build && npx wrangler deploy",
     "lint:tokens": "node scripts/validate_tokens.mjs",
-    "check": "npm run lint:tokens"
+    "check": "npm run lint:tokens && npm run build"
+  },
+  "devDependencies": {
+    "wrangler": "4.123.0"
   },
   "engines": {
     "node": ">=18"

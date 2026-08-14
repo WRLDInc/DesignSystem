@@ -1,0 +1,127 @@
+# =============================================================================
+# wrld.design — response headers
+#
+# Consumed by Cloudflare Workers static assets. This file is configuration,
+# not content: it is never served at a public URL. Copied verbatim into
+# dist/ by scripts/build_site.mjs.
+#
+# Limits: 100 rules, 2,000 characters per line. Later matching rules layer
+# onto earlier ones. Keep this file well inside those bounds.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Baseline, every path.
+#
+# CORS is open by design. wrld.design is an asset host: other WRLD origins
+# (wrld.tech, wrld.host, wrld.one, …) load tokens.css, the self-hosted
+# typefaces, and logo SVGs from here, and @font-face requires CORS even for
+# same-organisation origins. An assets-only Worker cannot vary the origin
+# per request — _headers supports only "*", "null", or one exact literal
+# origin, with no wildcard patterns — and everything served here is public,
+# read-only, unauthenticated reference material. So "*" is the correct
+# answer rather than a shortcut. Narrowing to an allowlist later would mean
+# giving this Worker a real script entrypoint, and billable requests.
+#
+# Deliberately NOT set:
+#   Content-Security-Policy — the styleguide and UI kits load React and
+#     Babel-standalone from unpkg.com and run inline/eval'd scripts, so any
+#     workable policy would need 'unsafe-inline' and 'unsafe-eval' and would
+#     buy essentially nothing. Self-hosting those dependencies (see the
+#     follow-up note in docs/CLOUDFLARE_DEPLOY.md) is the prerequisite for a
+#     CSP that actually means something.
+#   X-Frame-Options / frame-ancestors — the preview cards are designed to be
+#     embedded in design tools and documentation. There is no authenticated
+#     surface here and no state-changing action, so framing carries no
+#     clickjacking risk worth breaking that use case for.
+# -----------------------------------------------------------------------------
+/*
+  Access-Control-Allow-Origin: *
+  Access-Control-Allow-Methods: GET, HEAD, OPTIONS
+  Access-Control-Max-Age: 86400
+  Timing-Allow-Origin: *
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+  Strict-Transport-Security: max-age=31536000
+
+# -----------------------------------------------------------------------------
+# Typefaces — immutable for a year.
+#
+# These filenames encode family and weight and have never been revised in
+# place. That makes a year of immutable caching the right trade for a 688 KB
+# variable font. It is also a commitment: because "immutable" tells browsers
+# never to revalidate, replacing a typeface means shipping a NEW filename,
+# not overwriting an existing one.
+# -----------------------------------------------------------------------------
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/fonts/*.ttf
+  Content-Type: font/ttf
+
+# -----------------------------------------------------------------------------
+# Brand artwork — a day fresh, then served stale while revalidating.
+#
+# Shorter than the fonts because logos genuinely do get corrected in place,
+# and a consumer hotlinking a mark should pick that up without a rename.
+# -----------------------------------------------------------------------------
+/assets/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+/logos/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+# -----------------------------------------------------------------------------
+# Tokens and stylesheets — the contract other sites depend on.
+#
+# These are the files production WRLD pages link directly. Correct
+# propagation matters more here than saving a request: an hour of freshness
+# with a day of stale-while-revalidate means a token fix reaches every
+# consuming site within the hour, without any visitor ever blocking on a
+# revalidation round trip. Do not lengthen this to match /fonts/.
+# -----------------------------------------------------------------------------
+/styles.css
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+
+/colors_and_type.css
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+
+/tokens/*
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+
+/_ds_bundle.js
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+
+# -----------------------------------------------------------------------------
+# Documents — always revalidate.
+#
+# Cloudflare's default for assets is already
+# "public, max-age=0, must-revalidate" and it adds an ETag, so these
+# revalidate cheaply as 304s. Stated explicitly so that edits to the
+# styleguide, the previews, or a brand brief are visible immediately rather
+# than depending on a default staying put.
+# -----------------------------------------------------------------------------
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+/*.md
+  Cache-Control: public, max-age=0, must-revalidate
+  Content-Type: text/plain; charset=utf-8
+
+# -----------------------------------------------------------------------------
+# TypeScript sources — override a genuinely wrong Content-Type.
+#
+# Left alone, Cloudflare serves .ts as "video/mp2t" — the IANA registration
+# for an MPEG transport stream, which is what ".ts" officially means. That is
+# not a cosmetic problem here: tokens/tokens.ts is a published entry point
+# (see the "exports" map in package.json), so a browser would offer it as a
+# video download, and combined with the nosniff header above, any attempt to
+# import it as a module would be blocked outright.
+#
+# There is no registered MIME type for TypeScript. text/plain is the honest
+# choice: these files are published as readable source, and it makes them
+# display in a browser instead of downloading.
+# -----------------------------------------------------------------------------
+/*.ts
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
