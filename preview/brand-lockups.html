@@ -2,10 +2,17 @@
 <!-- @dsCard group="Brand" name="Logo lockups" subtitle="per-sub-brand SVG lockups" viewport="700x260" -->
 <html data-theme="light">
 <head>
-<meta charset="utf-8">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="_shared.css">
 <style>
-  .lockup-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  /* auto-fit keeps the intended three-up on a wide card but reflows to two
+     or one on narrow viewports. A hard `1fr 1fr 1fr` forced the page to
+     714px and scrolled the body sideways on every phone. */
+  .lockup-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr));
+    gap: 12px;
+  }
   .lockup {
     background: #fff; border: 1px solid #e4e4e7; border-radius: 8px;
     padding: 14px 16px; display: flex; align-items: center; gap: 2px; height: 72px;
@@ -14,6 +21,12 @@
   .lockup .text {
     flex: 1; min-width: 0; display: flex; flex-direction: column;
     line-height: 1; padding-right: 4.2em;
+  }
+  /* That padding is optical spacing for the wide layout, but it cannot
+     shrink, so it adds ~92px of unshrinkable width per cell. Drop it once
+     cells get narrow. */
+  @media (max-width: 720px) {
+    .lockup .text { padding-right: 0; }
   }
   .lockup .wordmark {
     font-family: 'Montserrat', sans-serif; font-weight: 700;
