@@ -265,10 +265,29 @@ WRLD.Tech Design System/
 │   ├── favicons/                     ← favicon-32, favicon-180
 │   └── *.png                         ← uploaded PNG references
 ├── preview/                          ← Design System tab cards (one HTML file each)
-└── ui_kits/
-    ├── wrld-tech/                    ← flagship marketing site UI kit
-    └── wrld-ai/                      ← AI product / dashboard UI kit
+├── ui_kits/
+│   ├── wrld-tech/                    ← flagship marketing site UI kit
+│   └── wrld-ai/                      ← AI product / dashboard UI kit
+├── wrangler.jsonc                    ← Cloudflare Worker config for wrld.design
+├── deploy/                           ← web-root overlay: landing page, 404, _headers, robots
+├── scripts/build_site.mjs            ← assembles the published dist/ (allowlist + link check)
+└── docs/CLOUDFLARE_DEPLOY.md         ← how wrld.design is built and deployed
 ```
+
+## Published at wrld.design
+
+This repo is deployed to <https://wrld.design> on Cloudflare Workers with
+Static Assets, built by Workers Builds on every push to `main`. Consumers
+link the token files directly from that origin (CORS is open):
+
+```html
+<link rel="stylesheet" href="https://wrld.design/styles.css">
+```
+
+`npm run build` assembles the publishable subset into `dist/` and fails if
+any published file references an asset that didn't make it. `npm run serve`
+previews the result. Full setup, the exact dashboard build settings, and the
+runbook are in [`docs/CLOUDFLARE_DEPLOY.md`](docs/CLOUDFLARE_DEPLOY.md).
 
 ## Components
 

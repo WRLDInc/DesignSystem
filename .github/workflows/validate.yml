@@ -17,6 +17,21 @@ jobs:
       - name: Validate design tokens are in sync
         run: node scripts/validate_tokens.mjs
 
+  site:
+    name: Build the wrld.design site
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      # scripts/build_site.mjs uses Node built-ins only, so there is nothing
+      # to install. It fails if a published file references an asset the
+      # allowlist did not copy, which is what makes this a useful gate:
+      # editing PUBLISH or moving an asset can't silently break the site.
+      - name: Assemble dist/ and verify every reference resolves
+        run: node scripts/build_site.mjs
+
   logos:
     runs-on: ubuntu-latest
     steps:

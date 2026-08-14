@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Not found · WRLD design system</title>
+<meta name="robots" content="noindex" />
+<meta name="color-scheme" content="light dark" />
+<link rel="icon" href="/logos/favicons/favicon.ico" sizes="any" />
+<link rel="stylesheet" href="/styles.css" />
+<style>
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    display: grid;
+    place-items: center;
+    background: var(--wrld-bg);
+    color: var(--wrld-fg);
+    font-family: var(--wrld-font-body);
+    padding: var(--wrld-space-6);
+  }
+  .panel { max-width: 46ch; text-align: left; }
+  .code {
+    font-family: var(--wrld-font-mono);
+    font-size: var(--wrld-fs-caption);
+    text-transform: uppercase;
+    letter-spacing: var(--wrld-ls-eyebrow);
+    color: var(--wrld-fg-subtle);
+    margin: 0 0 var(--wrld-space-3);
+  }
+  h1 {
+    font-family: var(--wrld-font-display);
+    font-size: var(--wrld-fs-h2);
+    line-height: var(--wrld-lh-heading);
+    margin: 0 0 var(--wrld-space-4);
+  }
+  p { color: var(--wrld-fg-muted); margin: 0 0 var(--wrld-space-6); }
+  a.back {
+    font-family: var(--wrld-font-mono);
+    font-size: var(--wrld-fs-body-sm);
+    color: var(--wrld-fg);
+    text-decoration: none;
+    border-bottom: 1px solid var(--wrld-border);
+    padding-bottom: 2px;
+    transition: color 120ms ease, border-color 120ms ease;
+  }
+  a.back:hover { color: var(--wrld-accent-primary); border-bottom-color: var(--wrld-accent-primary); }
+  a.back:focus-visible { outline: 2px solid var(--wrld-accent-primary); outline-offset: 3px; }
+</style>
+</head>
+<body>
+  <div class="panel">
+    <p class="code">404</p>
+    <h1>That page isn't part of the system.</h1>
+    <p>
+      The path you asked for doesn't exist here. Token files, logos, and previews all
+      live off the index — start there and you'll find what you need.
+    </p>
+    <a class="back" href="/">Back to the design system &rarr;</a>
+  </div>
+</body>
+</html>

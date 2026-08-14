@@ -1,0 +1,106 @@
+{
+  // ---------------------------------------------------------------------------
+  // wrld.design — the WRLD design system, served from Cloudflare Workers
+  // with Static Assets.
+  //
+  // Deployed by Cloudflare Workers Builds (Git integration) from
+  // WRLDInc/DesignSystem. See docs/CLOUDFLARE_DEPLOY.md for the exact
+  // dashboard fields, the custom-domain checklist, and the runbook.
+  //
+  // `name` MUST stay identical to the Worker name in the Cloudflare
+  // dashboard — `wrangler deploy` resolves its target script from this
+  // field. "wrlddesign" is the Worker the dashboard's "Import a repository"
+  // flow actually created, so this matches it exactly.
+  //
+  // Do not "tidy" this to wrld-design-system or wrld-design. Workers Builds
+  // papers over a mismatch in CI by overriding the name via
+  // WRANGLER_CI_OVERRIDE_NAME, so a wrong value here still builds green —
+  // but `npm run deploy` from a laptop would then create a SECOND Worker
+  // under the wrong name and, because the routes block below claims
+  // wrld.design as a Custom Domain, move the live domain onto it. Renaming
+  // a Cloudflare Worker is not possible in place; if this ever needs a
+  // different name, create the new Worker, reconnect the repo, and move the
+  // domain deliberately.
+  // ---------------------------------------------------------------------------
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "wrlddesign",
+  "compatibility_date": "2026-08-14",
+
+  // ---------------------------------------------------------------------------
+  // Static assets.
+  //
+  // This is an ASSETS-ONLY Worker: there is deliberately no "main"
+  // entrypoint, so every request is served from Cloudflare's asset layer
+  // and none of them are billable Worker invocations. Consequences of that
+  // choice, on purpose:
+  //   - No `assets.binding` (only valid alongside a "main" script).
+  //   - CORS must be static (see deploy/_headers). Per-origin allow-listing
+  //     would require a real Worker script.
+  //
+  // "directory" points at the assembled ./dist, NOT the repo root. That is
+  // load-bearing for security, not just tidiness: Workers — unlike Pages —
+  // does not auto-exclude .git, so a root deploy would publish the entire
+  // git history at https://wrld.design/.git/. Building into ./dist makes
+  // that structurally impossible and keeps working files, lint config, and
+  // CI workflows off the public site. See scripts/build_site.mjs.
+  // ---------------------------------------------------------------------------
+  "assets": {
+    "directory": "./dist",
+
+    // Default, stated explicitly because the whole site depends on it:
+    // /styleguide/ resolves to styleguide/index.html. With "none", only the
+    // literal /styleguide/index.html would 200 and every directory link
+    // on the site would break.
+    "html_handling": "auto-trailing-slash",
+
+    // Serves deploy/404.html for unmatched paths.
+    //
+    // NOT "single-page-application" — that would be actively harmful here.
+    // This origin is consumed cross-origin for tokens.css, fonts, and logo
+    // SVGs; SPA mode answers a missing asset with HTTP 200 and an HTML body,
+    // so a consuming site's <link rel="stylesheet"> would silently swallow
+    // the failure instead of erroring.
+    "not_found_handling": "404-page"
+  },
+
+  // ---------------------------------------------------------------------------
+  // Domains.
+  //
+  // One canonical origin. workers_dev is off so the design system is not
+  // also reachable at wrlddesign.<subdomain>.workers.dev — a second public
+  // origin for URL-referenced token files invites consumers to pin the wrong
+  // one, and splits SEO.
+  //
+  // preview_urls stays on so non-production branch builds remain
+  // reviewable. Cloudflare defaults preview_urls to follow workers_dev, so
+  // this pairing is set explicitly rather than relied upon — confirm the
+  // first non-production build actually returns a preview URL.
+  //
+  // www.wrld.design is intentionally NOT a second custom domain; serving
+  // the same tree on two hostnames is duplicate content. Send www to the
+  // apex with a Cloudflare Redirect Rule instead — CLOUDFLARE_DEPLOY.md
+  // has the exact rule. (_redirects cannot do it: it matches on path, not
+  // hostname.)
+  //
+  // NOTE: routes here overwrite whatever is configured in the dashboard on
+  // every deploy. This file is the owner of the domain binding — do not
+  // also manage it by hand in the UI.
+  // ---------------------------------------------------------------------------
+  "workers_dev": false,
+  "preview_urls": true,
+  "routes": [
+    {
+      "pattern": "wrld.design",
+      "custom_domain": true
+    }
+  ],
+
+  // ---------------------------------------------------------------------------
+  // Observability — matches the convention set by the sibling wrld.tech
+  // Worker so deploys and errors are traceable in one place.
+  // ---------------------------------------------------------------------------
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  }
+}

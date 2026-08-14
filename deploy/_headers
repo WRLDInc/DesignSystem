@@ -1,0 +1,242 @@
+# =============================================================================
+# wrld.design — response headers
+#
+# Consumed by Cloudflare Workers static assets. This file is CONFIGURATION,
+# not content: it is never served at a public URL (verified — GET /_headers
+# returns 404). Copied verbatim into dist/ by scripts/build_site.mjs.
+#
+# Limits: 100 rules, 2,000 characters per line.
+#
+# THE RULE THAT BITES — read this before editing.
+# There is no "most specific wins". EVERY matching rule applies, and when two
+# matching rules set the SAME header name, the values are APPENDED with a
+# comma rather than replaced. An earlier revision of this file set
+# Cache-Control in both `/tokens/*` and `/*.ts`, and because
+# tokens/tokens.ts matches both it was served with:
+#
+#   Cache-Control: public, max-age=3600, stale-while-revalidate=86400, public, max-age=3600, stale-while-revalidate=86400
+#
+# — a malformed header on a URL that other WRLD sites treat as a contract.
+#
+# So the invariant below is deliberate: every Cache-Control rule matches a
+# DISJOINT set of paths, and where rules do overlap on path they set disjoint
+# header NAMES (the Content-Type block sets no Cache-Control, and vice
+# versa). If you ever genuinely need two rules to set the same header, unset
+# it first in the narrower rule with `! Header-Name` — bang plus a MANDATORY
+# space; `!Header` has no colon and silently discards the whole rule.
+#
+# Also: only one `*` per rule path, a value line must never start with `/`
+# (the parser reads that as a new rule path), query strings cannot be
+# matched, and redirects are evaluated before headers.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Baseline, every path.
+#
+# CORS is open by design. wrld.design is an asset host: other WRLD origins
+# load tokens.css, the self-hosted typefaces, and logo SVGs from here, and
+# @font-face fetches are ALWAYS CORS-mode — a .ttf served without
+# Access-Control-Allow-Origin will not render even between our own
+# properties. An assets-only Worker cannot vary the value per request:
+# _headers supports only `*`, `null`, or one exact literal origin, with no
+# wildcard patterns. Everything served here is public, read-only,
+# unauthenticated reference material, and `*` additionally forbids
+# credentialed requests — so it is the correct answer, not a shortcut.
+# Narrowing to an allowlist later means giving this Worker a script
+# entrypoint, and billable requests.
+#
+# Cross-Origin-Resource-Policy is required by consumers whose pages are
+# cross-origin isolated (COEP: require-corp); without it those pages cannot
+# load these fonts or logos at all.
+#
+# Access-Control-Allow-Methods and Access-Control-Max-Age are deliberately
+# ABSENT. Verified: the asset layer answers OPTIONS with 405 Method Not
+# Allowed even when they are declared, so a CORS preflight can never succeed
+# here and advertising methods would be fiction. Every real consumer request
+# — a stylesheet, a font, an <img>, a fetch() without custom headers — is a
+# simple request that never preflights.
+#
+# Deliberately NOT set:
+#   Content-Security-Policy — the styleguide and UI kits load React and
+#     Babel-standalone from unpkg.com and evaluate inline JSX, so any
+#     workable policy needs both 'unsafe-inline' and 'unsafe-eval' and blocks
+#     no realistic attack. Self-hosting those is the prerequisite for a CSP
+#     worth having.
+#   X-Frame-Options / frame-ancestors — the previews are designed to be
+#     embedded in Craft docs and design tools. Nothing here is authenticated
+#     and nothing changes state, so framing carries no clickjacking risk
+#     worth breaking that for.
+# -----------------------------------------------------------------------------
+/*
+  Access-Control-Allow-Origin: *
+  Cross-Origin-Resource-Policy: cross-origin
+  Timing-Allow-Origin: *
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+  Strict-Transport-Security: max-age=31536000
+
+# -----------------------------------------------------------------------------
+# Typefaces — immutable for a year, listed by EXACT filename.
+#
+# Enumerated rather than globbed as /fonts/*, deliberately. Header rules are
+# applied to 404 responses too, so a /fonts/* immutable rule poisons browser
+# caches with year-long, never-revalidated 404s: verified that
+# GET /fonts/DoesNotExist-Bold.ttf under a glob returned
+#   404 + Cache-Control: public, max-age=31536000, immutable
+# meaning a client that ever requests a wrong font path would cache that
+# failure for a year, and adding the file later would not fix it for them.
+# Add a line here only when the file actually exists.
+#
+# `immutable` tells browsers never to revalidate. That is a versioning
+# commitment: replacing a typeface means shipping a NEW filename, never
+# overwriting one in place.
+#
+# No Content-Type override — verified .ttf is served natively as font/ttf,
+# so an override would be redundant, and under a glob it also mislabelled
+# the 404 HTML body as a font while nosniff was set.
+# -----------------------------------------------------------------------------
+/fonts/Montserrat-VariableFont_wght.ttf
+  Cache-Control: public, max-age=31536000, immutable
+
+/fonts/Ubuntu-Light.ttf
+  Cache-Control: public, max-age=31536000, immutable
+
+/fonts/Ubuntu-Regular.ttf
+  Cache-Control: public, max-age=31536000, immutable
+
+/fonts/Ubuntu-Medium.ttf
+  Cache-Control: public, max-age=31536000, immutable
+
+/fonts/Ubuntu-Bold.ttf
+  Cache-Control: public, max-age=31536000, immutable
+
+/fonts/UbuntuMono-Regular.ttf
+  Cache-Control: public, max-age=31536000, immutable
+
+/fonts/UbuntuMono-Bold.ttf
+  Cache-Control: public, max-age=31536000, immutable
+
+# -----------------------------------------------------------------------------
+# Brand artwork — a day fresh, then served stale while revalidating.
+#
+# Shorter than the fonts because marks genuinely do get corrected in place,
+# and a consumer hotlinking one should pick that up without a rename.
+# stale-while-revalidate is honoured by Chromium and by Cloudflare's cache;
+# other browsers simply revalidate, which is cheap thanks to the ETag.
+# -----------------------------------------------------------------------------
+/assets/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+/logos/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+# -----------------------------------------------------------------------------
+# Tokens and stylesheets — the contract other sites depend on.
+#
+# These are the files production WRLD pages link directly, and they are not
+# fingerprinted, so correct propagation matters more than saving a request.
+# An hour of freshness with a day of stale-while-revalidate means a token fix
+# reaches every consuming site within the hour without any visitor blocking
+# on a revalidation round trip. Do not lengthen this to match /fonts/. If a
+# consumer ever needs year-long immutable caching, publish a versioned path
+# (/v1/tokens/tokens.css) and give that path its own rule.
+#
+# /tokens/* sets ONLY Cache-Control. tokens/tokens.ts also matches /*.ts
+# below, which sets only Content-Type — disjoint header names, so nothing
+# appends. Keep it that way.
+# -----------------------------------------------------------------------------
+/styles.css
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+
+/colors_and_type.css
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+
+/tokens/*
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+
+/_ds_bundle.js
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+
+/_ds_manifest.json
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+
+# -----------------------------------------------------------------------------
+# Content-Type corrections. No rule here sets Cache-Control, so none of them
+# can collide with the blocks above.
+#
+# Left alone, Cloudflare derives Content-Type from the file extension and
+# gets these wrong for source that is published to be READ:
+#   .ts    -> video/mp2t. Verified. That is the correct registration for the
+#            extension (MPEG transport stream) and useless here. It hits
+#            tokens/tokens.ts — a published entry point in package.json
+#            "exports" — and every .d.ts under ui_kits/. A browser would
+#            offer them as video downloads.
+#   .jsx   -> text/jsx. Verified. Browsers download rather than display.
+#   .md    -> text/markdown. Same.
+#   LICENSE and any extensionless file -> no Content-Type at all. Verified.
+#
+# There is no registered MIME type for TypeScript; text/plain is the honest
+# choice and makes these display in a browser. Note the one-way door: with
+# nosniff set, a text/plain file can never be loaded as an executable module
+# script. If a .jsx or .ts here ever needs to be a real <script type="module">
+# it needs a JavaScript MIME type instead. Nothing does today — the
+# styleguide's .jsx is fetched by Babel, not by the browser's script loader.
+# -----------------------------------------------------------------------------
+/*.ts
+  Content-Type: text/plain; charset=utf-8
+
+/*.jsx
+  Content-Type: text/plain; charset=utf-8
+
+/*.md
+  Content-Type: text/plain; charset=utf-8
+
+/LICENSE
+  Content-Type: text/plain; charset=utf-8
+
+# -----------------------------------------------------------------------------
+# Neutralise script inside SVG on direct navigation. An SVG rendered through
+# <img> or CSS cannot execute script, but one opened at its own URL is a
+# document and can. These are our own marks, so this is belt and braces — and
+# it costs nothing.
+#
+# If a site-wide Content-Security-Policy is ever added to the /* block above,
+# add `! Content-Security-Policy` as the first line of this rule, or SVGs
+# will receive both policies comma-joined.
+# -----------------------------------------------------------------------------
+/*.svg
+  Content-Security-Policy: default-src 'none'; style-src 'unsafe-inline'; sandbox
+
+# -----------------------------------------------------------------------------
+# Note on HTML and Markdown caching: no explicit Cache-Control rule. Verified
+# that Cloudflare's default for assets is already
+# "public, max-age=0, must-revalidate" plus an ETag, which is exactly what
+# these documents want. An earlier revision stated it explicitly, but the
+# rule was inert twice over — the value was byte-identical to the default,
+# and a `/*.html` pattern does not match the site's real entry points anyway,
+# since `/` and `/styleguide/` are directory URLs with no `.html` in the path.
+# -----------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------
+# Keep build preview hostnames out of search results.
+#
+# wrld.design is the only canonical origin, but preview_urls is enabled in
+# wrangler.jsonc, so <version>-wrlddesign.<subdomain>.workers.dev is
+# publicly reachable and would otherwise be indexable — duplicate content
+# against the canonical site.
+#
+# Verified locally that this rule parses AND that it does not leak onto
+# non-workers.dev hosts: X-Robots-Tag is absent from /, /styleguide/, and
+# /tokens/tokens.css, including when the request carries a
+# `Host: wrld.design` header. That containment is the important half — a
+# stray noindex on the apex would deindex the real site.
+#
+# The half that CANNOT be verified without a real preview deploy is whether
+# it actually fires on a live *.workers.dev preview URL. Check that on the
+# first non-production build (see docs/CLOUDFLARE_DEPLOY.md §4). If it does
+# not fire, the fallback is setting preview_urls to false and giving up
+# per-branch review URLs.
+# -----------------------------------------------------------------------------
+https://:version.:subdomain.workers.dev/*
+  X-Robots-Tag: noindex

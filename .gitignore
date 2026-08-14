@@ -33,3 +33,7 @@ desktop.ini
 # Temp
 tmp/
 .cache/
+
+# Wrangler local state (dev server cache, local KV/DO, build tmp).
+# The deployable output is dist/, already ignored above.
+.wrangler/
