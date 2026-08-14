@@ -37,6 +37,8 @@
     "LICENSE"
   ],
   "scripts": {
+    "dev": "npx wrangler@4 dev",
+    "deploy": "npx wrangler@4 deploy",
     "styleguide": "python3 -m http.server 4747 --directory styleguide",
     "build:favicons": "python3 scripts/render_logo_pngs.py",
     "lint:tokens": "node scripts/validate_tokens.mjs",

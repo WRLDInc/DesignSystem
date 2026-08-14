@@ -1,0 +1,14 @@
+// Cloudflare Workers config — serves this repository as a static site.
+// Deploys to https://wrlddesign.wrldtech.workers.dev (eventual custom domain: wrld.design).
+// The repo itself IS the site: tokens, briefs, previews, and the styleguide are
+// all fetchable at stable URLs, which keeps the system LLM- and tool-friendly.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "wrlddesign",
+  "compatibility_date": "2025-08-01",
+  "assets": {
+    "directory": ".",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page"
+  }
+}

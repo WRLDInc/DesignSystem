@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>404 · WRLD Design System</title>
+  <meta name="robots" content="noindex" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/logos/favicons/favicon-32x32.png" />
+  <link rel="stylesheet" href="/tokens/tokens.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh; display: grid; place-items: center;
+      background: var(--wrld-bg); color: var(--wrld-fg);
+      font-family: var(--wrld-font-body); text-align: center; padding: var(--wrld-space-6);
+    }
+    h1 { font-family: var(--wrld-font-display); font-size: var(--wrld-fs-display-md); letter-spacing: var(--wrld-ls-display); margin: 0 0 var(--wrld-space-3); }
+    p { color: var(--wrld-fg-muted); margin: 0 0 var(--wrld-space-8); }
+    .code { font-family: var(--wrld-font-mono); font-size: var(--wrld-fs-caption); letter-spacing: var(--wrld-ls-eyebrow); text-transform: uppercase; color: var(--wrld-fg-subtle); margin-bottom: var(--wrld-space-3); }
+    a.btn {
+      display: inline-block; text-decoration: none; color: var(--wrld-fg);
+      border: var(--wrld-border-hairline) solid var(--wrld-border-strong); border-radius: var(--wrld-radius-md);
+      padding: var(--wrld-space-3) var(--wrld-space-5); font-size: var(--wrld-fs-body-sm); font-weight: var(--wrld-fw-medium);
+      transition: color var(--wrld-duration-default) var(--wrld-ease-standard), border-color var(--wrld-duration-default) var(--wrld-ease-standard);
+    }
+    a.btn:hover, a.btn:focus-visible { color: var(--wrld-accent-primary); border-color: var(--wrld-accent-primary); }
+    img { height: 40px; margin-bottom: var(--wrld-space-6); }
+  </style>
+</head>
+<body>
+  <main>
+    <img src="/logos/svg/wrld-mark-dark.svg" alt="WRLD" />
+    <p class="code">404 · off the mono scale</p>
+    <h1>Nothing on this surface.</h1>
+    <p>The page you're after isn't part of the system. Everything that is starts at the index.</p>
+    <a class="btn" href="/">Back to wrld.design</a>
+  </main>
+</body>
+</html>

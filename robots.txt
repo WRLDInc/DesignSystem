@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://wrlddesign.wrldtech.workers.dev/sitemap.xml

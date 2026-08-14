@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Preview Gallery · WRLD Design System</title>
+  <meta name="description" content="Live previews of the WRLD design system: color scales, type specimens, spacing, shadows, motion, brand lockups, and components — all rendered from the tokens." />
+  <link rel="icon" type="image/png" sizes="32x32" href="/logos/favicons/favicon-32x32.png" />
+  <link rel="stylesheet" href="/tokens/tokens.css" />
+  <style>
+    @font-face { font-family: 'Montserrat'; src: url('/fonts/Montserrat-VariableFont_wght.ttf') format('truetype-variations'); font-weight: 100 900; font-display: swap; }
+    @font-face { font-family: 'Ubuntu'; src: url('/fonts/Ubuntu-Regular.ttf') format('truetype'); font-weight: 400; font-display: swap; }
+    @font-face { font-family: 'Ubuntu'; src: url('/fonts/Ubuntu-Medium.ttf') format('truetype'); font-weight: 500; font-display: swap; }
+    @font-face { font-family: 'Ubuntu'; src: url('/fonts/Ubuntu-Bold.ttf') format('truetype'); font-weight: 700; font-display: swap; }
+    @font-face { font-family: 'Ubuntu Mono'; src: url('/fonts/UbuntuMono-Regular.ttf') format('truetype'); font-weight: 400; font-display: swap; }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      margin: 0; background: var(--wrld-bg); color: var(--wrld-fg);
+      font-family: var(--wrld-font-body); font-size: var(--wrld-fs-body); line-height: var(--wrld-lh-body);
+      -webkit-font-smoothing: antialiased;
+    }
+    h1, h2 { font-family: var(--wrld-font-display); letter-spacing: var(--wrld-ls-display); line-height: var(--wrld-lh-heading); }
+    a { color: inherit; }
+    .shell { max-width: 1160px; margin: 0 auto; padding: var(--wrld-space-12) var(--wrld-space-6) var(--wrld-space-20); }
+    .crumb { font-family: var(--wrld-font-mono); font-size: var(--wrld-fs-caption); color: var(--wrld-fg-subtle); text-transform: uppercase; letter-spacing: var(--wrld-ls-eyebrow); }
+    .crumb a { text-decoration: none; }
+    .crumb a:hover { color: var(--wrld-accent-primary); }
+    h1 { font-size: var(--wrld-fs-h1); margin: var(--wrld-space-3) 0 var(--wrld-space-2); }
+    p.sub { color: var(--wrld-fg-muted); max-width: 62ch; margin: 0 0 var(--wrld-space-12); }
+    h2 { font-size: var(--wrld-fs-h4); margin: var(--wrld-space-12) 0 var(--wrld-space-5); }
+    .grid { display: grid; gap: var(--wrld-space-4); grid-template-columns: repeat(auto-fill, minmax(255px, 1fr)); }
+    .tile {
+      display: block; text-decoration: none;
+      border: var(--wrld-border-hairline) solid var(--wrld-border);
+      border-radius: var(--wrld-radius-lg); overflow: hidden; background: var(--wrld-bg-elevated);
+      transition: border-color var(--wrld-duration-default) var(--wrld-ease-standard),
+                  box-shadow var(--wrld-duration-default) var(--wrld-ease-standard),
+                  transform var(--wrld-duration-default) var(--wrld-ease-standard);
+    }
+    .tile:hover, .tile:focus-visible { border-color: var(--wrld-accent-primary); box-shadow: var(--wrld-shadow-accent-primary); transform: translateY(-2px); }
+    .tile iframe {
+      width: 200%; height: 320px; border: 0; display: block;
+      transform: scale(0.5); transform-origin: top left; pointer-events: none;
+      background: var(--wrld-bg);
+    }
+    .tile .meta { padding: var(--wrld-space-3) var(--wrld-space-4); border-top: var(--wrld-border-hairline) solid var(--wrld-border); }
+    .tile .meta .name { font-weight: var(--wrld-fw-medium); font-size: var(--wrld-fs-body-sm); }
+    .tile .meta .path { font-family: var(--wrld-font-mono); font-size: var(--wrld-fs-caption); color: var(--wrld-fg-subtle); }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <p class="crumb"><a href="/">wrld.design</a> / preview</p>
+    <h1>Preview gallery</h1>
+    <p class="sub">Every card below is a standalone HTML page rendered live from the design tokens. Click any tile to open it full size.</p>
+
+    <h2>Color</h2>
+    <div class="grid" id="color"></div>
+
+    <h2>Typography</h2>
+    <div class="grid" id="type"></div>
+
+    <h2>Spacing, shadows &amp; motion</h2>
+    <div class="grid" id="spacing"></div>
+
+    <h2>Components</h2>
+    <div class="grid" id="components"></div>
+
+    <h2>Brand</h2>
+    <div class="grid" id="brand"></div>
+  </div>
+
+  <script>
+    var groups = {
+      color: ['colors-mono', 'colors-surfaces', 'colors-accents', 'colors-status'],
+      type: ['type-display', 'type-headings', 'type-body', 'type-mono', 'type-wordmark'],
+      spacing: ['spacing-scale', 'spacing-radii', 'spacing-shadows', 'spacing-shadows-accent', 'spacing-motion'],
+      components: ['components-buttons', 'components-cards', 'components-inputs', 'components-badges', 'components-nav'],
+      brand: ['brand-mark', 'brand-lockups', 'brand-lockups-dark', 'brand-icons', 'brand-voice']
+    };
+    Object.keys(groups).forEach(function (id) {
+      var grid = document.getElementById(id);
+      groups[id].forEach(function (slug) {
+        var a = document.createElement('a');
+        a.className = 'tile';
+        a.href = slug + '.html';
+        a.innerHTML =
+          '<iframe src="' + slug + '.html" title="' + slug + ' preview" loading="lazy" tabindex="-1"></iframe>' +
+          '<div class="meta"><div class="name">' + slug.replace(/-/g, ' ') + '</div>' +
+          '<div class="path">/preview/' + slug + '.html</div></div>';
+        grid.appendChild(a);
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+# Cloudflare Workers static asset headers.
+# Tokens, briefs, and machine-readable artifacts are meant to be consumed
+# cross-origin by client projects, build pipelines, and LLM tooling.
+
+/tokens/*
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=300
+
+/brand/*
+  Access-Control-Allow-Origin: *
+  Content-Type: text/markdown; charset=utf-8
+
+/fonts/*
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=31536000, immutable
+
+/logos/*
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=86400
+
+/llms.txt
+  Access-Control-Allow-Origin: *
+
+/_ds_manifest.json
+  Access-Control-Allow-Origin: *
+
+/_adherence.oxlintrc.json
+  Access-Control-Allow-Origin: *
+  Content-Type: application/json; charset=utf-8
+
+/_ds_bundle.js
+  Access-Control-Allow-Origin: *
+
+/README.md
+  Content-Type: text/markdown; charset=utf-8
+
+/*
+  X-Content-Type-Options: nosniff

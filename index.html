@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WRLD Design System — wrld.design</title>
+  <meta name="description" content="The canonical WRLD design system: tokens, typography, logos, components, and brand briefs. One monochromatic system behind every WRLD surface — and every client build." />
+  <meta property="og:title" content="WRLD Design System" />
+  <meta property="og:description" content="Modern minimalist. Dark/light monochromatic. Accents are interactive, never decorative. The single source of truth for every WRLD-branded surface." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://wrlddesign.wrldtech.workers.dev/" />
+  <meta property="og:image" content="https://wrlddesign.wrldtech.workers.dev/logos/favicons/favicon-512x512.png" />
+  <link rel="canonical" href="https://wrlddesign.wrldtech.workers.dev/" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/logos/favicons/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/logos/favicons/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/logos/favicons/apple-touch-icon.png" />
+  <link rel="manifest" href="/logos/favicons/site.webmanifest" />
+
+  <!-- Tokens — the source of truth -->
+  <link rel="stylesheet" href="/tokens/tokens.css" />
+
+  <style>
+    /* Self-hosted brand fonts — served from /fonts on this same origin. */
+    @font-face {
+      font-family: 'Montserrat';
+      src: url('/fonts/Montserrat-VariableFont_wght.ttf') format('truetype-variations');
+      font-weight: 100 900;
+      font-display: swap;
+    }
+    @font-face { font-family: 'Ubuntu'; src: url('/fonts/Ubuntu-Light.ttf') format('truetype'); font-weight: 300; font-display: swap; }
+    @font-face { font-family: 'Ubuntu'; src: url('/fonts/Ubuntu-Regular.ttf') format('truetype'); font-weight: 400; font-display: swap; }
+    @font-face { font-family: 'Ubuntu'; src: url('/fonts/Ubuntu-Medium.ttf') format('truetype'); font-weight: 500; font-display: swap; }
+    @font-face { font-family: 'Ubuntu'; src: url('/fonts/Ubuntu-Bold.ttf') format('truetype'); font-weight: 700; font-display: swap; }
+    @font-face { font-family: 'Ubuntu Mono'; src: url('/fonts/UbuntuMono-Regular.ttf') format('truetype'); font-weight: 400; font-display: swap; }
+    @font-face { font-family: 'Ubuntu Mono'; src: url('/fonts/UbuntuMono-Bold.ttf') format('truetype'); font-weight: 700; font-display: swap; }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background: var(--wrld-bg);
+      color: var(--wrld-fg);
+      font-family: var(--wrld-font-body);
+      font-size: var(--wrld-fs-body);
+      line-height: var(--wrld-lh-body);
+      -webkit-font-smoothing: antialiased;
+      transition: background var(--wrld-duration-default) var(--wrld-ease-standard),
+                  color var(--wrld-duration-default) var(--wrld-ease-standard);
+    }
+
+    h1, h2, h3, h4 {
+      font-family: var(--wrld-font-display);
+      letter-spacing: var(--wrld-ls-display);
+      line-height: var(--wrld-lh-heading);
+      margin: 0 0 var(--wrld-space-4);
+      font-weight: var(--wrld-fw-semibold);
+    }
+
+    a { color: inherit; }
+
+    .shell { max-width: 1160px; margin: 0 auto; padding: 0 var(--wrld-space-6); }
+
+    .eyebrow {
+      font-family: var(--wrld-font-mono);
+      font-size: var(--wrld-fs-caption);
+      letter-spacing: var(--wrld-ls-eyebrow);
+      text-transform: uppercase;
+      color: var(--wrld-fg-subtle);
+      margin: 0 0 var(--wrld-space-3);
+    }
+
+    /* ---- Header ---------------------------------------------------- */
+    header.top {
+      position: sticky; top: 0; z-index: 10;
+      background: color-mix(in srgb, var(--wrld-bg) 88%, transparent);
+      backdrop-filter: blur(12px);
+      border-bottom: var(--wrld-border-hairline) solid var(--wrld-border);
+    }
+    .top-inner {
+      display: flex; align-items: center; gap: var(--wrld-space-6);
+      padding: var(--wrld-space-3) var(--wrld-space-6);
+      max-width: 1160px; margin: 0 auto;
+    }
+    .brand-lockup { display: flex; align-items: center; gap: var(--wrld-space-3); text-decoration: none; }
+    .brand-lockup img { height: 26px; display: block; }
+    .brand-lockup .sub {
+      font-family: var(--wrld-font-mono); font-size: var(--wrld-fs-caption);
+      color: var(--wrld-fg-subtle); letter-spacing: var(--wrld-ls-eyebrow); text-transform: uppercase;
+    }
+    nav.main { display: flex; gap: var(--wrld-space-5); margin-left: auto; flex-wrap: wrap; }
+    nav.main a {
+      text-decoration: none; font-size: var(--wrld-fs-body-sm); color: var(--wrld-fg-muted);
+      transition: color var(--wrld-duration-default) var(--wrld-ease-standard);
+    }
+    nav.main a:hover, nav.main a:focus-visible { color: var(--wrld-accent-primary); }
+    .theme-toggle {
+      appearance: none; border: var(--wrld-border-hairline) solid var(--wrld-border);
+      background: transparent; color: var(--wrld-fg-muted); border-radius: var(--wrld-radius-pill);
+      font-family: var(--wrld-font-mono); font-size: var(--wrld-fs-caption);
+      padding: var(--wrld-space-1) var(--wrld-space-3); cursor: pointer;
+      transition: color var(--wrld-duration-default) var(--wrld-ease-standard),
+                  border-color var(--wrld-duration-default) var(--wrld-ease-standard);
+    }
+    .theme-toggle:hover, .theme-toggle:focus-visible { color: var(--wrld-accent-primary); border-color: var(--wrld-accent-primary); }
+
+    /* ---- Hero ------------------------------------------------------ */
+    .hero { padding: var(--wrld-space-30) 0 var(--wrld-space-20); position: relative; overflow: hidden; }
+    .hero h1 {
+      font-size: var(--wrld-fs-display-lg);
+      max-width: 18ch;
+      margin-bottom: var(--wrld-space-6);
+    }
+    .hero p.lede { font-size: var(--wrld-fs-body-lg); color: var(--wrld-fg-muted); max-width: 58ch; margin: 0 0 var(--wrld-space-8); }
+    .hero .mark { height: 56px; margin-bottom: var(--wrld-space-8); display: block; }
+
+    .cta-row { display: flex; gap: var(--wrld-space-3); flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; gap: var(--wrld-space-2);
+      text-decoration: none; font-weight: var(--wrld-fw-medium); font-size: var(--wrld-fs-body-sm);
+      border-radius: var(--wrld-radius-md); padding: var(--wrld-space-3) var(--wrld-space-5);
+      border: var(--wrld-border-hairline) solid var(--wrld-border-strong);
+      color: var(--wrld-fg);
+      transition: border-color var(--wrld-duration-default) var(--wrld-ease-standard),
+                  color var(--wrld-duration-default) var(--wrld-ease-standard),
+                  box-shadow var(--wrld-duration-default) var(--wrld-ease-standard),
+                  transform var(--wrld-duration-default) var(--wrld-ease-standard);
+    }
+    .btn:hover, .btn:focus-visible {
+      border-color: var(--wrld-accent-primary); color: var(--wrld-accent-primary);
+      box-shadow: var(--wrld-shadow-accent-primary); transform: translateY(-1px);
+    }
+    .btn.primary { background: var(--wrld-fg); color: var(--wrld-bg); border-color: var(--wrld-fg); }
+    .btn.primary:hover, .btn.primary:focus-visible {
+      background: var(--wrld-accent-primary); border-color: var(--wrld-accent-primary); color: #fff;
+    }
+
+    /* ---- Sections -------------------------------------------------- */
+    section { padding: var(--wrld-space-20) 0; border-top: var(--wrld-border-hairline) solid var(--wrld-border); }
+    section h2 { font-size: var(--wrld-fs-h2); margin-bottom: var(--wrld-space-2); }
+    section p.sub { color: var(--wrld-fg-muted); max-width: 62ch; margin: 0 0 var(--wrld-space-10); }
+
+    .grid { display: grid; gap: var(--wrld-space-4); grid-template-columns: repeat(auto-fill, minmax(255px, 1fr)); }
+
+    .card {
+      display: flex; flex-direction: column; gap: var(--wrld-space-2);
+      text-decoration: none;
+      border: var(--wrld-border-hairline) solid var(--wrld-border);
+      border-radius: var(--wrld-radius-lg);
+      background: var(--wrld-bg-elevated);
+      padding: var(--wrld-space-6);
+      transition: border-color var(--wrld-duration-default) var(--wrld-ease-standard),
+                  box-shadow var(--wrld-duration-default) var(--wrld-ease-standard),
+                  transform var(--wrld-duration-default) var(--wrld-ease-standard);
+    }
+    .card:hover, .card:focus-visible {
+      border-color: var(--wrld-accent-primary);
+      box-shadow: var(--wrld-shadow-accent-primary);
+      transform: translateY(-2px);
+    }
+    .card h3 { font-size: var(--wrld-fs-h5); margin: 0; }
+    .card p { margin: 0; font-size: var(--wrld-fs-body-sm); color: var(--wrld-fg-muted); }
+    .card .path { font-family: var(--wrld-font-mono); font-size: var(--wrld-fs-caption); color: var(--wrld-fg-subtle); margin-top: var(--wrld-space-2); }
+
+    /* Mono scale strip (decorative-in-monochrome is allowed) */
+    .mono-strip { display: flex; border-radius: var(--wrld-radius-md); overflow: hidden; margin: var(--wrld-space-10) 0 0; border: var(--wrld-border-hairline) solid var(--wrld-border); }
+    .mono-strip span { flex: 1; height: 44px; }
+
+    /* Principles */
+    .principles { display: grid; gap: var(--wrld-space-4); grid-template-columns: repeat(auto-fit, minmax(255px, 1fr)); }
+    .principle { border-left: var(--wrld-border-standard) solid var(--wrld-border-strong); padding-left: var(--wrld-space-5); }
+    .principle h3 { font-size: var(--wrld-fs-h5); margin-bottom: var(--wrld-space-2); }
+    .principle p { margin: 0; font-size: var(--wrld-fs-body-sm); color: var(--wrld-fg-muted); }
+
+    /* Brand lockups */
+    .lockups { display: grid; gap: var(--wrld-space-4); grid-template-columns: repeat(auto-fill, minmax(215px, 1fr)); }
+    .lockup {
+      display: flex; align-items: center; justify-content: center;
+      border: var(--wrld-border-hairline) solid var(--wrld-border);
+      border-radius: var(--wrld-radius-md); padding: var(--wrld-space-8) var(--wrld-space-4);
+      background: var(--wrld-bg-elevated);
+      transition: border-color var(--wrld-duration-default) var(--wrld-ease-standard);
+    }
+    .lockup:hover { border-color: var(--wrld-accent-primary); }
+    .lockup img { height: 30px; max-width: 100%; }
+
+    /* LLM section code block */
+    pre.snippet {
+      font-family: var(--wrld-font-mono); font-size: var(--wrld-fs-body-sm);
+      background: var(--wrld-bg-muted); border: var(--wrld-border-hairline) solid var(--wrld-border);
+      border-radius: var(--wrld-radius-md); padding: var(--wrld-space-5); overflow-x: auto;
+      line-height: var(--wrld-lh-ui); margin: 0;
+    }
+    pre.snippet .c { color: var(--wrld-fg-subtle); }
+
+    /* Marketing band — quiet, monochromatic */
+    .band {
+      border: var(--wrld-border-hairline) solid var(--wrld-border);
+      border-radius: var(--wrld-radius-lg);
+      padding: var(--wrld-space-12) var(--wrld-space-8);
+      background: var(--wrld-bg-subtle);
+      text-align: center;
+    }
+    .band h2 { max-width: 30ch; margin: 0 auto var(--wrld-space-4); }
+    .band p { color: var(--wrld-fg-muted); max-width: 62ch; margin: 0 auto var(--wrld-space-8); }
+
+    /* Footer */
+    footer { border-top: var(--wrld-border-hairline) solid var(--wrld-border); padding: var(--wrld-space-12) 0; }
+    .foot-inner { display: flex; flex-wrap: wrap; gap: var(--wrld-space-8); justify-content: space-between; align-items: flex-start; }
+    footer .legal { font-size: var(--wrld-fs-caption); color: var(--wrld-fg-subtle); font-family: var(--wrld-font-mono); }
+    footer nav { display: flex; gap: var(--wrld-space-5); flex-wrap: wrap; }
+    footer nav a { font-size: var(--wrld-fs-body-sm); color: var(--wrld-fg-muted); text-decoration: none; }
+    footer nav a:hover, footer nav a:focus-visible { color: var(--wrld-accent-primary); }
+
+    /* Theme-aware logo swap */
+    [data-theme="dark"] .only-light, :root:not([data-theme="light"]) .only-light { display: none; }
+    [data-theme="dark"] .only-dark { display: block; }
+    [data-theme="light"] .only-dark { display: none; }
+    [data-theme="light"] .only-light { display: block; }
+
+    @media (max-width: 720px) {
+      .hero { padding-top: var(--wrld-space-16); }
+      nav.main { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <div class="top-inner">
+      <a class="brand-lockup" href="/">
+        <img class="only-dark" src="/logos/svg/wrld-design-dark.svg" alt="wrld.design" />
+        <img class="only-light" src="/logos/svg/wrld-design-light.svg" alt="wrld.design" />
+        <span class="sub">Design System</span>
+      </a>
+      <nav class="main" aria-label="Primary">
+        <a href="#foundations">Foundations</a>
+        <a href="#components">Components</a>
+        <a href="#brands">Brands</a>
+        <a href="#llm">For LLMs</a>
+        <a href="/styleguide/">Styleguide</a>
+        <a href="https://github.com/WRLDInc/DesignSystem">GitHub</a>
+      </nav>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle color theme">dark</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="hero">
+      <div class="shell">
+        <img class="mark only-dark" src="/logos/svg/wrld-mark-dark.svg" alt="" aria-hidden="true" />
+        <img class="mark only-light" src="/logos/svg/wrld-mark-light.svg" alt="" aria-hidden="true" />
+        <p class="eyebrow">wrld.design · design system v0.2</p>
+        <h1>One system behind every WRLD surface.</h1>
+        <p class="lede">
+          Modern minimalist. Dark/light monochromatic. Accents are interactive, never decorative.
+          This is the living source of truth for WRLD's tokens, typography, logos, components, and
+          brand voice — the same meticulous system we run for client work.
+        </p>
+        <div class="cta-row">
+          <a class="btn primary" href="/styleguide/">Open the styleguide</a>
+          <a class="btn" href="/tokens/tokens.css">Read the tokens</a>
+          <a class="btn" href="/llms.txt">llms.txt</a>
+        </div>
+        <div class="mono-strip" role="img" aria-label="WRLD monochrome scale from white to near-black">
+          <span style="background:#ffffff"></span><span style="background:#fafafa"></span>
+          <span style="background:#f4f4f5"></span><span style="background:#e4e4e7"></span>
+          <span style="background:#d4d4d8"></span><span style="background:#a1a1aa"></span>
+          <span style="background:#71717a"></span><span style="background:#52525b"></span>
+          <span style="background:#3f3f46"></span><span style="background:#27272a"></span>
+          <span style="background:#18181b"></span><span style="background:#0a0a0a"></span>
+        </div>
+      </div>
+    </div>
+
+    <section id="principles">
+      <div class="shell">
+        <p class="eyebrow">Principles</p>
+        <h2>Continuity is a discipline, not an accident.</h2>
+        <p class="sub">Every rule below is enforced in tokens, linted in CI, and readable by both humans and machines.</p>
+        <div class="principles">
+          <div class="principle">
+            <h3>Monochromatic base</h3>
+            <p>Every static surface lives on a twelve-step neutral scale, from white to the signature near-black <code>#0a0a0a</code>. No decorative color, ever.</p>
+          </div>
+          <div class="principle">
+            <h3>Accents are interactive</h3>
+            <p>WRLD blue <code>#007fee</code>, sky <code>#00adee</code>, and warm <code>#EE9300</code> appear only on hover, focus, motion, and gradients — never as static fills.</p>
+          </div>
+          <div class="principle">
+            <h3>Tokens before pixels</h3>
+            <p>Color, type, spacing, radii, shadows, and motion ship as CSS custom properties, JSON, and TypeScript — one source of truth, three consumption formats.</p>
+          </div>
+          <div class="principle">
+            <h3>Machine-readable by design</h3>
+            <p>Briefs are markdown, tokens are JSON, adherence is lintable. Any agent or LLM can be pointed here and produce unmistakably-WRLD output.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="foundations">
+      <div class="shell">
+        <p class="eyebrow">Foundations</p>
+        <h2>Tokens, type, color, spacing.</h2>
+        <p class="sub">Fetch them directly — every artifact on this site is a stable URL you can import, diff, or feed to a build.</p>
+        <div class="grid">
+          <a class="card" href="/tokens/tokens.css">
+            <h3>tokens.css</h3>
+            <p>CSS custom properties with light, dark, and auto theming via <code>data-theme</code>.</p>
+            <span class="path">/tokens/tokens.css</span>
+          </a>
+          <a class="card" href="/tokens/tokens.json">
+            <h3>tokens.json</h3>
+            <p>The same tokens as structured JSON, for pipelines and design tooling.</p>
+            <span class="path">/tokens/tokens.json</span>
+          </a>
+          <a class="card" href="/tokens/tokens.ts">
+            <h3>tokens.ts</h3>
+            <p>Typed constants for TypeScript and JavaScript apps.</p>
+            <span class="path">/tokens/tokens.ts</span>
+          </a>
+          <a class="card" href="/preview/">
+            <h3>Preview gallery</h3>
+            <p>Color scales, type specimens, spacing, shadows, and motion — rendered live from the tokens.</p>
+            <span class="path">/preview/</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section id="components">
+      <div class="shell">
+        <p class="eyebrow">Components &amp; kits</p>
+        <h2>Reference implementations that ship.</h2>
+        <p class="sub">We don't hand off static specs — the system includes working component references and per-product UI kits.</p>
+        <div class="grid">
+          <a class="card" href="/preview/components-buttons.html">
+            <h3>Buttons</h3>
+            <p>Primary, secondary, and ghost variants with accent-on-interaction behavior.</p>
+            <span class="path">/preview/components-buttons.html</span>
+          </a>
+          <a class="card" href="/preview/components-cards.html">
+            <h3>Cards</h3>
+            <p>Elevated surfaces, hairline borders, hover lift.</p>
+            <span class="path">/preview/components-cards.html</span>
+          </a>
+          <a class="card" href="/preview/components-inputs.html">
+            <h3>Inputs</h3>
+            <p>Form fields with focus accents and monochrome resting state.</p>
+            <span class="path">/preview/components-inputs.html</span>
+          </a>
+          <a class="card" href="/preview/components-nav.html">
+            <h3>Navigation</h3>
+            <p>Header and nav patterns used across WRLD properties.</p>
+            <span class="path">/preview/components-nav.html</span>
+          </a>
+          <a class="card" href="/ui_kits/wrld-tech/">
+            <h3>UI kit — wrld.tech</h3>
+            <p>Hero, services grid, CTA, header/footer JSX components for the flagship.</p>
+            <span class="path">/ui_kits/wrld-tech/</span>
+          </a>
+          <a class="card" href="/ui_kits/wrld-ai/">
+            <h3>UI kit — WRLD.AI</h3>
+            <p>Sidebar, stat cards, agent list and run history for product UI.</p>
+            <span class="path">/ui_kits/wrld-ai/</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section id="brands">
+      <div class="shell">
+        <p class="eyebrow">Brands</p>
+        <h2>One mark, a federation of lockups.</h2>
+        <p class="sub">Each WRLD property carries the same mark and type discipline. Briefs define voice, tone dial, and color weighting per brand.</p>
+        <div class="lockups">
+          <div class="lockup"><img class="only-dark" src="/logos/svg/wrld-tech-dark.svg" alt="wrld.tech" /><img class="only-light" src="/logos/svg/wrld-tech-light.svg" alt="wrld.tech" /></div>
+          <div class="lockup"><img class="only-dark" src="/logos/svg/wrld-design-dark.svg" alt="wrld.design" /><img class="only-light" src="/logos/svg/wrld-design-light.svg" alt="wrld.design" /></div>
+          <div class="lockup"><img class="only-dark" src="/logos/svg/wrld-host-dark.svg" alt="wrld.host" /><img class="only-light" src="/logos/svg/wrld-host-light.svg" alt="wrld.host" /></div>
+          <div class="lockup"><img class="only-dark" src="/logos/svg/wrld-ai-dark.svg" alt="WRLD.AI" /><img class="only-light" src="/logos/svg/wrld-ai-light.svg" alt="WRLD.AI" /></div>
+          <div class="lockup"><img class="only-dark" src="/logos/svg/wrld-services-dark.svg" alt="WRLD.Services" /><img class="only-light" src="/logos/svg/wrld-services-light.svg" alt="WRLD.Services" /></div>
+          <div class="lockup"><img class="only-dark" src="/logos/svg/wrld-support-dark.svg" alt="WRLD.Support" /><img class="only-light" src="/logos/svg/wrld-support-light.svg" alt="WRLD.Support" /></div>
+          <div class="lockup"><img class="only-dark" src="/logos/svg/wrld-press-dark.svg" alt="WRLD.Press" /><img class="only-light" src="/logos/svg/wrld-press-light.svg" alt="WRLD.Press" /></div>
+          <div class="lockup"><img class="only-dark" src="/logos/svg/wrld-one-dark.svg" alt="wrld.one" /><img class="only-light" src="/logos/svg/wrld-one-light.svg" alt="wrld.one" /></div>
+        </div>
+        <p class="sub" style="margin-top:var(--wrld-space-8); margin-bottom:0;">
+          Briefs: <a href="/brand/CLAUDE.md">master brief</a> ·
+          <a href="/brand/wrld-tech.md">wrld.tech</a> ·
+          <a href="/brand/wrld-design.md">wrld.design</a> ·
+          <a href="/brand/wrld-host.md">wrld.host</a> ·
+          <a href="/brand/wrld-ai.md">WRLD.AI</a> ·
+          <a href="/brand/wrld-services.md">WRLD.Services</a> ·
+          <a href="/brand/wrld-one.md">wrld.one</a> ·
+          <a href="/brand/wrld-inc.md">WRLD Inc.</a>
+        </p>
+      </div>
+    </section>
+
+    <section id="llm">
+      <div class="shell">
+        <p class="eyebrow">For LLMs &amp; agents</p>
+        <h2>Point your project here. Get WRLD out.</h2>
+        <p class="sub">
+          This site is built to be consumed by tooling as much as by people. Start at
+          <a href="/llms.txt">/llms.txt</a> for a curated index, or pull artifacts directly:
+        </p>
+        <div class="grid" style="margin-bottom: var(--wrld-space-8);">
+          <a class="card" href="/llms.txt">
+            <h3>llms.txt</h3>
+            <p>Curated entry point for language models — what to read and in what order.</p>
+            <span class="path">/llms.txt</span>
+          </a>
+          <a class="card" href="/brand/CLAUDE.md">
+            <h3>Master brand brief</h3>
+            <p>Entity map, voice, naming rules, and hard constraints in plain markdown.</p>
+            <span class="path">/brand/CLAUDE.md</span>
+          </a>
+          <a class="card" href="/_ds_manifest.json">
+            <h3>Design system manifest</h3>
+            <p>Machine-readable inventory of every token, asset, and rule in the system.</p>
+            <span class="path">/_ds_manifest.json</span>
+          </a>
+          <a class="card" href="/_adherence.oxlintrc.json">
+            <h3>Adherence lint rules</h3>
+            <p>Drop-in oxlint config that flags off-system colors, fonts, and spacing.</p>
+            <span class="path">/_adherence.oxlintrc.json</span>
+          </a>
+        </div>
+        <pre class="snippet"><span class="c">/* Consume the system in one line: */</span>
+@import url('https://wrlddesign.wrldtech.workers.dev/tokens/tokens.css');
+
+<span class="c">/* Then build with variables only: */</span>
+.card {
+  background: var(--wrld-bg-elevated);
+  color: var(--wrld-fg);
+  border: var(--wrld-border-hairline) solid var(--wrld-border);
+}</pre>
+      </div>
+    </section>
+
+    <section id="about">
+      <div class="shell">
+        <div class="band">
+          <p class="eyebrow">Why this exists</p>
+          <h2>Design that ships. Managed meticulously.</h2>
+          <p>
+            This is how WRLD runs design internally — tokenized, versioned, CI-validated, and readable
+            by every tool in the pipeline. It's also how we manage design for clients: one system,
+            enforced everywhere, so every surface stays congruent as teams and tools change.
+            If your brand needs this level of continuity, that's what
+            <a href="https://wrld.tech">wrld.tech</a> does.
+          </p>
+          <div class="cta-row" style="justify-content:center;">
+            <a class="btn primary" href="https://wrld.tech">Work with WRLD</a>
+            <a class="btn" href="https://github.com/WRLDInc/DesignSystem">View the source</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="shell foot-inner">
+      <div>
+        <img class="only-dark" style="height:22px" src="/logos/svg/wrld-lockup-dark.svg" alt="WRLD" />
+        <img class="only-light" style="height:22px" src="/logos/svg/wrld-lockup-light.svg" alt="WRLD" />
+        <p class="legal">© WRLD Inc. (DBA WRLD Tech Co.) · wrld.design · Maintained by Ridgeway Lawrence</p>
+      </div>
+      <nav aria-label="Footer">
+        <a href="/styleguide/">Styleguide</a>
+        <a href="/preview/">Previews</a>
+        <a href="/tokens/tokens.css">Tokens</a>
+        <a href="/llms.txt">llms.txt</a>
+        <a href="https://wrld.tech">wrld.tech</a>
+        <a href="https://github.com/WRLDInc/DesignSystem">GitHub</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var root = document.documentElement;
+      var btn = document.getElementById('themeToggle');
+      var stored = null;
+      try { stored = localStorage.getItem('wrld-theme'); } catch (e) {}
+      if (stored === 'light' || stored === 'dark') root.setAttribute('data-theme', stored);
+      function sync() { btn.textContent = root.getAttribute('data-theme') === 'light' ? 'light' : 'dark'; }
+      btn.addEventListener('click', function () {
+        var next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+        root.setAttribute('data-theme', next);
+        try { localStorage.setItem('wrld-theme', next); } catch (e) {}
+        sync();
+      });
+      sync();
+    })();
+  </script>
+</body>
+</html>

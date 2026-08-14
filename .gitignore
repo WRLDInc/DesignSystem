@@ -33,3 +33,4 @@ desktop.ini
 # Temp
 tmp/
 .cache/
+.wrangler/

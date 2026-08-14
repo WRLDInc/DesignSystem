@@ -1,0 +1,14 @@
+# Files excluded from the deployed Cloudflare Workers site.
+# Everything else in the repo is intentionally public and fetchable.
+.git
+.github
+.gitignore
+.assetsignore
+node_modules
+.wrangler
+scraps
+uploads
+scripts
+wrangler.jsonc
+package.json
+package-lock.json

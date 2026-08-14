@@ -10,6 +10,14 @@
 
 A Claude-readable design system that bundles brand briefs, design tokens, fonts, logos, sample slides, and per-product UI kits. Use it to make any new artifact (mock, slide, prototype, production component) look unmistakably WRLD without having to reverse-engineer the brand.
 
+## The website
+
+This repository **is** a public website, served as static assets on Cloudflare Workers at [wrlddesign.wrldtech.workers.dev](https://wrlddesign.wrldtech.workers.dev) (eventual home: **wrld.design**). Every artifact — tokens, briefs, previews, the styleguide, UI kits — is fetchable at a stable URL, so projects and LLM agents can be pointed at the site directly for design continuity and congruence.
+
+- **Entry points:** [`/`](https://wrlddesign.wrldtech.workers.dev/) (homepage) · [`/styleguide/`](https://wrlddesign.wrldtech.workers.dev/styleguide/) · [`/preview/`](https://wrlddesign.wrldtech.workers.dev/preview/) (gallery) · [`/llms.txt`](https://wrlddesign.wrldtech.workers.dev/llms.txt) (curated index for language models)
+- **Config:** `wrangler.jsonc` (Workers assets config) · `.assetsignore` (files excluded from the site) · `_headers` (CORS + caching for tokens, fonts, briefs)
+- **Local dev:** `npm run dev` (wrangler dev) · **Deploy:** `npm run deploy`, or automatically on push to `main` via `.github/workflows/deploy.yml` (requires `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` repo secrets)
+
 ## Sources used to build this
 
 | Source | What we pulled |

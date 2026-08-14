@@ -1,0 +1,48 @@
+# WRLD Design System
+
+> The canonical design system for WRLD Inc. (DBA WRLD Tech Co.) and all WRLD brands — wrld.tech, wrld.design, wrld.host, WRLD.AI, WRLD.Services, WRLD.Support, WRLD.Press, wrld.one. Modern minimalist, dark/light monochromatic; the three accent colors (#007fee, #00adee, #EE9300) appear only on interaction (hover, focus, motion) — never as static fills. Use this site as the source of truth for design continuity and congruence in any WRLD or WRLD-client project.
+
+Key rules for generated output:
+
+- Static surfaces use only the 12-step monochrome scale (white #ffffff → near-black #0a0a0a).
+- Display type is Montserrat; body is Ubuntu; code is Ubuntu Mono.
+- Consume tokens as CSS custom properties (prefix `--wrld-`) — never hardcode values.
+- Brand name is always `WRLD` uppercase in prose; lowercase `wrld.tech` style only for literal domains. Never "Wrld" or "wrld".
+- Themes switch via `data-theme="light" | "dark" | "auto"` on `<html>`.
+
+## Tokens
+
+- [tokens.css](/tokens/tokens.css): CSS custom properties with light/dark/auto themes — import this first
+- [tokens.json](/tokens/tokens.json): the same tokens as structured JSON for pipelines
+- [tokens.ts](/tokens/tokens.ts): typed TypeScript constants
+
+## Brand briefs
+
+- [Master brief](/brand/CLAUDE.md): entity map, voice, naming rules, hard constraints — read before any brand work
+- [wrld.tech](/brand/wrld-tech.md): flagship property brief
+- [wrld.design](/brand/wrld-design.md): design services brief
+- [wrld.host](/brand/wrld-host.md): hosting platform brief
+- [WRLD.AI](/brand/wrld-ai.md): AI product brief
+- [WRLD.Services](/brand/wrld-services.md): MSP / managed IT brief
+- [wrld.one](/brand/wrld-one.md): unified platform (emerging) brief
+- [WRLD Inc.](/brand/wrld-inc.md): legal entity brief
+
+## Reference implementations
+
+- [Styleguide](/styleguide/): full interactive reference — colors, type, logos, components
+- [Preview gallery](/preview/): standalone token-rendered previews of color, type, spacing, components, brand
+- [wrld.tech UI kit](/ui_kits/wrld-tech/): flagship marketing components (JSX + d.ts)
+- [WRLD.AI UI kit](/ui_kits/wrld-ai/): product UI components (JSX + d.ts)
+
+## Machine-readable extras
+
+- [Design system manifest](/_ds_manifest.json): inventory of tokens, assets, and rules
+- [Adherence lint config](/_adherence.oxlintrc.json): oxlint rules that flag off-system colors, fonts, spacing
+- [README](/README.md): full human-readable system documentation
+- [Component bundle](/_ds_bundle.js): browser-ready UMD bundle of the reference components
+
+## Optional
+
+- [Logos (SVG)](/logos/svg/wrld-lockup-dark.svg): per-brand lockups at /logos/svg/, marks and wordmarks in light/dark/mono
+- [Fonts](/fonts/Montserrat-VariableFont_wght.ttf): self-hosted brand fonts at /fonts/
+- [Changelog](/docs/CHANGELOG.md): version history
