@@ -17,7 +17,7 @@ verification step rather than stated as fact.
 |---|---|
 | **Cloudflare account** | WRLD Inc. — `1260edafa2dec8e0bdf243859e07c160` |
 | **Zone** | `wrld.design` — `f0b528554e11028ff7446781b7737da8`, active |
-| **Worker name** | `wrld-design-system` |
+| **Worker name** | `wrlddesign` |
 | **Config** | [`wrangler.jsonc`](../wrangler.jsonc) at the repo root |
 | **Build** | `npm run build` → [`scripts/build_site.mjs`](../scripts/build_site.mjs) → `dist/` |
 | **Served directory** | `dist/` (204 files, 4.7 MB) |
@@ -78,7 +78,7 @@ The chosen option cannot fail that way.
 **Create:** Workers & Pages → **Create application** → **Get started** next
 to *Import a repository* → select the Git account → select the repository.
 
-**Later edits:** Workers & Pages → `wrld-design-system` → **Settings** →
+**Later edits:** Workers & Pages → `wrlddesign` → **Settings** →
 **Build**. (Cloudflare's own docs label this tab both "Build" and "Builds"
 in different places; it is the same screen.)
 
@@ -117,11 +117,22 @@ the environment.
 
 ### Non-production branches
 
-Leave **Builds for non-production branches** unchecked for now — the design
-system has one canonical published state. If you later want per-branch
-review builds, check it and set the non-production deploy command to
-`npx wrangler versions upload` (which uploads a version *without* shifting
-production traffic), not `wrangler deploy`.
+**Builds for non-production branches** is currently **enabled**, and the
+non-production deploy command is `npx wrangler versions upload` — which
+uploads a version *without* shifting production traffic and, importantly,
+**without applying triggers**. Keep it that way: `wrangler deploy` on a
+feature branch would move the live domain onto unreviewed code.
+
+This is worth understanding, because it explains a result that looks like a
+failure and isn't. A build on a feature branch reports "Deployment
+successful" while `wrld.design` stays unresolved and no Custom Domain
+appears — because a version upload never touches the domain binding. The
+apex binds on the first **production** (`main`) build, which runs
+`wrangler deploy`.
+
+You can tell which happened from the API: a `wrangler deploy` adds a row to
+`/workers/scripts/<name>/deployments`, while `versions upload` only adds one
+to `/versions`.
 
 ### Build variables are per-trigger
 
@@ -153,6 +164,13 @@ whose nameservers are not managed by Cloudflare**. That prerequisite is met.
 
 On deploy, Cloudflare creates the proxied DNS record for the apex and issues
 the certificate automatically. There is no DNS record to add by hand.
+
+**Current state, as of the first repo connection:** the Worker `wrlddesign`
+exists and holds two deployments from the dashboard's "Import a repository"
+scaffold (a hello-world template) plus one version uploaded from a feature
+branch. `wrld.design` is **not yet bound** and does not resolve — the apex
+carries only email records. Nothing of this design system is live yet. The
+apex binds, and the template is replaced, on the first build of `main`.
 
 > **`routes` in this file overwrite the dashboard on every deploy.** This
 > file owns the domain binding — do not also manage it in the UI, or the next
@@ -267,7 +285,7 @@ build, which cannot be verified locally:
 
 ```bash
 # 7. Preview URLs must be noindex'd — they are duplicate content otherwise.
-curl -sI https://<version>-wrld-design-system.<subdomain>.workers.dev/ | grep -i x-robots-tag
+curl -sI https://<version>-wrlddesign.<subdomain>.workers.dev/ | grep -i x-robots-tag
 ```
 
 If that returns nothing, the placeholder-hostname rule in `_headers` isn't

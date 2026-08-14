@@ -8,17 +8,22 @@
   // dashboard fields, the custom-domain checklist, and the runbook.
   //
   // `name` MUST stay identical to the Worker name in the Cloudflare
-  // dashboard's Build settings — `wrangler deploy` resolves the target
-  // script from this field, and a mismatch fails the build.
+  // dashboard — `wrangler deploy` resolves its target script from this
+  // field. "wrlddesign" is the Worker the dashboard's "Import a repository"
+  // flow actually created, so this matches it exactly.
   //
-  // Named "wrld-design-system" rather than "wrld-design" deliberately:
-  // per brand/wrld-design.md, wrld.design is the *design services*
-  // property (case studies, process, pricing). This Worker serves the
-  // *design system*. Keeping the names distinct leaves room for a
-  // separate services site later — see the note in CLOUDFLARE_DEPLOY.md.
+  // Do not "tidy" this to wrld-design-system or wrld-design. Workers Builds
+  // papers over a mismatch in CI by overriding the name via
+  // WRANGLER_CI_OVERRIDE_NAME, so a wrong value here still builds green —
+  // but `npm run deploy` from a laptop would then create a SECOND Worker
+  // under the wrong name and, because the routes block below claims
+  // wrld.design as a Custom Domain, move the live domain onto it. Renaming
+  // a Cloudflare Worker is not possible in place; if this ever needs a
+  // different name, create the new Worker, reconnect the repo, and move the
+  // domain deliberately.
   // ---------------------------------------------------------------------------
   "$schema": "./node_modules/wrangler/config-schema.json",
-  "name": "wrld-design-system",
+  "name": "wrlddesign",
   "compatibility_date": "2026-08-14",
 
   // ---------------------------------------------------------------------------
@@ -62,9 +67,9 @@
   // Domains.
   //
   // One canonical origin. workers_dev is off so the design system is not
-  // also reachable at wrld-design-system.<subdomain>.workers.dev — a second
-  // public origin for URL-referenced token files invites consumers to pin
-  // the wrong one, and splits SEO.
+  // also reachable at wrlddesign.<subdomain>.workers.dev — a second public
+  // origin for URL-referenced token files invites consumers to pin the wrong
+  // one, and splits SEO.
   //
   // preview_urls stays on so non-production branch builds remain
   // reviewable. Cloudflare defaults preview_urls to follow workers_dev, so

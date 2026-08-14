@@ -222,7 +222,7 @@
 # Keep build preview hostnames out of search results.
 #
 # wrld.design is the only canonical origin, but preview_urls is enabled in
-# wrangler.jsonc, so <version>-wrld-design-system.<subdomain>.workers.dev is
+# wrangler.jsonc, so <version>-wrlddesign.<subdomain>.workers.dev is
 # publicly reachable and would otherwise be indexable — duplicate content
 # against the canonical site.
 #
