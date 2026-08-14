@@ -289,17 +289,20 @@ served as content instead of consumed as configuration, and none of the CORS
 or cache rules are in effect.
 
 All six checks were run against a local `wrangler dev` serving this exact
-`dist/`, and all passed. Add one more check for the first *non-production*
-build, which cannot be verified locally:
+`dist/`, and all passed — then re-run against the live origin after the first
+production deploy. Re-run this one after any `_headers` edit:
 
 ```bash
 # 7. Preview URLs must be noindex'd — they are duplicate content otherwise.
 curl -sI https://<version>-wrlddesign.<subdomain>.workers.dev/ | grep -i x-robots-tag
 ```
 
-If that returns nothing, the placeholder-hostname rule in `_headers` isn't
-firing; the fallback is setting `preview_urls` to `false` in
-`wrangler.jsonc` and giving up per-branch review URLs.
+**Confirmed working** on the first real preview build: both the commit and
+branch preview URLs return `200` with `x-robots-tag: noindex`, while
+`https://wrld.design/` returns no `X-Robots-Tag` at all. That is the pairing
+that matters — previews suppressed, apex indexable. If a future edit ever
+makes that rule stop firing, the fallback is setting `preview_urls` to
+`false` and giving up per-branch review URLs.
 
 ### Five things that were wrong until they were tested
 
