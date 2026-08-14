@@ -4,7 +4,10 @@
 // inside menus, cards, and prototypes — e.g. the header mega menu's Help panel).
 //
 // Warm #EE9300 is reserved for commerce/support moments; this is one of the
-// few sanctioned static uses. The ping ring is decorative and disabled under
+// few sanctioned static uses. The glyph and hairline rim use near-black
+// (--mono-950) so both the icon and the control boundary clear the WCAG 1.4.11
+// 3:1 non-text contrast threshold on light surfaces (white on #EE9300 is only
+// ~2.4:1). The ping ring is decorative and disabled under
 // prefers-reduced-motion.
 export function HelpButton({ size = 52, label = 'Open WRLD Help chat', onClick, style }) {
   const [hover, setHover] = React.useState(false);
@@ -19,9 +22,9 @@ export function HelpButton({ size = 52, label = 'Open WRLD Help chat', onClick, 
       style={{
         position: 'relative',
         width: size, height: size,
-        border: 'none', borderRadius: '50%',
+        border: '1px solid var(--mono-950)', borderRadius: '50%',
         background: 'var(--accent-warm)',
-        color: '#fff',
+        color: 'var(--mono-950)',
         display: 'grid', placeItems: 'center',
         cursor: 'pointer', padding: 0,
         boxShadow: 'var(--shadow-accent-warm)',

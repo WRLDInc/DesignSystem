@@ -1,4 +1,4 @@
-/* @ds-bundle: {"format":4,"namespace":"WRLDTechDesignSystemRemix_6276ea","components":[{"name":"Lockup","sourcePath":"ui_kits/_shared/Lockup.jsx"},{"name":"AgentDetail","sourcePath":"ui_kits/wrld-ai/AgentDetail.jsx"},{"name":"AgentList","sourcePath":"ui_kits/wrld-ai/AgentList.jsx"},{"name":"RunHistory","sourcePath":"ui_kits/wrld-ai/RunHistory.jsx"},{"name":"Sidebar","sourcePath":"ui_kits/wrld-ai/Sidebar.jsx"},{"name":"StatCard","sourcePath":"ui_kits/wrld-ai/StatCard.jsx"},{"name":"TopBar","sourcePath":"ui_kits/wrld-ai/TopBar.jsx"},{"name":"Button","sourcePath":"ui_kits/wrld-tech/Button.jsx"},{"name":"CTA","sourcePath":"ui_kits/wrld-tech/CTA.jsx"},{"name":"Eyebrow","sourcePath":"ui_kits/wrld-tech/Eyebrow.jsx"},{"name":"Footer","sourcePath":"ui_kits/wrld-tech/Footer.jsx"},{"name":"Header","sourcePath":"ui_kits/wrld-tech/Header.jsx"},{"name":"Hero","sourcePath":"ui_kits/wrld-tech/Hero.jsx"},{"name":"ServicesGrid","sourcePath":"ui_kits/wrld-tech/ServicesGrid.jsx"},{"name":"ValuesStrip","sourcePath":"ui_kits/wrld-tech/ValuesStrip.jsx"}],"sourceHashes":{"styleguide/tweaks-panel.jsx":"57fac7f3caf9","ui_kits/_shared/Lockup.jsx":"6c0ff84ad9d2","ui_kits/wrld-ai/AgentDetail.jsx":"a4fd6eee8f43","ui_kits/wrld-ai/AgentList.jsx":"fd556cea7ab8","ui_kits/wrld-ai/RunHistory.jsx":"3884edd6598d","ui_kits/wrld-ai/Sidebar.jsx":"78381d580953","ui_kits/wrld-ai/StatCard.jsx":"a947957ae150","ui_kits/wrld-ai/TopBar.jsx":"f9434490ea66","ui_kits/wrld-tech/Button.jsx":"237884ba4310","ui_kits/wrld-tech/CTA.jsx":"524f2ca63191","ui_kits/wrld-tech/Eyebrow.jsx":"bbf587253c14","ui_kits/wrld-tech/Footer.jsx":"032ecfba508b","ui_kits/wrld-tech/Header.jsx":"516be493f364","ui_kits/wrld-tech/Hero.jsx":"675fb1562475","ui_kits/wrld-tech/ServicesGrid.jsx":"c302bc0eb9d0","ui_kits/wrld-tech/ValuesStrip.jsx":"e1c59922e2d5"},"inlinedExternals":[],"unexposedExports":[]} */
+/* @ds-bundle: {"format":4,"namespace":"WRLDTechDesignSystemRemix_6276ea","components":[{"name":"Lockup","sourcePath":"ui_kits/_shared/Lockup.jsx"},{"name":"AgentDetail","sourcePath":"ui_kits/wrld-ai/AgentDetail.jsx"},{"name":"AgentList","sourcePath":"ui_kits/wrld-ai/AgentList.jsx"},{"name":"RunHistory","sourcePath":"ui_kits/wrld-ai/RunHistory.jsx"},{"name":"Sidebar","sourcePath":"ui_kits/wrld-ai/Sidebar.jsx"},{"name":"StatCard","sourcePath":"ui_kits/wrld-ai/StatCard.jsx"},{"name":"TopBar","sourcePath":"ui_kits/wrld-ai/TopBar.jsx"},{"name":"Button","sourcePath":"ui_kits/wrld-tech/Button.jsx"},{"name":"HelpButton","sourcePath":"ui_kits/wrld-tech/HelpButton.jsx"},{"name":"CTA","sourcePath":"ui_kits/wrld-tech/CTA.jsx"},{"name":"Eyebrow","sourcePath":"ui_kits/wrld-tech/Eyebrow.jsx"},{"name":"Footer","sourcePath":"ui_kits/wrld-tech/Footer.jsx"},{"name":"Header","sourcePath":"ui_kits/wrld-tech/Header.jsx"},{"name":"Hero","sourcePath":"ui_kits/wrld-tech/Hero.jsx"},{"name":"ServicesGrid","sourcePath":"ui_kits/wrld-tech/ServicesGrid.jsx"},{"name":"ValuesStrip","sourcePath":"ui_kits/wrld-tech/ValuesStrip.jsx"}],"sourceHashes":{"styleguide/tweaks-panel.jsx":"57fac7f3caf9","ui_kits/_shared/Lockup.jsx":"6c0ff84ad9d2","ui_kits/wrld-ai/AgentDetail.jsx":"a4fd6eee8f43","ui_kits/wrld-ai/AgentList.jsx":"fd556cea7ab8","ui_kits/wrld-ai/RunHistory.jsx":"3884edd6598d","ui_kits/wrld-ai/Sidebar.jsx":"78381d580953","ui_kits/wrld-ai/StatCard.jsx":"a947957ae150","ui_kits/wrld-ai/TopBar.jsx":"f9434490ea66","ui_kits/wrld-tech/Button.jsx":"237884ba4310","ui_kits/wrld-tech/CTA.jsx":"524f2ca63191","ui_kits/wrld-tech/Eyebrow.jsx":"bbf587253c14","ui_kits/wrld-tech/Footer.jsx":"032ecfba508b","ui_kits/wrld-tech/Header.jsx":"516be493f364","ui_kits/wrld-tech/HelpButton.jsx":"d78f236d80f6","ui_kits/wrld-tech/Hero.jsx":"675fb1562475","ui_kits/wrld-tech/ServicesGrid.jsx":"c302bc0eb9d0","ui_kits/wrld-tech/ValuesStrip.jsx":"e1c59922e2d5"},"inlinedExternals":[],"unexposedExports":[]} */
 
 (() => {
 
@@ -1243,6 +1243,80 @@ window.Button = Button;
 Object.assign(__ds_scope, { Button });
 })(); } catch (e) { __ds_ns.__errors.push({ path: "ui_kits/wrld-tech/Button.jsx", error: String((e && e.message) || e) }); }
 
+// ui_kits/wrld-tech/HelpButton.jsx
+try { (() => {
+function HelpButton({
+  size = 52,
+  label = 'Open WRLD Help chat',
+  onClick,
+  style
+}) {
+  const [hover, setHover] = React.useState(false);
+  const glyph = Math.round(size * 0.46);
+  return /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    "aria-label": label,
+    onClick: onClick,
+    onMouseEnter: () => setHover(true),
+    onMouseLeave: () => setHover(false),
+    style: {
+      position: 'relative',
+      width: size,
+      height: size,
+      border: '1px solid var(--mono-950)',
+      borderRadius: '50%',
+      background: 'var(--accent-warm)',
+      color: 'var(--mono-950)',
+      display: 'grid',
+      placeItems: 'center',
+      cursor: 'pointer',
+      padding: 0,
+      boxShadow: 'var(--shadow-accent-warm)',
+      transform: hover ? 'translateY(-1px) scale(1.05)' : 'none',
+      transition: 'transform 200ms cubic-bezier(.2,.8,.2,1), box-shadow 200ms cubic-bezier(.2,.8,.2,1)',
+      ...style
+    }
+  }, /*#__PURE__*/React.createElement("style", null, `
+        @keyframes wrld-help-ping {
+          0% { transform: scale(1); opacity: .8; }
+          70%, 100% { transform: scale(1.5); opacity: 0; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .wrld-help-ping { animation: none !important; }
+        }
+      `), /*#__PURE__*/React.createElement("svg", {
+    width: glyph,
+    height: glyph,
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "1.7",
+    strokeLinecap: "round",
+    strokeLinejoin: "round",
+    "aria-hidden": "true"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M7.9 20A9 9 0 1 0 4 16.1L2 22Z"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M9.8 9.3a2.3 2.3 0 0 1 4.5.7c0 1.5-2.3 2.1-2.3 2.1"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M12 15.4h.01"
+  })), /*#__PURE__*/React.createElement("span", {
+    className: "wrld-help-ping",
+    "aria-hidden": true,
+    style: {
+      position: 'absolute',
+      inset: 0,
+      borderRadius: '50%',
+      border: '1px solid rgb(238 147 0 / 0.55)',
+      animation: 'wrld-help-ping 2.8s cubic-bezier(.2,.8,.2,1) infinite',
+      pointerEvents: 'none'
+    }
+  }));
+}
+window.HelpButton = HelpButton;
+Object.assign(__ds_scope, { HelpButton });
+})(); } catch (e) { __ds_ns.__errors.push({ path: "ui_kits/wrld-tech/HelpButton.jsx", error: String((e && e.message) || e) }); }
+
 // ui_kits/wrld-tech/CTA.jsx
 try { (() => {
 function CTA() {
@@ -2235,6 +2309,8 @@ __ds_ns.StatCard = __ds_scope.StatCard;
 __ds_ns.TopBar = __ds_scope.TopBar;
 
 __ds_ns.Button = __ds_scope.Button;
+
+__ds_ns.HelpButton = __ds_scope.HelpButton;
 
 __ds_ns.CTA = __ds_scope.CTA;
 
