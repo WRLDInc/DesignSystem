@@ -262,18 +262,55 @@ served as content instead of consumed as configuration, and none of the CORS
 or cache rules are in effect.
 
 All six checks were run against a local `wrangler dev` serving this exact
-`dist/`, and all passed. Two findings from that run are worth knowing, because
-both were wrong before they were tested:
+`dist/`, and all passed. Add one more check for the first *non-production*
+build, which cannot be verified locally:
 
-- **`.ts` served as `video/mp2t`.** That is the correct IANA meaning of the
-  extension (MPEG transport stream), and it is wrong for TypeScript. Since
-  `tokens/tokens.ts` is a published entry point, a browser offered it as a
-  video download — and with `nosniff` set, importing it as a module would be
-  blocked. `deploy/_headers` now overrides it to `text/plain`.
-- **Directory URLs 404.** There is no directory listing, so `/fonts/` and
-  `/tokens/` return 404 even though the directories exist. The build's
-  reference check models this, so a directory link now fails the build
-  instead of shipping as a dead link.
+```bash
+# 7. Preview URLs must be noindex'd — they are duplicate content otherwise.
+curl -sI https://<version>-wrld-design-system.<subdomain>.workers.dev/ | grep -i x-robots-tag
+```
+
+If that returns nothing, the placeholder-hostname rule in `_headers` isn't
+firing; the fallback is setting `preview_urls` to `false` in
+`wrangler.jsonc` and giving up per-branch review URLs.
+
+### Five things that were wrong until they were tested
+
+Every one of these passed a reading of the docs and failed a real request.
+They are recorded because each is a trap the next person will hit.
+
+1. **`_headers` has no specificity precedence — colliding values are
+   comma-joined, not replaced.** Every matching rule applies. An earlier
+   revision set `Cache-Control` in both `/tokens/*` and `/*.ts`, and
+   `tokens/tokens.ts` matches both, so it was served with
+   `Cache-Control: public, max-age=3600, stale-while-revalidate=86400, public, max-age=3600, stale-while-revalidate=86400`
+   — a malformed header on a URL other WRLD sites treat as a contract. The
+   file now keeps every `Cache-Control` rule on a disjoint path set, and
+   where rules overlap on path they set disjoint header *names*. Use
+   `! Header-Name` (bang plus a mandatory space) to unset before re-setting.
+2. **Header rules apply to 404 responses too.** A `/fonts/*` rule with
+   `immutable` meant `GET /fonts/DoesNotExist-Bold.ttf` returned 404 with
+   `Cache-Control: public, max-age=31536000, immutable` — a client that ever
+   requested a wrong font path would cache that failure for a year and never
+   revalidate, so adding the file later would not fix it for them. Fonts are
+   now listed by exact filename.
+3. **`.ts` is served as `video/mp2t`** — the correct IANA meaning of the
+   extension, and useless for TypeScript. `tokens/tokens.ts` is a published
+   entry point, so a browser offered it as a video download, and with
+   `nosniff` a module import would be blocked. Overridden to `text/plain`,
+   along with `.jsx`, `.md`, and the extensionless `LICENSE` (which had no
+   `Content-Type` at all).
+4. **`OPTIONS` returns 405.** The asset layer allows only GET and HEAD, so a
+   CORS preflight can never succeed and `Access-Control-Allow-Methods` /
+   `Access-Control-Max-Age` were fiction. Removed. Every real consumer
+   request here is a simple request that never preflights.
+5. **Directory URLs 404.** There is no directory listing, so `/fonts/` and
+   `/tokens/` return 404 even though the directories exist. The build's
+   reference check models this, so a directory link now fails the build
+   instead of shipping as a dead link.
+
+A sweep of all 203 shipped files confirms no response carries a doubled
+header. Worth re-running after any `_headers` edit.
 
 Also confirm the `workers_dev: false` + `preview_urls: true` pairing behaves:
 Cloudflare defaults preview URLs to follow `workers_dev`, so this
