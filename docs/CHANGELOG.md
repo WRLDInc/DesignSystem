@@ -2,6 +2,12 @@
 
 All notable changes to the WRLD Design System are documented here. This project follows semantic versioning.
 
+## [0.2.1] — 2026-08-17
+
+### Fixed
+
+- **Favicon is the starburst, not the circular disc.** Regenerated `logos/favicons/` (and the `assets/logos/favicons/` mirror) from the 18-ray mark. Added `favicon.svg` (white starburst on `#0a0a0a`). Styleguide and UI-kit pages now point at `favicon.svg` with PNG fallbacks. The old circle/gear raster set is gone.
+
 ## [0.2.0] — 2026-08-11
 
 Synced this repository to the canonical Claude Design project
