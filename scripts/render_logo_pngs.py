@@ -145,7 +145,15 @@ def write_starburst_favicons() -> None:
     ico_sizes = [16, 32, 48, 64]
     images = [Image.open(pngs[s]).convert("RGBA") for s in ico_sizes]
     ico = FAV_DIR / "favicon.ico"
-    images[0].save(ico, format="ICO", sizes=[(s, s) for s in ico_sizes])
+    # Pillow drops any requested size larger than the base image, so the
+    # largest raster must be the base; the smaller ones are matched by size
+    # from append_images.
+    images[-1].save(
+        ico,
+        format="ICO",
+        sizes=[(s, s) for s in ico_sizes],
+        append_images=images[:-1],
+    )
     print(f"  → {ico.relative_to(REPO)}")
 
     svg_text = _load_generate_svgs().build_favicon_svg()
@@ -169,12 +177,15 @@ def write_starburst_favicons() -> None:
 
     # Mirror into the remix/preview path so leftover circle files cannot win.
     stale = {"favicon.png"}
+    for name in stale:
+        (FAV_DIR / name).unlink(missing_ok=True)
+
     for path in ASSET_FAV_DIR.iterdir():
         if path.name in stale or path.suffix.lower() in {".png", ".ico", ".svg", ".webmanifest"}:
             if path.name != ".DS_Store":
                 path.unlink()
     for src in FAV_DIR.iterdir():
-        if src.name == ".DS_Store":
+        if src.name == ".DS_Store" or src.name in stale:
             continue
         dest = ASSET_FAV_DIR / src.name
         dest.write_bytes(src.read_bytes())
