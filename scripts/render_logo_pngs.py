@@ -6,16 +6,23 @@ Run after ``generate_svgs.py`` — or together via ``npm run build:favicons``.
 """
 from __future__ import annotations
 
-import io
+import importlib.util
+import json
 from pathlib import Path
 
-import cairosvg
 from PIL import Image
+
+try:
+    import cairosvg
+except ImportError:
+    cairosvg = None
 
 REPO = Path(__file__).resolve().parent.parent
 SVG_DIR = REPO / "logos" / "svg"
 PNG_DIR = REPO / "logos" / "png"
 FAV_DIR = REPO / "logos" / "favicons"
+ASSET_FAV_DIR = REPO / "assets" / "logos" / "favicons"
+MARK_WHITE_PNG = REPO / "assets" / "logos" / "wrld-mark-white.png"
 
 PNG_DIR.mkdir(parents=True, exist_ok=True)
 FAV_DIR.mkdir(parents=True, exist_ok=True)
@@ -27,6 +34,8 @@ LOCKUP_WIDTHS = [512, 1024, 2048]
 
 
 def render(svg_path: Path, out_path: Path, *, width: int | None = None, height: int | None = None) -> None:
+    if cairosvg is None:
+        raise RuntimeError("cairosvg is required for SVG → PNG mark exports")
     kwargs = {}
     if width:
         kwargs["output_width"] = width
@@ -36,10 +45,27 @@ def render(svg_path: Path, out_path: Path, *, width: int | None = None, height: 
     print(f"  → {out_path.relative_to(REPO)}")
 
 
+def _load_generate_svgs():
+    spec = importlib.util.spec_from_file_location(
+        "generate_svgs", REPO / "scripts" / "generate_svgs.py"
+    )
+    module = importlib.util.module_from_spec(spec)
+    assert spec.loader is not None
+    spec.loader.exec_module(module)
+    return module
+
+
 def main() -> None:
-    # ------------------------------------------------------------------
-    # PNG exports of marks
-    # ------------------------------------------------------------------
+    if cairosvg is None:
+        print("cairosvg not installed — skipping mark/lockup PNG exports")
+    else:
+        _render_mark_and_lockup_pngs()
+    print("\nRendering favicons…")
+    write_starburst_favicons()
+    print("\nDone.")
+
+
+def _render_mark_and_lockup_pngs() -> None:
     print("Rendering mark PNGs…")
     for variant in ("dark", "light", "mono"):
         src = SVG_DIR / f"wrld-mark-{variant}.svg"
@@ -71,52 +97,88 @@ def main() -> None:
         out = PNG_DIR / f"{svg.stem}-2048w.png"
         render(svg, out, width=2048)
 
-    # ------------------------------------------------------------------
-    # Favicons — derived from the mark. Solid dark (for light contexts).
-    # ------------------------------------------------------------------
-    print("\nRendering favicons…")
-    fav_src = SVG_DIR / "wrld-mark-dark.svg"
+
+def _square_mark(src: Path) -> Image.Image:
+    im = Image.open(src).convert("RGBA")
+    w, h = im.size
+    side = min(w, h)
+    left = (w - side) // 2
+    top = (h - side) // 2
+    return im.crop((left, top, left + side, top + side))
+
+
+def _resize_mark(square: Image.Image, size: int) -> Image.Image:
+    return square.resize((size, size), Image.Resampling.LANCZOS)
+
+
+def write_starburst_favicons() -> None:
+    """Rasterize the starburst mark for every published favicon size.
+
+    Source of truth is the white-on-black mark PNG (same geometry as
+    ``logos/svg/wrld-mark-light.svg``). CairoSVG is optional; this path
+    must work with Pillow alone so the circle set cannot linger.
+    """
+    if not MARK_WHITE_PNG.exists():
+        raise SystemExit(f"missing starburst source: {MARK_WHITE_PNG}")
+
+    square = _square_mark(MARK_WHITE_PNG)
+    FAV_DIR.mkdir(parents=True, exist_ok=True)
+    ASSET_FAV_DIR.mkdir(parents=True, exist_ok=True)
+
     favicon_sizes = [16, 32, 48, 64, 96, 128, 180, 192, 256, 384, 512]
     pngs: dict[int, Path] = {}
     for size in favicon_sizes:
         out = FAV_DIR / f"favicon-{size}x{size}.png"
-        render(fav_src, out, width=size, height=size)
+        _resize_mark(square, size).save(out, format="PNG")
         pngs[size] = out
+        print(f"  → {out.relative_to(REPO)}")
 
-    # apple-touch-icon — conventionally 180 w/ padding-safe dark
-    render(fav_src, FAV_DIR / "apple-touch-icon.png", width=180, height=180)
+    apple = FAV_DIR / "apple-touch-icon.png"
+    _resize_mark(square, 180).save(apple, format="PNG")
+    print(f"  → {apple.relative_to(REPO)}")
 
-    # Android / PWA icons
-    render(fav_src, FAV_DIR / "android-chrome-192x192.png", width=192, height=192)
-    render(fav_src, FAV_DIR / "android-chrome-512x512.png", width=512, height=512)
+    for size, name in ((192, "android-chrome-192x192.png"), (512, "android-chrome-512x512.png")):
+        out = FAV_DIR / name
+        _resize_mark(square, size).save(out, format="PNG")
+        print(f"  → {out.relative_to(REPO)}")
 
-    # Classic favicon.ico (multi-resolution)
     ico_sizes = [16, 32, 48, 64]
-    images: list[Image.Image] = []
-    for s in ico_sizes:
-        images.append(Image.open(pngs[s]).convert("RGBA"))
-    images[0].save(FAV_DIR / "favicon.ico", format="ICO", sizes=[(s, s) for s in ico_sizes])
-    print(f"  → {(FAV_DIR / 'favicon.ico').relative_to(REPO)}")
+    images = [Image.open(pngs[s]).convert("RGBA") for s in ico_sizes]
+    ico = FAV_DIR / "favicon.ico"
+    images[0].save(ico, format="ICO", sizes=[(s, s) for s in ico_sizes])
+    print(f"  → {ico.relative_to(REPO)}")
 
-    # ------------------------------------------------------------------
-    # Web manifest
-    # ------------------------------------------------------------------
+    svg_text = _load_generate_svgs().build_favicon_svg()
+    (FAV_DIR / "favicon.svg").write_text(svg_text)
+    print(f"  → {(FAV_DIR / 'favicon.svg').relative_to(REPO)}")
+
     manifest = {
         "name": "WRLD",
         "short_name": "WRLD",
         "icons": [
-            {"src": "/favicons/android-chrome-192x192.png", "sizes": "192x192", "type": "image/png"},
-            {"src": "/favicons/android-chrome-512x512.png", "sizes": "512x512", "type": "image/png"},
+            {"src": "/logos/favicons/android-chrome-192x192.png", "sizes": "192x192", "type": "image/png"},
+            {"src": "/logos/favicons/android-chrome-512x512.png", "sizes": "512x512", "type": "image/png"},
+            {"src": "/logos/favicons/favicon.svg", "sizes": "any", "type": "image/svg+xml"},
         ],
         "theme_color": "#0a0a0a",
         "background_color": "#0a0a0a",
         "display": "standalone",
     }
-    import json as _json
-    (FAV_DIR / "site.webmanifest").write_text(_json.dumps(manifest, indent=2))
+    (FAV_DIR / "site.webmanifest").write_text(json.dumps(manifest, indent=2) + "\n")
     print(f"  → {(FAV_DIR / 'site.webmanifest').relative_to(REPO)}")
 
-    print("\nDone.")
+    # Mirror into the remix/preview path so leftover circle files cannot win.
+    stale = {"favicon.png"}
+    for path in ASSET_FAV_DIR.iterdir():
+        if path.name in stale or path.suffix.lower() in {".png", ".ico", ".svg", ".webmanifest"}:
+            if path.name != ".DS_Store":
+                path.unlink()
+    for src in FAV_DIR.iterdir():
+        if src.name == ".DS_Store":
+            continue
+        dest = ASSET_FAV_DIR / src.name
+        dest.write_bytes(src.read_bytes())
+        print(f"  → {dest.relative_to(REPO)}")
 
 
 if __name__ == "__main__":
