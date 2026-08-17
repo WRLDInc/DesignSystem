@@ -71,6 +71,21 @@ def build_mark_svg(fill: str, viewbox: str = "0 0 200 200", *, id_prefix: str = 
 '''
 
 
+def build_favicon_svg() -> str:
+    """Tab icon: white starburst on the near-black plate. Never a circle or disc."""
+    rays = "\n    ".join(
+        f'<path d="{build_ray_path(i)}"/>' for i in range(RAYS)
+    )
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="WRLD">
+  <title>WRLD</title>
+  <rect width="200" height="200" fill="#0a0a0a"/>
+  <g fill="#fafafa" fill-rule="evenodd">
+    {rays}
+  </g>
+</svg>
+'''
+
+
 def build_mark_svg_current_color() -> str:
     """Mono variant — inherits currentColor so a single file themes everywhere."""
     rays = "\n    ".join(
@@ -216,7 +231,12 @@ def main() -> None:
         (out / name).write_text(content)
         print(f"wrote {name}")
 
-    print(f"\n{len(files)} files written to {out}")
+    fav_dir = Path(__file__).resolve().parent.parent / "logos" / "favicons"
+    fav_dir.mkdir(parents=True, exist_ok=True)
+    (fav_dir / "favicon.svg").write_text(build_favicon_svg())
+    print("wrote ../favicons/favicon.svg")
+
+    print(f"\n{len(files) + 1} files written to {out} and {fav_dir}")
 
 
 if __name__ == "__main__":
