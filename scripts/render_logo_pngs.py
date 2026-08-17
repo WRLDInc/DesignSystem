@@ -122,6 +122,11 @@ def write_starburst_favicons() -> None:
         raise SystemExit(f"missing starburst source: {MARK_WHITE_PNG}")
 
     square = _square_mark(MARK_WHITE_PNG)
+    # The mark is white on transparency; flatten onto the brand dark plate so
+    # the raster favicons stay visible on light browser chrome.
+    plate = Image.new("RGBA", square.size, "#0a0a0a")
+    plate.alpha_composite(square)
+    square = plate
     FAV_DIR.mkdir(parents=True, exist_ok=True)
     ASSET_FAV_DIR.mkdir(parents=True, exist_ok=True)
 
