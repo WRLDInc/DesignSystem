@@ -165,12 +165,21 @@ whose nameservers are not managed by Cloudflare**. That prerequisite is met.
 On deploy, Cloudflare creates the proxied DNS record for the apex and issues
 the certificate automatically. There is no DNS record to add by hand.
 
-**Current state, as of the first repo connection:** the Worker `wrlddesign`
-exists and holds two deployments from the dashboard's "Import a repository"
-scaffold (a hello-world template) plus one version uploaded from a feature
-branch. `wrld.design` is **not yet bound** and does not resolve — the apex
-carries only email records. Nothing of this design system is live yet. The
-apex binds, and the template is replaced, on the first build of `main`.
+**Current state: live.** The first `main` build ran `wrangler deploy`, which
+created the Custom Domain `wrld.design → wrlddesign` and the proxied apex
+record (`AAAA wrld.design → 100::`) automatically, replacing the dashboard's
+hello-world scaffold. Verified in production: `/`, `/styleguide/`,
+`/ui_kits/wrld-tech/`, `/preview/colors-mono`, `/tokens/tokens.css`, and the
+typefaces all return 200; `/_headers`, `/.git/config`, `/package.json`,
+`/scripts/*`, and `/uploads/*` all 404; `/index.html` 307s to `/`; the custom
+404 renders; `tokens/tokens.ts` serves `text/plain` with a single clean
+`Cache-Control`; a missing font 404s with `max-age=0, must-revalidate`. The
+five apex `MX` records are untouched, so Namecheap email forwarding still
+works.
+
+One note for the first request after any future domain rebind: the very first
+hit to `/` returned a connection error while the edge certificate settled,
+then served 200 consistently. Warming, not a fault.
 
 > **`routes` in this file overwrite the dashboard on every deploy.** This
 > file owns the domain binding — do not also manage it in the UI, or the next
@@ -280,17 +289,20 @@ served as content instead of consumed as configuration, and none of the CORS
 or cache rules are in effect.
 
 All six checks were run against a local `wrangler dev` serving this exact
-`dist/`, and all passed. Add one more check for the first *non-production*
-build, which cannot be verified locally:
+`dist/`, and all passed — then re-run against the live origin after the first
+production deploy. Re-run this one after any `_headers` edit:
 
 ```bash
 # 7. Preview URLs must be noindex'd — they are duplicate content otherwise.
 curl -sI https://<version>-wrlddesign.<subdomain>.workers.dev/ | grep -i x-robots-tag
 ```
 
-If that returns nothing, the placeholder-hostname rule in `_headers` isn't
-firing; the fallback is setting `preview_urls` to `false` in
-`wrangler.jsonc` and giving up per-branch review URLs.
+**Confirmed working** on the first real preview build: both the commit and
+branch preview URLs return `200` with `x-robots-tag: noindex`, while
+`https://wrld.design/` returns no `X-Robots-Tag` at all. That is the pairing
+that matters — previews suppressed, apex indexable. If a future edit ever
+makes that rule stop firing, the fallback is setting `preview_urls` to
+`false` and giving up per-branch review URLs.
 
 ### Five things that were wrong until they were tested
 
@@ -330,10 +342,12 @@ They are recorded because each is a trap the next person will hit.
 A sweep of all 203 shipped files confirms no response carries a doubled
 header. Worth re-running after any `_headers` edit.
 
-Also confirm the `workers_dev: false` + `preview_urls: true` pairing behaves:
-Cloudflare defaults preview URLs to follow `workers_dev`, so this
-combination is set explicitly rather than relied on. If preview URLs don't
-appear on a non-production build, that pairing is why.
+The `workers_dev: false` + `preview_urls: true` pairing is **confirmed
+working** after the first production deploy — the Worker reports
+`enabled: false, previews_enabled: true`, exactly as configured. Cloudflare
+defaults preview URLs to follow `workers_dev`, so keep both set explicitly;
+that default is also Wrangler-version-dependent, and leaving it implicit
+would make the behaviour drift with the build image.
 
 ---
 

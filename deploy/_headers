@@ -219,7 +219,7 @@
 # -----------------------------------------------------------------------------
 
 # -----------------------------------------------------------------------------
-# Keep build preview hostnames out of search results.
+# Keep build preview hostnames out of search results. VERIFIED WORKING.
 #
 # wrld.design is the only canonical origin, but preview_urls is enabled in
 # wrangler.jsonc, so <version>-wrlddesign.<subdomain>.workers.dev is
@@ -232,11 +232,11 @@
 # `Host: wrld.design` header. That containment is the important half — a
 # stray noindex on the apex would deindex the real site.
 #
-# The half that CANNOT be verified without a real preview deploy is whether
-# it actually fires on a live *.workers.dev preview URL. Check that on the
-# first non-production build (see docs/CLOUDFLARE_DEPLOY.md §4). If it does
-# not fire, the fallback is setting preview_urls to false and giving up
-# per-branch review URLs.
+# Confirmed on the first real preview build: both the commit and branch
+# preview URLs return 200 with `x-robots-tag: noindex`, while
+# https://wrld.design/ returns no X-Robots-Tag at all. Re-check after any
+# edit here; if it ever stops firing, the fallback is setting preview_urls to
+# false and giving up per-branch review URLs.
 # -----------------------------------------------------------------------------
 https://:version.:subdomain.workers.dev/*
   X-Robots-Tag: noindex

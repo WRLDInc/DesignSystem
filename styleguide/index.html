@@ -486,6 +486,64 @@
       border-radius: var(--wrld-radius-pill);
       color: var(--wrld-fg-muted);
     }
+
+    /* ---- Responsive -------------------------------------------------
+       This page previously had no media queries at all, so the header row
+       (brand + five nav links + theme toggle) never wrapped and forced the
+       whole document to 865px wide — every narrow viewport scrolled
+       sideways. The rules below keep the page body at viewport width at all
+       sizes; wide content scrolls inside its own container instead.
+       ---------------------------------------------------------------- */
+
+    /* Nothing may push the document wider than the viewport. */
+    html, body { max-width: 100%; overflow-x: hidden; }
+    img, svg, canvas { max-width: 100%; }
+
+    @media (max-width: 900px) {
+      header.top .inner {
+        flex-wrap: wrap;
+        gap: var(--wrld-space-3);
+        padding: var(--wrld-space-3) var(--wrld-space-4);
+      }
+      /* This padding existed only to fake optical spacing against the nav;
+         once the nav wraps to its own row it just overflows the brand. */
+      header.top .brand .lockup-text { padding-right: 0; }
+
+      /* The nav becomes its own scroll region on its own row, rather than
+         stretching the page. Scrollbar hidden — the row is clearly clipped. */
+      header.top nav {
+        order: 3;
+        width: 100%;
+        gap: var(--wrld-space-5);
+        overflow-x: auto;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 2px;
+      }
+      header.top nav::-webkit-scrollbar { display: none; }
+      header.top nav a { white-space: nowrap; flex: 0 0 auto; }
+
+      .shell { padding: var(--wrld-space-8) var(--wrld-space-5); }
+      section { padding: var(--wrld-space-10) 0; }
+    }
+
+    @media (max-width: 560px) {
+      .shell { padding: var(--wrld-space-6) var(--wrld-space-4); }
+      section { padding: var(--wrld-space-8) 0; }
+      header.top .brand .wordmark { font-size: 16px; }
+      header.top nav { gap: var(--wrld-space-4); }
+      header.top nav a { font-size: 11px; letter-spacing: 0.14em; }
+    }
+
+    /* Reduced motion: the nav underline sweep and toggle transitions are
+       decorative. Honour the OS preference. */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+      }
+    }
   </style>
 </head>
 <body>
