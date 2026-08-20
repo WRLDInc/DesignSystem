@@ -57,7 +57,7 @@ These values shape *every* design and copy decision. When in doubt, ask: "Does t
 
 **Modern minimalist. Dark/light mode monochromatic.** Static surfaces stay grayscale, with near-black `#0a0a0a` as the anchoring value in light mode and `#fafafa` as the anchoring value in dark mode. Negative space is generous. Geometry is precise. The system should read as confident, technical, and quietly premium — never busy, never "tech-bro neon".
 
-The logo matches the surface it sits on: the **dark** logo on light backgrounds; the **light** logo on dark backgrounds. The starburst mark is always paired with the wordmark unless the mark alone is used as a favicon or small-scale icon. The favicon is that same 18-ray starburst on `#0a0a0a` (`logos/favicons/favicon.svg`). Never a circle, disc, gear, or any other radial substitute.
+The logo matches the surface it sits on: the **dark** logo on light backgrounds; the **light** logo on dark backgrounds. Pair the starburst mark with the wordmark unless you use the mark alone as a favicon or small-scale icon. The favicon is that same 18-ray starburst on `#0a0a0a` (`logos/favicons/favicon.svg`). Never a circle, disc, gear, or any other radial substitute.
 
 ### 3.2 Accent usage (interactive-only)
 

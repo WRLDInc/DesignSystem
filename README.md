@@ -241,7 +241,7 @@ WRLD does **not** ship a custom icon font. Iconography is sparse — the brand f
 - `assets/logos/svg/wrld-mark-{black,white}.svg` — starburst alone (official vector geometry).
 - `assets/logos/svg/wrld-lockup-{black,white}.svg` — starburst + WRLD wordmark + sub-label.
 - `assets/logos/svg/wrld-tech-{black,white}.svg` — WRLD.TECH lockup with blue rule.
-- `assets/logos/favicons/` — starburst tab icons (`favicon.svg` plus 16–512 PNG and `favicon.ico`). Never the old circular disc.
+- `assets/logos/favicons/` — full starburst favicon set: `favicon.svg`, 16–512 PNGs, `favicon.ico`, `apple-touch-icon.png`, both `android-chrome-*.png` icons, and `site.webmanifest` (consumed by `deploy/index.html`). Never the old circular disc.
 - `assets/logos/wrld-tech-{black,white}.png` and `wrld-mark-master.png` — uploaded PNG references, preserved as fallbacks.
 
 ---
@@ -262,7 +262,7 @@ WRLD.Tech Design System/
 ├── styles.css                        ← global entry: @imports tokens + colors_and_type
 ├── assets/logos/
 │   ├── svg/                          ← all sub-brand lockups + starburst + wordmark, dark/light/mono
-│   ├── favicons/                     ← starburst favicon.svg + PNG/ICO
+│   ├── favicons/                     ← starburst favicon.svg + PNG/ICO + touch/Android icons + site.webmanifest
 │   └── *.png                         ← uploaded PNG references
 ├── preview/                          ← Design System tab cards (one HTML file each)
 ├── ui_kits/
