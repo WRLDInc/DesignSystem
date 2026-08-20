@@ -241,7 +241,7 @@ WRLD does **not** ship a custom icon font. Iconography is sparse — the brand f
 - `assets/logos/svg/wrld-mark-{black,white}.svg` — starburst alone (official vector geometry).
 - `assets/logos/svg/wrld-lockup-{black,white}.svg` — starburst + WRLD wordmark + sub-label.
 - `assets/logos/svg/wrld-tech-{black,white}.svg` — WRLD.TECH lockup with blue rule.
-- `assets/logos/favicons/` — full starburst favicon set: `favicon.svg`, 16–512 PNGs, `favicon.ico`, `apple-touch-icon.png`, both `android-chrome-*.png` icons, and `site.webmanifest` (consumed by `deploy/index.html`). Never the old circular disc.
+- `assets/logos/favicons/` — full starburst favicon set: `favicon.svg`, 16–512 PNGs, `favicon.ico`, `apple-touch-icon.png`, both `android-chrome-*.png` icons, and `site.webmanifest` (consumed by the styleguide, preview, and UI-kit pages; `deploy/index.html` uses the mirrored root `logos/favicons/` tree). Never the old circular disc.
 - `assets/logos/wrld-tech-{black,white}.png` and `wrld-mark-master.png` — uploaded PNG references, preserved as fallbacks.
 
 ---
