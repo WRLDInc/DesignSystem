@@ -59,8 +59,8 @@ const PUBLISH = [
   'tokens',
 
   // Brand assets. Both trees are referenced: styleguide/preview use
-  // ../assets/logos/*, ui_kits use ../../assets/logos/favicons/*, and
-  // styleguide favicons come from ../logos/favicons/*.
+  // ../assets/logos/*, ui_kits use ../../assets/logos/favicons/*, and the
+  // deploy landing page + site.webmanifest consume root logos/favicons/*.
   'assets',
   'logos',
 

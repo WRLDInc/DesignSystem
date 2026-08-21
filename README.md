@@ -223,7 +223,7 @@ WRLD does **not** ship a custom icon font. Iconography is sparse — the brand f
 
 ### What we use
 
-1. **The starburst mark** is the hero. SVG variants in `assets/logos/svg/` (traced from the official vector source). It does double duty as logo, favicon, and ornamental geometric element.
+1. **The starburst mark** is the hero. SVG variants in `assets/logos/svg/` (traced from the official vector source). It does double duty as logo, favicon (`logos/favicons/favicon.svg`), and ornamental geometric element. Never substitute a circle, disc, or gear.
 2. **Lockups** — the full lockup and the WRLD.TECH lockup ship as black/white SVGs. Other sub-brands are a *recipe* (mark + Montserrat WRLD + uppercase sub-label), not separate assets.
 3. **Lucide** as the working icon set (CDN: `https://unpkg.com/lucide@latest`). Stroke-based, geometric, monochrome — matches brand DNA. Substituted because the design-system repo doesn't (yet) ship a curated icon set. **Flagged for the maintainer** — see "Open questions" below.
 4. **Emoji are not used.** Never as iconography in product, marketing, slides, or proposals.
@@ -241,7 +241,7 @@ WRLD does **not** ship a custom icon font. Iconography is sparse — the brand f
 - `assets/logos/svg/wrld-mark-{black,white}.svg` — starburst alone (official vector geometry).
 - `assets/logos/svg/wrld-lockup-{black,white}.svg` — starburst + WRLD wordmark + sub-label.
 - `assets/logos/svg/wrld-tech-{black,white}.svg` — WRLD.TECH lockup with blue rule.
-- `assets/logos/favicons/` — favicon-32x32, favicon-180x180.
+- `assets/logos/favicons/` — full starburst favicon set: `favicon.svg`, 16–512 PNGs, `favicon.ico`, `apple-touch-icon.png`, both `android-chrome-*.png` icons, and `site.webmanifest` (consumed by the styleguide, preview, and UI-kit pages; `deploy/index.html` uses the mirrored root `logos/favicons/` tree). Never the old circular disc.
 - `assets/logos/wrld-tech-{black,white}.png` and `wrld-mark-master.png` — uploaded PNG references, preserved as fallbacks.
 
 ---
@@ -262,7 +262,7 @@ WRLD.Tech Design System/
 ├── styles.css                        ← global entry: @imports tokens + colors_and_type
 ├── assets/logos/
 │   ├── svg/                          ← all sub-brand lockups + starburst + wordmark, dark/light/mono
-│   ├── favicons/                     ← favicon-32, favicon-180
+│   ├── favicons/                     ← starburst favicon.svg + PNG/ICO + touch/Android icons + site.webmanifest
 │   └── *.png                         ← uploaded PNG references
 ├── preview/                          ← Design System tab cards (one HTML file each)
 ├── ui_kits/
