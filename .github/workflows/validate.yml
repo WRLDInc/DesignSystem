@@ -40,7 +40,7 @@ jobs:
         with:
           python-version: '3.11'
       - name: Install rendering deps
-        run: pip install pillow
+        run: pip install pillow==12.3.0
       # The favicon pipeline renders from the authentic raster master only.
       # Byte-diffing PNGs across Pillow versions is fragile, so the gate is:
       # the pipeline runs, every published icon exists, and the retired
