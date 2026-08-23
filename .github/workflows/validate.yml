@@ -47,7 +47,13 @@ jobs:
       # parametric outputs (favicon.svg, the logos/svg set) stay dead.
       - name: Render favicons and verify the published set
         run: |
+          # Snapshot the committed set first: deploys publish the committed
+          # files (npm run build never renders), so a contributor who edits
+          # the master artwork but forgets to commit regenerated favicons
+          # must fail here, at the pixel level.
+          cp -r logos/favicons /tmp/committed-favicons
           python3 scripts/render_logo_pngs.py
+          python3 scripts/check_favicons_fresh.py /tmp/committed-favicons logos/favicons
           for dir in logos/favicons assets/logos/favicons; do
             for f in favicon.ico favicon-16x16.png favicon-32x32.png \
                      apple-touch-icon.png android-chrome-192x192.png \
