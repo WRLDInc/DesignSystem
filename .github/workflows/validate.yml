@@ -40,14 +40,31 @@ jobs:
         with:
           python-version: '3.11'
       - name: Install rendering deps
+        run: pip install pillow==12.3.0
+      # The favicon pipeline renders from the authentic raster master only.
+      # Byte-diffing PNGs across Pillow versions is fragile, so the gate is:
+      # the pipeline runs, every published icon exists, and the retired
+      # parametric outputs (favicon.svg, the logos/svg set) stay dead.
+      - name: Render favicons and verify the published set
         run: |
-          sudo apt-get update
-          sudo apt-get install -y libcairo2
-          pip install cairosvg pillow
-      - name: Regenerate SVGs and diff
-        run: |
-          python3 scripts/generate_svgs.py
-          git diff --exit-code logos/svg/ || {
-            echo "::error::SVGs are out of sync with generator. Run scripts/generate_svgs.py and commit."
-            exit 1
+          # Snapshot the committed set first: deploys publish the committed
+          # files (npm run build never renders), so a contributor who edits
+          # the master artwork but forgets to commit regenerated favicons
+          # must fail here, at the pixel level.
+          cp -r logos/favicons /tmp/committed-favicons
+          python3 scripts/render_logo_pngs.py
+          python3 scripts/check_favicons_fresh.py /tmp/committed-favicons logos/favicons
+          for dir in logos/favicons assets/logos/favicons; do
+            for f in favicon.ico favicon-16x16.png favicon-32x32.png \
+                     apple-touch-icon.png android-chrome-192x192.png \
+                     android-chrome-512x512.png site.webmanifest; do
+              test -s "$dir/$f" || { echo "::error::missing $dir/$f"; exit 1; }
+            done
+            test ! -e "$dir/favicon.svg" || { echo "::error::parametric favicon.svg reappeared in $dir"; exit 1; }
+          done
+          test ! -d logos/svg || { echo "::error::retired logos/svg directory reappeared"; exit 1; }
+          test ! -d assets/logos/svg || { echo "::error::retired assets/logos/svg directory reappeared"; exit 1; }
+          ! grep -rl "logos/svg/\|favicon\.svg" --include="*.html" --include="*.webmanifest" \
+              styleguide preview ui_kits deploy logos assets 2>/dev/null | grep . || {
+            echo "::error::a published page still references the retired parametric set"; exit 1;
           }

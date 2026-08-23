@@ -223,8 +223,8 @@ WRLD does **not** ship a custom icon font. Iconography is sparse — the brand f
 
 ### What we use
 
-1. **The starburst mark** is the hero. SVG variants in `assets/logos/svg/` (traced from the official vector source). It does double duty as logo, favicon (`logos/favicons/favicon.svg`), and ornamental geometric element. Never substitute a circle, disc, or gear.
-2. **Lockups** — the full lockup and the WRLD.TECH lockup ship as black/white SVGs. Other sub-brands are a *recipe* (mark + Montserrat WRLD + uppercase sub-label), not separate assets.
+1. **The starburst mark** is the hero. The authentic artwork is raster — `assets/logos/wrld-mark-master.png` and its black/white siblings; the old parametric SVG set is retired. It does double duty as logo, favicon (`logos/favicons/`), and ornamental geometric element. Never substitute a circle, disc, or gear.
+2. **Lockups** — the WRLD.TECH lockup ships as black/white PNGs (`assets/logos/wrld-tech-{black,white}.png`). Every other lockup is a *recipe* (mark + Montserrat WRLD + uppercase sub-label), not a separate asset.
 3. **Lucide** as the working icon set (CDN: `https://unpkg.com/lucide@latest`). Stroke-based, geometric, monochrome — matches brand DNA. Substituted because the design-system repo doesn't (yet) ship a curated icon set. **Flagged for the maintainer** — see "Open questions" below.
 4. **Emoji are not used.** Never as iconography in product, marketing, slides, or proposals.
 5. **Unicode arrows / glyphs** (→, ↗, ✕, ⌘) are acceptable inline within UI labels and are preferred over importing a stroke icon for one-off use.
@@ -238,10 +238,10 @@ WRLD does **not** ship a custom icon font. Iconography is sparse — the brand f
 
 ### Files
 
-- `assets/logos/svg/wrld-mark-{black,white}.svg` — starburst alone (official vector geometry).
-- `assets/logos/svg/wrld-lockup-{black,white}.svg` — starburst + WRLD wordmark + sub-label.
-- `assets/logos/svg/wrld-tech-{black,white}.svg` — WRLD.TECH lockup with blue rule.
-- `assets/logos/favicons/` — full starburst favicon set: `favicon.svg`, 16–512 PNGs, `favicon.ico`, `apple-touch-icon.png`, both `android-chrome-*.png` icons, and `site.webmanifest` (consumed by the styleguide, preview, and UI-kit pages; `deploy/index.html` uses the mirrored root `logos/favicons/` tree). Never the old circular disc.
+- `assets/logos/wrld-mark-{master,black,white}.png` — starburst alone (original artwork).
+- Lockups are a live-markup recipe — mark + Montserrat **WRLD** + uppercase sub-label (see the styleguide Logos section).
+- `assets/logos/wrld-tech-{black,white}.png` — WRLD.TECH lockup with blue rule (original artwork).
+- `assets/logos/favicons/` — full starburst favicon set: 16–512 PNGs, `favicon.ico`, `apple-touch-icon.png`, both `android-chrome-*.png` icons, and `site.webmanifest` (consumed by the styleguide, preview, and UI-kit pages; `deploy/index.html` uses the mirrored root `logos/favicons/` tree). Never the old circular disc.
 - `assets/logos/wrld-tech-{black,white}.png` and `wrld-mark-master.png` — uploaded PNG references, preserved as fallbacks.
 
 ---
@@ -261,9 +261,8 @@ WRLD.Tech Design System/
 │   └── index.html                    ← upstream interactive reference, viewable as-is
 ├── styles.css                        ← global entry: @imports tokens + colors_and_type
 ├── assets/logos/
-│   ├── svg/                          ← all sub-brand lockups + starburst + wordmark, dark/light/mono
-│   ├── favicons/                     ← starburst favicon.svg + PNG/ICO + touch/Android icons + site.webmanifest
-│   └── *.png                         ← uploaded PNG references
+│   ├── favicons/                     ← starburst PNG/ICO + touch/Android icons + site.webmanifest
+│   └── *.png                         ← authentic artwork: mark master + black/white, WRLD.TECH lockups
 ├── preview/                          ← Design System tab cards (one HTML file each)
 ├── ui_kits/
 │   ├── wrld-tech/                    ← flagship marketing site UI kit

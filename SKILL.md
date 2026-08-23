@@ -11,8 +11,8 @@ Read `README.md` first — it's the source of truth for entity naming, tone, vis
 - `colors_and_type.css` — drop-in stylesheet. Includes `@font-face` for Ubuntu, Ubuntu Mono, and Montserrat; primitive + semantic CSS variables; light/dark theming via `[data-theme]`.
 - `tokens/tokens.css` and `tokens/tokens.json` — canonical full token suite mirroring the upstream `WRLDInc/DesignSystem` repo.
 - `fonts/` — bundled TTFs. Reference these directly; do not pull from Google Fonts.
-- `assets/logos/` — SVG lockups for every sub-brand in dark / light / mono, plus PNG fallbacks. Always prefer SVG.
-- `logos/favicons/favicon.svg` — tab icon. White 18-ray starburst on `#0a0a0a`. Never a circle or disc.
+- `assets/logos/` — the authentic raster artwork: `wrld-mark-{master,black,white}.png` and the `wrld-tech-{black,white}.png` lockups. Other sub-brand lockups are a markup recipe (mark + Montserrat WRLD + uppercase sub-label), not separate files.
+- `logos/favicons/` — tab icon set. White 18-ray starburst on `#0a0a0a`, resized straight from the master artwork. Never a circle or disc.
 - `preview/` — small HTML cards demonstrating each token group, type scale, component, and brand asset. Useful for quickly seeing what's in the system.
 - `ui_kits/wrld-tech/` — flagship marketing site UI kit (header, hero, services grid, values strip, CTA, footer).
 - `ui_kits/wrld-ai/` — WRLD.AI product dashboard UI kit (sidebar, agent list, agent detail, run history, stat cards).
