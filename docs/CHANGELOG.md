@@ -2,6 +2,14 @@
 
 All notable changes to the WRLD Design System are documented here. This project follows semantic versioning.
 
+## [0.2.2] — 2026-08-23
+
+### Fixed
+
+- **Auto theme renders dark correctly in `colors_and_type.css`.** The semantic-surface tokens (`--fg`, `--bg`, and friends) only flipped under an explicit `data-theme="dark"`, so with `data-theme="auto"` on a dark OS every heading kept its light-mode near-black and vanished against the dark background. Added the missing `@media (prefers-color-scheme: dark) { :root[data-theme="auto"] }` block, mirroring the one `tokens/tokens.css` already had.
+- **Landing-page header shows the authentic mark, at a readable size.** `deploy/index.html` linked the parametric `assets/logos/svg/wrld-design-*.svg` lockups — the disc-reading generated geometry, at 22px. The header now composes the authentic raster mark (`assets/logos/wrld-mark-black.png` / `-white.png`, theme-swapped) at 36px with a live-text WRLD / Design wordmark. The generated SVG set itself is still tracked in [issue #11](https://github.com/WRLDInc/DesignSystem/issues/11).
+- **Styleguide header mark now inverts on auto + dark OS.** The `invert(1)` filter on the header mark only matched `data-theme="dark"`; the same rule now also applies under `data-theme="auto"` with a dark color scheme (both `styleguide/index.html` and the bundle-prep copy).
+
 ## [0.2.1] — 2026-08-17
 
 ### Fixed

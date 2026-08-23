@@ -69,7 +69,31 @@
     justify-content: space-between;
     gap: var(--wrld-space-4);
   }
-  .lockup img { height: 22px; width: auto; display: block; }
+  .lockup {
+    display: flex;
+    align-items: center;
+    gap: var(--wrld-space-3);
+  }
+  /* No display here: .lockup is flex (children blockify), and a
+     .lockup img rule would outweigh the [data-brand-art] theme swap. */
+  .lockup img { height: 36px; width: 36px; object-fit: contain; }
+  .lockup .lockup-text { display: inline-flex; flex-direction: column; line-height: 1; }
+  .lockup .wordmark {
+    font-family: var(--wrld-font-display);
+    font-weight: var(--wrld-fw-bold);
+    font-size: 20px;
+    letter-spacing: 0.04em;
+    color: var(--wrld-fg);
+  }
+  .lockup .sub {
+    font-family: var(--wrld-font-display);
+    font-weight: var(--wrld-fw-medium);
+    font-size: 10px;
+    letter-spacing: 0.20em;
+    text-transform: uppercase;
+    color: var(--wrld-fg-muted);
+    margin-top: 4px;
+  }
 
   .theme-toggle {
     font-family: var(--wrld-font-mono);
@@ -264,8 +288,12 @@
 <header class="site">
   <div class="wrap">
     <a class="lockup" href="./" aria-label="WRLD design system, home">
-      <img data-brand-art="on-light" src="assets/logos/svg/wrld-design-dark.svg" alt="WRLD design" />
-      <img data-brand-art="on-dark" src="assets/logos/svg/wrld-design-light.svg" alt="WRLD design" />
+      <img data-brand-art="on-light" src="assets/logos/wrld-mark-black.png" alt="" />
+      <img data-brand-art="on-dark" src="assets/logos/wrld-mark-white.png" alt="" />
+      <span class="lockup-text">
+        <span class="wordmark">WRLD</span>
+        <span class="sub">Design</span>
+      </span>
     </a>
     <button class="theme-toggle" type="button" data-theme-toggle aria-live="polite">auto</button>
   </div>

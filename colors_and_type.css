@@ -198,6 +198,40 @@
   --focus-ring: 0 0 0 3px rgb(var(--accent-primary-rgb) / 0.40);
 }
 
+/* -------- Semantic surfaces — auto follows the OS --------
+   Mirrors the [data-theme="dark"] block above, the same way
+   tokens.css resolves data-theme="auto" against prefers-color-scheme.
+   Keep the two blocks identical. */
+@media (prefers-color-scheme: dark) {
+  :root[data-theme="auto"] {
+    --bg:           var(--mono-950);
+    --bg-subtle:    var(--mono-900);
+    --bg-muted:     var(--mono-800);
+    --bg-elevated:  var(--mono-900);
+
+    --fg:           var(--mono-50);
+    --fg-muted:     var(--mono-400);
+    --fg-subtle:    var(--mono-500);
+    --fg-inverse:   var(--mono-950);
+
+    --border:        var(--mono-800);
+    --border-strong: var(--mono-700);
+
+    --logo:         var(--mono-0); /* light logo on dark surfaces */
+    --logo-inverse: var(--mono-950);
+
+    --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.30);
+    --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.40), 0 1px 2px 0 rgb(0 0 0 / 0.20);
+    --shadow-md: 0 4px 12px 0 rgb(0 0 0 / 0.45), 0 2px 4px 0 rgb(0 0 0 / 0.25);
+    --shadow-lg: 0 12px 32px 0 rgb(0 0 0 / 0.55), 0 4px 8px 0 rgb(0 0 0 / 0.25);
+
+    --shadow-accent-primary:   0 10px 40px -8px rgb(var(--accent-primary-rgb) / 0.36);
+    --shadow-accent-secondary: 0 10px 40px -8px rgb(var(--accent-secondary-rgb) / 0.34);
+    --shadow-accent-warm:      0 10px 40px -8px rgb(var(--accent-warm-rgb) / 0.36);
+    --focus-ring: 0 0 0 3px rgb(var(--accent-primary-rgb) / 0.40);
+  }
+}
+
 /* ============================================================
    SEMANTIC ELEMENT STYLES
    ============================================================ */

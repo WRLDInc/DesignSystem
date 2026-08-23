@@ -91,6 +91,9 @@
       filter: var(--wrld-logo-filter, none);
     }
     [data-theme="dark"] header.top .brand img.mark { filter: invert(1); }
+    @media (prefers-color-scheme: dark) {
+      [data-theme="auto"] header.top .brand img.mark { filter: invert(1); }
+    }
     header.top .brand .lockup-text {
       display: inline-flex; flex-direction: column; line-height: 1; padding-right: 4.2em;
     }
