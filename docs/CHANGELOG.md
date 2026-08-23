@@ -2,6 +2,19 @@
 
 All notable changes to the WRLD Design System are documented here. This project follows semantic versioning.
 
+## [0.3.0] — 2026-08-23
+
+### Removed
+
+- **The parametric SVG logo set is retired, everywhere.** `logos/svg/` (27 files), its `assets/logos/svg/` mirror, the `logos/png/` exports rendered from them, `favicon.svg` in both favicon trees, the `preview/svg-check.html` comparison page, and the `scripts/generate_svgs.py` generator are all deleted. The generated geometry drew 18 identical rays whose tips all landed on one circle — it read as a disc and never matched the authentic asymmetric mark. Resolves the tension tracked in [issue #11](https://github.com/WRLDInc/DesignSystem/issues/11).
+- `assets/logos/wrld-mark-light-bg-fallback.png` and its styleguide card — white-on-transparent artwork that rendered invisible on the light card and duplicated the white master's role.
+
+### Changed
+
+- **Every logo surface now uses the authentic artwork.** Styleguide logo cards show `wrld-mark-black/white.png`, the raster favicon set, and the original `wrld-tech-black/white.png` lockups. All favicon `<link>`s across the styleguide, preview, and UI kits drop the SVG entry and lead with the authentic PNG rasters; `site.webmanifest` (both trees) lists PNG icons only. The landing page's `og:image` moves off the deleted `logos/png/` export to `favicon-512x512.png`.
+- `scripts/render_logo_pngs.py` is now a pure-Pillow pipeline from `wrld-mark-master`'s white sibling — no cairosvg, no generator import — and actively deletes `favicon.svg` if it reappears. The CI `logos` job gates on the pipeline running and the retired set staying dead, instead of diffing generated SVGs.
+- README, SKILL, brand briefs, and contributor docs describe the raster-only source of truth; review scope moves from `/logos/svg/*` to `/assets/logos/*`.
+
 ## [0.2.2] — 2026-08-23
 
 ### Fixed

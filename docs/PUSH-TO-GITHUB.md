@@ -35,7 +35,7 @@ git push -u origin main
 Once pushed:
 
 - **Default branch:** `main`.
-- **Branch protection on `main`:** require PR review (at minimum: Ridgeway approval on any file in `brand/`, `tokens/`, `logos/svg/`).
+- **Branch protection on `main`:** require PR review (at minimum: Ridgeway approval on any file in `brand/`, `tokens/`, `assets/logos/`).
 - **Visibility:** start Private. Flip to Public if and when the system becomes an external reference — e.g., hosted at `wrld.host/brand`.
 - **Homepage URL:** `https://wrld.host/brand` (once the styleguide is deployed) or `https://baseline.is/brand/wrld` as an interim.
 - **Topics:** `design-system`, `brand-guidelines`, `wrld`, `tokens`, `msp`.

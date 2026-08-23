@@ -247,7 +247,7 @@ Publish and link the canonical forms. The generated landing page and
 preview links and a redirect-free sitemap deliberately.
 
 **There is no directory listing.** `/fonts/`, `/tokens/`, and
-`/assets/logos/svg/` all return `404` — only files are served. Link a
+`/assets/logos/` all return `404` — only files are served. Link a
 specific file, never a directory.
 
 ---
