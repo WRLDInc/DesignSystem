@@ -245,10 +245,10 @@
         "marketing"
       ],
       "source": "ui_kits/wrld-tech/ServicesGrid.jsx",
-      "component": null,
-      "url": null,
-      "installRef": null,
-      "publishedAt": null
+      "component": 13022,
+      "url": "https://21st.dev/@ridgelawrence/components/wrld-services-grid",
+      "installRef": "@ridgelawrence/wrld-services-grid",
+      "publishedAt": "2026-09-03T19:14:43.759Z"
     },
     {
       "slug": "wrld-footer",
@@ -264,10 +264,10 @@
         "marketing"
       ],
       "source": "ui_kits/wrld-tech/Footer.jsx",
-      "component": null,
-      "url": null,
-      "installRef": null,
-      "publishedAt": null
+      "component": 13023,
+      "url": "https://21st.dev/@ridgelawrence/components/wrld-footer",
+      "installRef": "@ridgelawrence/wrld-footer",
+      "publishedAt": "2026-09-03T19:17:02.383Z"
     },
     {
       "slug": "wrld-sidebar",
