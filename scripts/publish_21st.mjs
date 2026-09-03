@@ -38,7 +38,7 @@
  * 4 rate limited · 5 build failed · 6 cover not ready · 7 conflict. The script
  * exits 1 if any component fails, 2 if the only outcome was a Studio handoff.
  */
-import { spawnSync } from 'node:child_process';
+import { spawn } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { dirname, join, relative, resolve } from 'node:path';
@@ -160,47 +160,75 @@ if (!hasKey && !hasLogin && !flags.dryRun) {
   console.error('No 21st credentials found: export API_KEY_21ST (team key) or run `npx 21st login`. Continuing — the CLI will report exit 3 if this is wrong.');
 }
 
-/** Run the CLI. stdout is captured (the --json document); progress stays on stderr. */
-const runCli = (args, { json = true } = {}) => {
-  const [cmd, ...pre] = cli;
-  const full = [...pre, ...args, ...(json ? ['--json'] : [])];
-  if (flags.dryRun) {
-    console.log(`  $ ${[cmd === localBin ? '21st' : cmd, ...full].map((s) => (/\s/.test(s) ? JSON.stringify(s) : s)).join(' ')}`);
-    return { status: 0, data: null, stdout: '' };
-  }
-  const r = spawnSync(cmd, full, {
-    cwd: REPO,
-    encoding: 'utf8',
-    stdio: ['inherit', 'pipe', 'inherit'],
-    env: process.env,
-    maxBuffer: 64 * 1024 * 1024,
-    shell: process.platform === 'win32',
-    // Cover generation can queue for a long time on 21st's side. SIGINT lets
-    // the CLI's own interrupt handler delete the temporary draft, so a timed-out
-    // run does not eat the team's draft allowance.
-    timeout: flags.timeout * 1000,
-    killSignal: 'SIGINT',
-  });
-  if (r.error && r.error.code === 'ETIMEDOUT') {
-    console.error(`  timed out after ${flags.timeout}s — re-run later with --only for this slug`);
-    return { status: 124, data: null, stdout: r.stdout ?? '' };
-  }
-  if (r.error) fail(`could not run the 21st CLI: ${r.error.message}`);
-  const stdout = r.stdout ?? '';
-  let data = null;
-  if (json && stdout.trim()) {
-    try {
-      data = JSON.parse(stdout.trim());
-    } catch {
-      const start = stdout.indexOf('{');
-      const end = stdout.lastIndexOf('}');
-      if (start >= 0 && end > start) {
-        try { data = JSON.parse(stdout.slice(start, end + 1)); } catch { data = null; }
-      }
+/**
+ * Run the CLI. stdout is captured (the --json document); progress stays on
+ * stderr. Resolves with { status, data, stdout }; never rejects.
+ *
+ * Stopping is two-stage: after --timeout seconds the CLI gets SIGINT, which
+ * its own handler turns into "abort and delete the temporary draft". If it is
+ * stuck in a request that ignores the abort (seen in the wild), SIGKILL follows
+ * 30 seconds later so a batch never hangs on one component.
+ */
+const runCli = (args, { json = true } = {}) =>
+  new Promise((done) => {
+    const [cmd, ...pre] = cli;
+    const full = [...pre, ...args, ...(json ? ['--json'] : [])];
+    if (flags.dryRun) {
+      console.log(`  $ ${[cmd === localBin ? '21st' : cmd, ...full].map((s) => (/\s/.test(s) ? JSON.stringify(s) : s)).join(' ')}`);
+      done({ status: 0, data: null, stdout: '' });
+      return;
     }
-  }
-  return { status: r.status ?? 1, data, stdout };
-};
+    const child = spawn(cmd, full, {
+      cwd: REPO,
+      stdio: ['inherit', 'pipe', 'inherit'],
+      env: process.env,
+      shell: process.platform === 'win32',
+    });
+    let stdout = '';
+    child.stdout.setEncoding('utf8');
+    child.stdout.on('data', (chunk) => {
+      stdout += chunk;
+    });
+    let timedOut = false;
+    const soft = setTimeout(() => {
+      timedOut = true;
+      console.error(`  no result after ${flags.timeout}s — interrupting the CLI so it deletes its draft`);
+      child.kill('SIGINT');
+    }, flags.timeout * 1000);
+    const hard = setTimeout(() => {
+      if (child.exitCode === null && child.signalCode === null) {
+        console.error('  the CLI did not exit on SIGINT — killing it (its temporary draft may linger; `npx 21st components --json` shows the allowance)');
+        child.kill('SIGKILL');
+      }
+    }, flags.timeout * 1000 + 30_000);
+    child.on('error', (err) => {
+      clearTimeout(soft);
+      clearTimeout(hard);
+      fail(`could not run the 21st CLI: ${err.message}`);
+    });
+    child.on('close', (code) => {
+      clearTimeout(soft);
+      clearTimeout(hard);
+      if (timedOut) {
+        console.error(`  timed out after ${flags.timeout}s — re-run later with --only for this slug`);
+        done({ status: 124, data: null, stdout });
+        return;
+      }
+      let data = null;
+      if (json && stdout.trim()) {
+        try {
+          data = JSON.parse(stdout.trim());
+        } catch {
+          const s0 = stdout.indexOf('{');
+          const e0 = stdout.lastIndexOf('}');
+          if (s0 >= 0 && e0 > s0) {
+            try { data = JSON.parse(stdout.slice(s0, e0 + 1)); } catch { data = null; }
+          }
+        }
+      }
+      done({ status: code ?? 1, data, stdout });
+    });
+  });
 
 const pick = (obj, ...keys) => {
   for (const k of keys) if (obj && obj[k] != null) return obj[k];
@@ -236,7 +264,7 @@ if (flags.theme) {
   console.log(`\nPublishing theme "${th.name}" from ${th.file} (public)`);
   const args = ['publish-theme', abs(th.file), '--name', th.name];
   if (th.tags?.length) args.push('--tags', th.tags.join(','));
-  const r = runCli(args, { json: false });
+  const r = await runCli(args, { json: false });
   if (r.stdout.trim()) console.log(r.stdout.trim());
   if (r.status === 0 && !flags.dryRun) {
     const url = r.stdout.match(/https?:\/\/21st\.dev\/\S+/)?.[0] ?? th.url ?? null;
@@ -258,7 +286,7 @@ if (flags.theme) {
       if (!flags.dryRun) mkdirSync(out, { recursive: true });
       const args = ['render', abs(entry.file), '--out', out];
       if (entry.demo) args.push('--demo', abs(entry.demo));
-      const r = runCli(args);
+      const r = await runCli(args);
       const cover = pick(r.data, 'cover');
       if (r.status === 0) {
         const size = cover ? pngSize(cover) : null;
@@ -292,7 +320,7 @@ if (flags.theme) {
       console.log('  no local render for this slug — 21st will generate the cover (run `npm run registry:render -- --only ' + entry.slug + '` first to stage a verified one)');
     }
 
-    const r = runCli(args);
+    const r = await runCli(args);
     const d = r.data ?? {};
     const url = pick(d, 'url', 'component_url', 'componentUrl');
     if (!flags.dryRun) {
