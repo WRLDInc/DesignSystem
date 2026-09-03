@@ -19,6 +19,9 @@ This repo is the canonical source of truth for WRLD brand design. Changes that l
 | Adding new sub-brand briefs | Yes — Ridgeway |
 | Fixing typos, broken links, doc clarity | No, just open a PR |
 | Adding new sections to the HTML styleguide | No — but keep consistent with existing patterns |
+| Adding or changing a component under `/registry/**` | No — keep it self-contained (one file + one demo), typecheck, `npm run registry:render`, and mirror the change in the source UI kit |
+| Publishing components to the 21st.dev team library | No — but run it from the manifest (`npm run registry:publish`) and commit the refs it records |
+| Publishing the theme to 21st.dev (`registry:publish:theme`) | Yes — Ridgeway or Curtis. Themes are public and every run creates a new one |
 
 ## Workflow
 
@@ -26,7 +29,7 @@ This repo is the canonical source of truth for WRLD brand design. Changes that l
 2. **Make the smallest change** that achieves the goal.
 3. **Regenerate favicons** if you touched the master artwork:
    - `python3 scripts/render_logo_pngs.py` (or `npm run build:favicons`)
-4. **Run checks**: `npm run check`.
+4. **Run checks**: `npm run check` (after `npm ci`; it typechecks the 21st registry and verifies the generated theme too).
 5. **Open a PR** with a description that answers: *what changed, why, and what else is affected*.
 6. **Include screenshots** for any visual change.
 7. **Conventional commit prefix**: `feat:`, `fix:`, `docs:`, `refactor:`, `chore:`.

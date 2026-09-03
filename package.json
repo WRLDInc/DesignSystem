@@ -1,6 +1,6 @@
 {
   "name": "@wrldinc/design-system",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Canonical design system for WRLD Inc. and all WRLD brands — tokens, logos, briefs, and reference implementations.",
   "license": "SEE LICENSE IN LICENSE",
   "author": "Ridgeway Lawrence <ridge@wrld.tech>",
@@ -18,14 +18,20 @@
     "brand",
     "tokens",
     "msp",
-    "hosting"
+    "hosting",
+    "shadcn",
+    "21st",
+    "react",
+    "registry"
   ],
   "main": "tokens/tokens.ts",
   "types": "tokens/tokens.ts",
   "exports": {
     ".": "./tokens/tokens.ts",
     "./tokens.css": "./tokens/tokens.css",
-    "./tokens.json": "./tokens/tokens.json"
+    "./tokens.json": "./tokens/tokens.json",
+    "./theme.css": "./registry/theme/wrld.css",
+    "./registry/manifest.json": "./registry/manifest.json"
   },
   "files": [
     "brand",
@@ -33,6 +39,7 @@
     "logos",
     "assets",
     "styleguide",
+    "registry",
     "docs",
     "README.md",
     "LICENSE"
@@ -45,12 +52,42 @@
     "dev": "npm run build && npx wrangler dev",
     "deploy": "npm run build && npx wrangler deploy",
     "lint:tokens": "node scripts/validate_tokens.mjs",
-    "check": "npm run lint:tokens && npm run build"
+    "check": "npm run lint:tokens && npm run registry:check && npm run build",
+    "registry:theme": "node scripts/build_21st_theme.mjs",
+    "registry:theme:check": "node scripts/build_21st_theme.mjs --check",
+    "registry:typecheck": "tsc -p registry/tsconfig.json",
+    "registry:render": "node scripts/publish_21st.mjs --render",
+    "registry:publish": "node scripts/publish_21st.mjs",
+    "registry:publish:theme": "node scripts/publish_21st.mjs --theme",
+    "registry:check": "npm run registry:theme:check && npm run registry:typecheck"
   },
   "devDependencies": {
+    "@21st-dev/cli": "1.17.0",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.7",
+    "lucide-react": "1.40.0",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "typescript": "5.9.3",
     "wrangler": "4.123.0"
   },
   "engines": {
     "node": ">=18"
+  },
+  "peerDependencies": {
+    "lucide-react": ">=0.400.0",
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    },
+    "lucide-react": {
+      "optional": true
+    }
   }
 }

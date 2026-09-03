@@ -2,6 +2,41 @@
 
 All notable changes to the WRLD Design System are documented here. This project follows semantic versioning.
 
+## [0.4.0] — 2026-09-03
+
+### Added
+
+- **A 21st.dev registry for the design system** (`registry/`). Every UI-kit component now has a self-contained
+  TypeScript port with a demo, ready for `21st publish`: eight atoms in `registry/ui` (`WrldButton`, `WrldEyebrow`,
+  `WrldLockup`, `WrldHelpButton`, `WrldStatCard`, `WrldTopBar`, `WrldRunHistory`, `WrldAgentList`) and eight sections
+  in `registry/blocks` (`WrldHero`, `WrldCta`, `WrldValuesStrip`, `WrldServicesGrid`, `WrldFooter`, `WrldSidebar`,
+  `WrldAgentDetail`, `WrldHeader`). Ports carry a provenance header naming the source kit file, resolve tokens as
+  `--wrld-*` → host shadcn theme (`--color-*`) → WRLD literal, carry the authentic mark inline (128px renders in
+  `registry/assets/`, `markSrc` for the full-resolution file) because 21st's renderer blocks cross-origin requests,
+  use `lucide-react` where the kits used the Lucide CDN, and render interactive rows as real buttons for keyboard
+  access. Demos declare a `settings` object so 21st shows live controls and load nothing external.
+- **A generated shadcn / Tailwind v4 theme** — `registry/theme/wrld.css`, produced by `scripts/build_21st_theme.mjs`
+  from `tokens/tokens.css`: the full shadcn token set (`--background` … `--sidebar-ring`, `--radius`, `--font-*`)
+  mapped from the WRLD semantics for light and `.dark`, plus the `--wrld-*` tokens resolved to literals. Exposed as
+  `@wrldinc/design-system/theme.css` and at `https://wrld.design/registry/theme/wrld.css`. CI fails if it drifts.
+- **A manifest-driven publisher** — `registry/manifest.json` names every component, slug, description, tags and
+  registry kind, plus the target library (`wrld-tech`) and visibility (`private`); `scripts/publish_21st.mjs` drives
+  the pinned `@21st-dev/cli` from it (`npm run registry:render | registry:publish | registry:publish:theme`), writes
+  the stable `component:<id>` refs back after a publish, refuses to publish the theme without `--yes-public` because
+  21st themes are public, and mirrors the CLI exit codes.
+- **CI** — a `registry` job in `validate.yml` (theme freshness + strict typecheck of every port and demo) and a
+  manual `publish-21st.yml` workflow that publishes headlessly with the `API_KEY_21ST` repository secret and pushes
+  the recorded refs to a branch.
+- `docs/21ST_PUBLISHING.md` — the runbook: credentials, layout rules, commands, exit codes, install instructions.
+
+### Changed
+
+- `package.json` → 0.4.0. `files` ships `registry/`; `exports` adds `./theme.css`; `check` now runs the registry
+  gates; React, TypeScript, `lucide-react` and the 21st CLI are pinned devDependencies with optional peer ranges.
+- `scripts/build_site.mjs` publishes `registry/` (minus `tsconfig.json` and local renders) so the theme is linkable;
+  `deploy/_headers` caches `/registry/*` like the tokens and labels `.tsx` as `text/plain`; the landing page lists
+  the theme and the registry.
+
 ## [0.3.0] — 2026-08-23
 
 ### Removed

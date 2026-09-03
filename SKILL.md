@@ -17,6 +17,7 @@ Read `README.md` first — it's the source of truth for entity naming, tone, vis
 - `ui_kits/wrld-tech/` — flagship marketing site UI kit (header, hero, services grid, values strip, CTA, footer).
 - `ui_kits/wrld-ai/` — WRLD.AI product dashboard UI kit (sidebar, agent list, agent detail, run history, stat cards).
 - `styleguide/index.html` — upstream interactive reference, viewable as-is.
+- `registry/` — the 21st.dev registry: self-contained TypeScript ports of every kit component (`Wrld*`) with demos, the generated shadcn theme `registry/theme/wrld.css`, and `manifest.json`. Use these when the target project is React + shadcn; publish with `npm run registry:publish` (see `docs/21ST_PUBLISHING.md`).
 
 ## How to use this skill
 

@@ -1,0 +1,76 @@
+name: publish-21st
+
+# Publishes the registry to the WRLD team library on 21st.dev. Manual only:
+# a publish generates covers, consumes the team's draft allowance and changes
+# what teammates install, so nothing here runs on push.
+#
+# Requires the repository secret API_KEY_21ST — a TEAM API key from
+# https://21st.dev/settings/api-keys (a personal key cannot publish into a
+# team library). Never echo it; the CLI reads it from the environment.
+on:
+  workflow_dispatch:
+    inputs:
+      only:
+        description: 'Comma-separated slugs to publish (empty = every component in registry/manifest.json)'
+        required: false
+        default: ''
+      visibility:
+        description: 'Access for the published components'
+        type: choice
+        options: [private, published]
+        default: private
+
+concurrency:
+  group: publish-21st
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+
+      - name: Registry gates
+        run: node scripts/build_21st_theme.mjs --check && npx tsc -p registry/tsconfig.json
+
+      - name: Publish to the team library (headless)
+        id: publish
+        env:
+          API_KEY_21ST: ${{ secrets.API_KEY_21ST }}
+          ONLY: ${{ inputs.only }}
+          VISIBILITY: ${{ inputs.visibility }}
+        run: |
+          node scripts/publish_21st.mjs --auto --visibility "$VISIBILITY" ${ONLY:+--only "$ONLY"}
+
+      # A successful publish writes the stable component:<id> refs into
+      # registry/manifest.json. Those refs are what turn the next publish into
+      # a revision instead of a slug conflict, so they must land on main. The
+      # workflow pushes them to a branch and links the PR to open.
+      - name: Record stable refs on a branch
+        if: success()
+        run: |
+          if git diff --quiet -- registry/manifest.json; then
+            echo "registry/manifest.json unchanged — nothing to record" | tee -a "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          BRANCH="chore/21st-manifest-${GITHUB_RUN_ID}"
+          git checkout -b "$BRANCH"
+          git add registry/manifest.json
+          git commit -m "chore: record 21st.dev stable refs from publish run ${GITHUB_RUN_ID}"
+          git push -u origin "$BRANCH"
+          {
+            echo "### Stable refs recorded"
+            echo
+            echo "Open a pull request to land them on main:"
+            echo "https://github.com/${GITHUB_REPOSITORY}/compare/main...${BRANCH}?expand=1"
+          } >> "$GITHUB_STEP_SUMMARY"

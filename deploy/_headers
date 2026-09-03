@@ -161,6 +161,13 @@
 /_ds_manifest.json
   Cache-Control: public, max-age=3600, stale-while-revalidate=86400
 
+# The 21st.dev registry tree: the shadcn-compatible theme other projects may
+# link directly, plus the manifest and TSX sources. Same freshness contract as
+# the tokens. Sets ONLY Cache-Control; the /*.tsx rule below sets only
+# Content-Type, so the two never append.
+/registry/*
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+
 # -----------------------------------------------------------------------------
 # Content-Type corrections. No rule here sets Cache-Control, so none of them
 # can collide with the blocks above.
@@ -187,6 +194,9 @@
   Content-Type: text/plain; charset=utf-8
 
 /*.jsx
+  Content-Type: text/plain; charset=utf-8
+
+/*.tsx
   Content-Type: text/plain; charset=utf-8
 
 /*.md
