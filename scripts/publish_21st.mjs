@@ -19,7 +19,10 @@
  *   --visibility <v>    override the manifest visibility (published | private)
  *   --to <slug>         override the target library slug
  *   --auto              publish without a Studio round-trip (waits for the generated cover)
- *   --render            build + screenshot into registry/.renders/<slug>/ instead of publishing
+ *   --render            build + screenshot into registry/.renders/<slug>/ instead of publishing.
+ *                       A 2973×2232 capture is the render host's "Component Example"
+ *                       scaffold: it is rendered once more, and if it persists the PNG is
+ *                       set aside as scaffold.png so no publish stages it as the cover.
  *   --theme             publish the theme instead of components; requires --yes-public
  *   --dry-run           print the CLI commands and change nothing
  *   --timeout <s>       give up on one component after this many seconds (default 900).
@@ -43,7 +46,7 @@
  * exits 1 if any component fails, 2 if the only outcome was a Studio handoff.
  */
 import { spawn } from 'node:child_process';
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -266,6 +269,14 @@ const pngSize = (file) => {
 const coverFor = (slug) => join(RENDERS, slug, 'default.png');
 
 /**
+ * One of 21st's render hosts sometimes captures its own "Component Example"
+ * counter scaffold instead of the demo. Every such capture seen so far is
+ * exactly this size, while a real capture is 3840×2880 (or 3837×2877).
+ */
+const SCAFFOLD = { width: 2973, height: 2232 };
+const isScaffold = (size) => !!size && size.width === SCAFFOLD.width && size.height === SCAFFOLD.height;
+
+/**
  * The team's draft allowance. Every render and every publish creates a draft
  * on 21st, and the allowance (20 at the time of writing) recovers over time.
  * A CLI run that sits silent for minutes is almost always waiting on it.
@@ -358,13 +369,35 @@ if (flags.theme) {
       if (!flags.dryRun) mkdirSync(out, { recursive: true });
       const args = ['render', abs(entry.file), '--out', out];
       if (entry.demo) args.push('--demo', abs(entry.demo));
-      const r = await runCli(args);
-      const cover = pick(r.data, 'cover');
+      let r = await runCli(args);
+      let cover = pick(r.data, 'cover');
+      let size = r.status === 0 && cover ? pngSize(cover) : null;
+      if (isScaffold(size) && !flags.dryRun) {
+        // Costs a second slot, but a blind re-run is exactly what a human would do next.
+        console.log(`  ${size.width}×${size.height} is the render host's "Component Example" scaffold, not the demo — rendering once more`);
+        let slot = true;
+        if (flags.wait) {
+          const a = await waitForSlot(entry.slug);
+          slot = !(a && a.remaining < 1);
+        }
+        if (slot) {
+          r = await runCli(args);
+          cover = pick(r.data, 'cover');
+          size = r.status === 0 && cover ? pngSize(cover) : null;
+        }
+      }
+      if (r.status === 0 && isScaffold(size) && !flags.dryRun) {
+        // Keep the evidence, but never leave a scaffold where a publish would stage it as the cover.
+        const aside = join(out, 'scaffold.png');
+        renameSync(cover, aside);
+        console.log(`  still the scaffold — moved to ${rel(aside)}; re-run --only ${entry.slug} later. Nothing is staged for this slug.`);
+        results.push({ slug: entry.slug, status: 6, url: rel(aside) });
+        continue;
+      }
       if (r.status === 0) {
-        const size = cover ? pngSize(cover) : null;
         const dims = size ? ` (${size.width}×${size.height})` : '';
         console.log(`  rendered → ${cover ? rel(cover) : rel(out)}${dims}`);
-        console.log('  open the PNG: a generic "Component Example" counter means 21st\'s render host substituted its scaffold — re-run --only for this slug.');
+        console.log('  open the PNG before publishing: the publisher stages it as the cover.');
       }
       results.push({ slug: entry.slug, status: r.status, url: cover ? rel(cover) : null });
       continue;
@@ -384,7 +417,9 @@ if (flags.theme) {
     if (entry.demo) args.push('--demo', abs(entry.demo));
     if (entry.component) args.push('--component', `component:${entry.component}`);
     if (flags.auto) args.push('--auto');
-    if (flags.covers && existsSync(coverFor(entry.slug))) {
+    if (flags.covers && existsSync(coverFor(entry.slug)) && isScaffold(pngSize(coverFor(entry.slug)))) {
+      console.log(`  ${rel(coverFor(entry.slug))} is the render host's scaffold, not the demo — not staging it; 21st will generate the cover. Re-run \`npm run registry:render -- --only ${entry.slug}\` and publish again to replace it.`);
+    } else if (flags.covers && existsSync(coverFor(entry.slug))) {
       // A cover you have looked at beats one 21st generates blind.
       args.push('--preview', coverFor(entry.slug));
       console.log(`  staging verified cover ${rel(coverFor(entry.slug))}`);

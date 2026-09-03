@@ -128,10 +128,10 @@
         "toolbar"
       ],
       "source": "ui_kits/wrld-ai/TopBar.jsx",
-      "component": null,
-      "url": null,
-      "installRef": null,
-      "publishedAt": null
+      "component": 13019,
+      "url": "https://21st.dev/@ridgelawrence/components/wrld-top-bar",
+      "installRef": "@ridgelawrence/wrld-top-bar",
+      "publishedAt": "2026-09-03T19:09:10.272Z"
     },
     {
       "slug": "wrld-run-history",
@@ -168,10 +168,10 @@
         "ai"
       ],
       "source": "ui_kits/wrld-ai/AgentList.jsx",
-      "component": null,
-      "url": null,
-      "installRef": null,
-      "publishedAt": null
+      "component": 13020,
+      "url": "https://21st.dev/@ridgelawrence/components/wrld-agent-list",
+      "installRef": "@ridgelawrence/wrld-agent-list",
+      "publishedAt": "2026-09-03T19:10:05.521Z"
     },
     {
       "slug": "wrld-hero",
@@ -187,10 +187,10 @@
         "marketing"
       ],
       "source": "ui_kits/wrld-tech/Hero.jsx",
-      "component": null,
-      "url": null,
-      "installRef": null,
-      "publishedAt": null
+      "component": 13021,
+      "url": "https://21st.dev/@ridgelawrence/components/wrld-hero",
+      "installRef": "@ridgelawrence/wrld-hero",
+      "publishedAt": "2026-09-03T19:10:52.968Z"
     },
     {
       "slug": "wrld-cta",

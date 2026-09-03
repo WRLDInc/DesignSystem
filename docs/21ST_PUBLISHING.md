@@ -127,7 +127,7 @@ All of these run from the repo root after `npm ci`.
 |---|---|
 | `npm run registry:theme` | Regenerate `registry/theme/wrld.css` from `tokens/tokens.css`. Run after any token change and commit the result. |
 | `npm run registry:check` | Theme freshness + strict typecheck of every port and demo. Part of `npm run check` and of CI. |
-| `npm run registry:render` | Build every component in 21st's sandbox and save a screenshot under `registry/.renders/<slug>/default.png`. Publishes nothing. Inspect these before a publish: one of 21st's render hosts sometimes returns a generic "Component Example" counter instead of the demo (its images are 2973×2232 rather than 3840×2880); re-run `-- --only <slug>` until the real capture comes back. |
+| `npm run registry:render` | Build every component in 21st's sandbox and save a screenshot under `registry/.renders/<slug>/default.png`. Publishes nothing. One of 21st's render hosts sometimes returns a generic "Component Example" counter instead of the demo; every such capture is 2973×2232 (a real one is 3840×2880), so the script renders once more when it sees that size and, if it persists, sets the file aside as `scaffold.png` so nothing stages it. Still look at every PNG before publishing. |
 | `npm run registry:publish` | Create a reviewed draft per component and print its Studio **CLI Review** URL. Finish there: check every demo in light and dark, then publish. When `registry/.renders/<slug>/default.png` exists the script stages it as the cover (`--preview`), so a cover you have already looked at ships instead of a blind regeneration; `--no-covers` opts out. |
 | `npm run registry:publish -- --auto` | Headless: wait for the generated cover, publish, and record the refs. What CI uses. |
 | `npm run registry:publish -- --only wrld-button,wrld-lockup` | Limit any mode to specific slugs. |
@@ -273,7 +273,9 @@ registry item (verified with the team key on 3 Sep 2026); the team-slug form
   fetches). Anything a demo needs must be inline; that is why the mark is a
   data URI and why previews use system type.
 - Cover generation is not deterministic: one render host occasionally captures
-  a generic "Component Example" counter instead of the demo. Look at every
-  render, re-run the odd ones, and let the publisher stage the verified PNG.
+  a generic "Component Example" counter instead of the demo. The publisher
+  recognises it by size (2973×2232), re-renders once, sets a persisting one
+  aside as `scaffold.png` and never stages a scaffold as a cover. Still look at
+  every render before publishing and let the publisher stage the verified PNG.
   Two render requests in flight at once have also stalled for half an hour;
   run batches sequentially and rely on `--timeout`.
