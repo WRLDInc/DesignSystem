@@ -1,6 +1,7 @@
 {
-  "$comment": "Source of truth for what the WRLD design system publishes to 21st.dev. Drive it with scripts/publish_21st.mjs (npm run registry:publish). The script writes the stable component refs back here after a publish; never replace a recorded ref with a slug guess. No credentials belong in this file.",
-  "namespace": "curtis-c-s-team",
+  "$comment": "Source of truth for what the WRLD design system publishes to 21st.dev. Drive it with scripts/publish_21st.mjs (npm run registry:publish). The script writes the stable component refs back here after a publish; never replace a recorded ref with a slug guess. No credentials belong in this file. namespace = the author namespace 21st uses in install refs and registry URLs (components publish into the team library but are attributed to the key owner); teamSlug = the team's own URL slug.",
+  "namespace": "ridgelawrence",
+  "teamSlug": "curtis-c-s-team",
   "library": "wrld-tech",
   "visibility": "private",
   "theme": {

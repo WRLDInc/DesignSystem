@@ -309,7 +309,7 @@ stock shadcn app, and on a page that links `tokens.css`.
 
 | What | Where | Command |
 | --- | --- | --- |
-| Install a component | any React project | `npx @21st-dev/cli add <namespace>/wrld-button` — see [`docs/21ST_PUBLISHING.md`](docs/21ST_PUBLISHING.md) for the shadcn `components.json` registry setup |
+| Install a component | any React project | `npx @21st-dev/cli add @ridgelawrence/wrld-button` — see [`docs/21ST_PUBLISHING.md`](docs/21ST_PUBLISHING.md) for the shadcn `components.json` registry setup |
 | Apply the WRLD theme to shadcn | `globals.css` | paste [`registry/theme/wrld.css`](registry/theme/wrld.css) (also served at `https://wrld.design/registry/theme/wrld.css`) |
 | Preview locally before publishing | `registry/.renders/` | `npm run registry:render` |
 | Publish or revise the library | 21st.dev, library `wrld-tech` | `npm run registry:publish` (Studio review) · `-- --auto` (headless) |

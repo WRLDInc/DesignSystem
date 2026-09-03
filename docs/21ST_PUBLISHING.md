@@ -14,7 +14,7 @@ team-wide standard operating procedure lives in Craft
 |---|---|
 | **21st team** | WRLD (team id `6e4b7cb3-1f2f-4105-90ec-e6e842433474`) |
 | **Library** | `wrld-tech` — agency-wide reusable sections. Client work goes in its own library (`casp3r`, …), never here. |
-| **Registry namespace** | `curtis-c-s-team` (the team's URL slug on 21st; confirm against the `install_ref` the CLI prints) |
+| **Install namespace** | `@ridgelawrence` — 21st attributes a team-library component to the account whose key published it, so install refs and registry URLs use the author namespace, not the team slug (`curtis-c-s-team`). Confirmed on the first publish, 3 Sep 2026. |
 | **Visibility** | `private` by default — teammates and keyed installs only. Flip per component with `--visibility published`. |
 | **Sources** | `registry/ui/*.tsx` (atoms) and `registry/blocks/*.tsx` (sections), one `*.demo.tsx` beside each |
 | **Theme** | `registry/theme/wrld.css` — generated from `tokens/tokens.css`, never hand-edited |
@@ -193,7 +193,7 @@ guide; point teammates and client projects here.
 {
   "registries": {
     "@wrld": {
-      "url": "https://21st.dev/r/curtis-c-s-team/wrld-tech/{name}.json",
+      "url": "https://21st.dev/r/ridgelawrence/{name}.json",
       "headers": { "Authorization": "Bearer ${API_KEY_21ST}" }
     }
   }
@@ -205,10 +205,16 @@ export API_KEY_21ST=21st_sk_…
 npx shadcn@latest add @wrld/wrld-button
 ```
 
+**shadcn CLI, direct URL** (what `21st add --print` emits):
+
+```bash
+npx shadcn@latest add "https://21st.dev/r/ridgelawrence/wrld-button?api_key=$API_KEY_21ST"
+```
+
 **21st CLI.**
 
 ```bash
-npx @21st-dev/cli add curtis-c-s-team/wrld-button
+npx @21st-dev/cli add @ridgelawrence/wrld-button
 ```
 
 **Theme.** Paste `registry/theme/wrld.css` (or link
@@ -217,8 +223,9 @@ so stock shadcn components take on WRLD monochrome, the blue focus ring and the
 Ubuntu / Montserrat / Ubuntu Mono stacks. Load the typefaces from
 `https://wrld.design/fonts/` or bundle them.
 
-Confirm the `{name}.json` URL shape against the `install_ref` the CLI prints on
-first publish and correct this section if it differs.
+Both `https://21st.dev/r/ridgelawrence/<slug>` and `…/<slug>.json` return the
+registry item (verified with the team key on 3 Sep 2026); the team-slug form
+`https://21st.dev/r/curtis-c-s-team/…` does not.
 
 ---
 
