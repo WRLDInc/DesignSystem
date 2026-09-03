@@ -169,7 +169,7 @@ if (!hasKey && !hasLogin && !flags.dryRun) {
  * stuck in a request that ignores the abort (seen in the wild), SIGKILL follows
  * 30 seconds later so a batch never hangs on one component.
  */
-const runCli = (args, { json = true } = {}) =>
+const runCli = (args, { json = true, quiet = false } = {}) =>
   new Promise((done) => {
     const [cmd, ...pre] = cli;
     const full = [...pre, ...args, ...(json ? ['--json'] : [])];
@@ -194,9 +194,11 @@ const runCli = (args, { json = true } = {}) =>
       pending += chunk;
       const lines = pending.split('\n');
       pending = lines.pop() ?? '';
+      if (quiet) return;
       for (const line of lines) {
         const t = line.trim();
-        if (t && !t.startsWith('{')) console.error(`  · ${t}`);
+        // Skip JSON structure lines; keep the CLI's human progress and wait notices.
+        if (t && !/^[{}\[\]"]/.test(t) && !/^[},]$/.test(t)) console.error(`  · ${t}`);
       }
     });
     let timedOut = false;
@@ -264,7 +266,7 @@ const coverFor = (slug) => join(RENDERS, slug, 'default.png');
  */
 const readAllowance = async () => {
   if (flags.dryRun) return null;
-  const r = await runCli(['components'], { json: true });
+  const r = await runCli(['components'], { json: true, quiet: true });
   return r.data?.draftAllowance ?? null;
 };
 

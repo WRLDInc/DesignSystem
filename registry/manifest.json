@@ -6,7 +6,12 @@
   "theme": {
     "name": "WRLD",
     "file": "registry/theme/wrld.css",
-    "tags": ["monochrome", "minimal", "light", "dark"],
+    "tags": [
+      "monochrome",
+      "minimal",
+      "light",
+      "dark"
+    ],
     "id": null,
     "url": null,
     "publishedAt": null
@@ -19,12 +24,17 @@
       "file": "registry/ui/wrld-button.tsx",
       "demo": "registry/ui/wrld-button.demo.tsx",
       "description": "WRLD button with primary, secondary, ghost and warm (commerce) variants. Monochrome at rest, accent-tinted shadow lift on hover only. Use for every call to action on a WRLD property.",
-      "tags": ["wrld", "button", "cta", "monochrome"],
+      "tags": [
+        "wrld",
+        "button",
+        "cta",
+        "monochrome"
+      ],
       "source": "ui_kits/wrld-tech/Button.jsx",
-      "component": null,
-      "url": null,
-      "installRef": null,
-      "publishedAt": null
+      "component": 13014,
+      "url": "https://21st.dev/@ridgelawrence/components/wrld-button",
+      "installRef": "@ridgelawrence/wrld-button",
+      "publishedAt": "2026-09-03T18:56:08.361Z"
     },
     {
       "slug": "wrld-eyebrow",
@@ -33,7 +43,12 @@
       "file": "registry/ui/wrld-eyebrow.tsx",
       "demo": "registry/ui/wrld-eyebrow.demo.tsx",
       "description": "Uppercase, letter-spaced eyebrow label that sits above a heading. Use to name a section before its display heading, in marketing pages and dashboards alike.",
-      "tags": ["wrld", "eyebrow", "label", "typography"],
+      "tags": [
+        "wrld",
+        "eyebrow",
+        "label",
+        "typography"
+      ],
       "source": "ui_kits/wrld-tech/Eyebrow.jsx",
       "component": null,
       "url": null,
@@ -47,7 +62,12 @@
       "file": "registry/ui/wrld-lockup.tsx",
       "demo": "registry/ui/wrld-lockup.demo.tsx",
       "description": "Canonical WRLD lockup: the authentic starburst mark, the Montserrat wordmark and an optional sub-brand label such as TECH, AI or HOST. Use in navigation, footers and sub-brand cards.",
-      "tags": ["wrld", "logo", "lockup", "brand"],
+      "tags": [
+        "wrld",
+        "logo",
+        "lockup",
+        "brand"
+      ],
       "source": "ui_kits/_shared/Lockup.jsx",
       "component": null,
       "url": null,
@@ -61,7 +81,12 @@
       "file": "registry/ui/wrld-help-button.tsx",
       "demo": "registry/ui/wrld-help-button.demo.tsx",
       "description": "Circular warm-accent help launcher, the canonical visual of the WRLD Help widget corner button. Use wherever a menu, card or prototype represents Help.",
-      "tags": ["wrld", "help", "support", "launcher"],
+      "tags": [
+        "wrld",
+        "help",
+        "support",
+        "launcher"
+      ],
       "source": "ui_kits/wrld-tech/HelpButton.jsx",
       "component": null,
       "url": null,
@@ -75,7 +100,13 @@
       "file": "registry/ui/wrld-stat-card.tsx",
       "demo": "registry/ui/wrld-stat-card.demo.tsx",
       "description": "Single KPI tile with an eyebrow label, a display value and a signed delta. Use in WRLD.AI dashboards, reports and account overviews.",
-      "tags": ["wrld", "stat", "kpi", "dashboard", "card"],
+      "tags": [
+        "wrld",
+        "stat",
+        "kpi",
+        "dashboard",
+        "card"
+      ],
       "source": "ui_kits/wrld-ai/StatCard.jsx",
       "component": null,
       "url": null,
@@ -89,7 +120,12 @@
       "file": "registry/ui/wrld-top-bar.tsx",
       "demo": "registry/ui/wrld-top-bar.demo.tsx",
       "description": "Dashboard top bar with an eyebrow subtitle, the page title and a primary action pair. Use at the top of a WRLD.AI content pane.",
-      "tags": ["wrld", "dashboard", "header", "toolbar"],
+      "tags": [
+        "wrld",
+        "dashboard",
+        "header",
+        "toolbar"
+      ],
       "source": "ui_kits/wrld-ai/TopBar.jsx",
       "component": null,
       "url": null,
@@ -103,7 +139,13 @@
       "file": "registry/ui/wrld-run-history.tsx",
       "demo": "registry/ui/wrld-run-history.demo.tsx",
       "description": "Chronological list of agent run outcomes with success, running and failed states as status pills. Use on agent detail and monitoring views.",
-      "tags": ["wrld", "table", "status", "dashboard", "ai"],
+      "tags": [
+        "wrld",
+        "table",
+        "status",
+        "dashboard",
+        "ai"
+      ],
       "source": "ui_kits/wrld-ai/RunHistory.jsx",
       "component": null,
       "url": null,
@@ -117,7 +159,13 @@
       "file": "registry/ui/wrld-agent-list.tsx",
       "demo": "registry/ui/wrld-agent-list.demo.tsx",
       "description": "Selectable list of AI agents with a status dot, a summary line and run counts. Use as the primary list of a WRLD.AI agents view.",
-      "tags": ["wrld", "list", "agents", "dashboard", "ai"],
+      "tags": [
+        "wrld",
+        "list",
+        "agents",
+        "dashboard",
+        "ai"
+      ],
       "source": "ui_kits/wrld-ai/AgentList.jsx",
       "component": null,
       "url": null,
@@ -131,7 +179,12 @@
       "file": "registry/blocks/wrld-hero.tsx",
       "demo": "registry/blocks/wrld-hero.demo.tsx",
       "description": "wrld.tech marketing hero: eyebrow, display headline, lede and a call-to-action row. Use as the single hero element of a WRLD landing page.",
-      "tags": ["wrld", "hero", "landing", "marketing"],
+      "tags": [
+        "wrld",
+        "hero",
+        "landing",
+        "marketing"
+      ],
       "source": "ui_kits/wrld-tech/Hero.jsx",
       "component": null,
       "url": null,
@@ -145,7 +198,12 @@
       "file": "registry/blocks/wrld-cta.tsx",
       "demo": "registry/blocks/wrld-cta.demo.tsx",
       "description": "Closing call-to-action band on an inverted monochrome surface with a contact line. Use once, at the end of a WRLD marketing page.",
-      "tags": ["wrld", "cta", "section", "marketing"],
+      "tags": [
+        "wrld",
+        "cta",
+        "section",
+        "marketing"
+      ],
       "source": "ui_kits/wrld-tech/CTA.jsx",
       "component": null,
       "url": null,
@@ -159,7 +217,12 @@
       "file": "registry/blocks/wrld-values-strip.tsx",
       "demo": "registry/blocks/wrld-values-strip.demo.tsx",
       "description": "Numbered values strip with a title and a supporting line per value, five columns on desktop. Use to present principles, process steps or differentiators.",
-      "tags": ["wrld", "values", "features", "section"],
+      "tags": [
+        "wrld",
+        "values",
+        "features",
+        "section"
+      ],
       "source": "ui_kits/wrld-tech/ValuesStrip.jsx",
       "component": null,
       "url": null,
@@ -173,7 +236,13 @@
       "file": "registry/blocks/wrld-services-grid.tsx",
       "demo": "registry/blocks/wrld-services-grid.demo.tsx",
       "description": "Grid of sub-brand service cards, each with a WRLD lockup, a summary and an accent-tinted hover. Use to present a portfolio of properties or services.",
-      "tags": ["wrld", "services", "cards", "grid", "marketing"],
+      "tags": [
+        "wrld",
+        "services",
+        "cards",
+        "grid",
+        "marketing"
+      ],
       "source": "ui_kits/wrld-tech/ServicesGrid.jsx",
       "component": null,
       "url": null,
@@ -187,7 +256,12 @@
       "file": "registry/blocks/wrld-footer.tsx",
       "demo": "registry/blocks/wrld-footer.demo.tsx",
       "description": "Site footer with the WRLD lockup, link columns and a legal line. Use as the closing element of every WRLD marketing page.",
-      "tags": ["wrld", "footer", "navigation", "marketing"],
+      "tags": [
+        "wrld",
+        "footer",
+        "navigation",
+        "marketing"
+      ],
       "source": "ui_kits/wrld-tech/Footer.jsx",
       "component": null,
       "url": null,
@@ -201,7 +275,13 @@
       "file": "registry/blocks/wrld-sidebar.tsx",
       "demo": "registry/blocks/wrld-sidebar.demo.tsx",
       "description": "Dashboard left navigation with the WRLD.AI lockup, workspace links with Lucide icons and a plan footer. Use as the primary navigation of a WRLD.AI product surface.",
-      "tags": ["wrld", "sidebar", "navigation", "dashboard", "ai"],
+      "tags": [
+        "wrld",
+        "sidebar",
+        "navigation",
+        "dashboard",
+        "ai"
+      ],
       "source": "ui_kits/wrld-ai/Sidebar.jsx",
       "component": null,
       "url": null,
@@ -215,7 +295,13 @@
       "file": "registry/blocks/wrld-agent-detail.tsx",
       "demo": "registry/blocks/wrld-agent-detail.demo.tsx",
       "description": "Detail pane for one AI agent: header with actions, description, four KPI tiles and the recent run history. Use as the main pane of a WRLD.AI agents view.",
-      "tags": ["wrld", "detail", "dashboard", "ai", "agents"],
+      "tags": [
+        "wrld",
+        "detail",
+        "dashboard",
+        "ai",
+        "agents"
+      ],
       "source": "ui_kits/wrld-ai/AgentDetail.jsx",
       "component": null,
       "url": null,
@@ -229,7 +315,13 @@
       "file": "registry/blocks/wrld-header.tsx",
       "demo": "registry/blocks/wrld-header.demo.tsx",
       "description": "Sticky wrld.tech site header with a morphing lockup, animated submenus and a traveling underline; collapses to a drawer below 900px. Use as the site chrome of a WRLD marketing property.",
-      "tags": ["wrld", "header", "navigation", "menu", "marketing"],
+      "tags": [
+        "wrld",
+        "header",
+        "navigation",
+        "menu",
+        "marketing"
+      ],
       "source": "ui_kits/wrld-tech/Header.jsx",
       "component": null,
       "url": null,
