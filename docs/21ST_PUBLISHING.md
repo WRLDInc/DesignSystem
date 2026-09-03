@@ -245,8 +245,13 @@ first publish and correct this section if it differs.
 
 - One component file + one demo per publish; no shared local modules, no
   `21st.json`, no `--registry-dep`. Hence the inlined lockups and buttons.
-- Team drafts are capped (20 outstanding at the time of writing). Publish with
-  `--auto` or finish drafts in Studio rather than accumulating them.
+- **The draft allowance is the real budget.** Every `21st render` and every
+  `21st publish` creates a draft, and the team allowance (20 at the time of
+  writing) recovers over roughly an hour. The publisher prints the allowance
+  before a batch; when it is short the CLI silently waits and retries, which
+  looks like a hang. Spend slots on publishes first: a verified render costs a
+  slot too, so render only what you intend to look at. `npx 21st components
+  --json` shows `draftAllowance` at any time.
 - Every `publish-theme` creates a new public theme. Treat the theme as a release,
   not a build artefact.
 - `21st whoami` is a false negative with a valid key; `21st usage` is unavailable

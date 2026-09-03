@@ -185,9 +185,19 @@ const runCli = (args, { json = true } = {}) =>
       shell: process.platform === 'win32',
     });
     let stdout = '';
+    let pending = '';
     child.stdout.setEncoding('utf8');
     child.stdout.on('data', (chunk) => {
       stdout += chunk;
+      // The CLI prints progress and rate-limit waits on stdout in render mode.
+      // Surface every non-JSON line as it arrives so a wait is never silent.
+      pending += chunk;
+      const lines = pending.split('\n');
+      pending = lines.pop() ?? '';
+      for (const line of lines) {
+        const t = line.trim();
+        if (t && !t.startsWith('{')) console.error(`  · ${t}`);
+      }
     });
     let timedOut = false;
     const soft = setTimeout(() => {
@@ -247,6 +257,17 @@ const pngSize = (file) => {
 };
 const coverFor = (slug) => join(RENDERS, slug, 'default.png');
 
+/**
+ * The team's draft allowance. Every render and every publish creates a draft
+ * on 21st, and the allowance (20 at the time of writing) recovers over time.
+ * A CLI run that sits silent for minutes is almost always waiting on it.
+ */
+const readAllowance = async () => {
+  if (flags.dryRun) return null;
+  const r = await runCli(['components'], { json: true });
+  return r.data?.draftAllowance ?? null;
+};
+
 // ---------------------------------------------------------------------------
 // Modes
 // ---------------------------------------------------------------------------
@@ -278,6 +299,13 @@ if (flags.theme) {
   const visibility = flags.visibility ?? manifest.visibility;
   const mode = flags.render ? 'render' : flags.auto ? 'publish (headless, --auto)' : 'publish (Studio review)';
   console.log(`\n21st registry — ${mode} · library "${to}" · visibility ${visibility} · ${selected.length} component(s)`);
+  const allowance = await readAllowance();
+  if (allowance) {
+    console.log(`draft allowance: ${allowance.remaining} of ${allowance.limit} remaining — each render or publish uses one`);
+    if (allowance.remaining < selected.length) {
+      console.log(`  only ${allowance.remaining} slot(s) for ${selected.length} component(s): the CLI will wait for the allowance to recover. Use --only to run what fits now.`);
+    }
+  }
 
   for (const entry of selected) {
     console.log(`\n▸ ${entry.name} (${entry.slug})${entry.component ? ` → revision of component:${entry.component}` : ''}`);
