@@ -131,6 +131,7 @@ All of these run from the repo root after `npm ci`.
 | `npm run registry:publish` | Create a reviewed draft per component and print its Studio **CLI Review** URL. Finish there: check every demo in light and dark, then publish. When `registry/.renders/<slug>/default.png` exists the script stages it as the cover (`--preview`), so a cover you have already looked at ships instead of a blind regeneration; `--no-covers` opts out. |
 | `npm run registry:publish -- --auto` | Headless: wait for the generated cover, publish, and record the refs. What CI uses. |
 | `npm run registry:publish -- --only wrld-button,wrld-lockup` | Limit any mode to specific slugs. |
+| `npm run registry:publish -- --auto --wait` | Poll the draft allowance every 90 s and start each component as soon as a slot frees (up to `--wait 7200` seconds per component). Without it the CLI sleeps a fixed ~58 minutes per retry when the allowance is exhausted, even if a slot frees three minutes later. Works with `--render` too. |
 | `npm run registry:publish -- --visibility published` | Override the manifest visibility for this run. |
 | `npm run registry:publish:theme -- --yes-public` | Publish the theme. **Themes are public** and every run creates a **new** theme — confirm with Ridgeway or Curtis first. Retag or rename with `npx 21st edit <id> --type theme`; only re-publish when colours change, then `npx 21st delete <old-id> --type theme --yes`. |
 | `npm run registry:publish -- --dry-run` | Print the exact CLI commands without running them. |
@@ -254,11 +255,14 @@ registry item (verified with the team key on 3 Sep 2026); the team-slug form
   `21st.json`, no `--registry-dep`. Hence the inlined lockups and buttons.
 - **The draft allowance is the real budget.** Every `21st render` and every
   `21st publish` creates a draft, and the team allowance (20 at the time of
-  writing) recovers over roughly an hour. The publisher prints the allowance
-  before a batch; when it is short the CLI silently waits and retries, which
-  looks like a hang. Spend slots on publishes first: a verified render costs a
-  slot too, so render only what you intend to look at. `npx 21st components
-  --json` shows `draftAllowance` at any time.
+  writing) is a rolling window: a slot comes back about an hour after the
+  render or publish that used it, and deleting a draft does not free one. The
+  publisher prints the allowance before a batch; when it is short the CLI
+  sleeps ~58 minutes per retry, which looks like a hang — pass `--wait` so the
+  publisher polls for a slot and starts the next component the minute one
+  frees. Spend slots on publishes first: a verified render costs a slot too, so
+  render only what you intend to look at. `npx 21st components --json` shows
+  `draftAllowance` at any time.
 - Every `publish-theme` creates a new public theme. Treat the theme as a release,
   not a build artefact.
 - `21st whoami` is a false negative with a valid key; `21st usage` is unavailable

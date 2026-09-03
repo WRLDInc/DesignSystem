@@ -29,6 +29,10 @@
  *                       `npm run registry:render`) with --preview, so 21st does not
  *                       have to regenerate a cover — one of its render hosts sometimes
  *                       returns a generic "Component Example" scaffold instead.
+ *   --wait [<s>]        when the draft allowance is exhausted, poll it every 90s and start
+ *                       the next component as soon as a slot frees, waiting up to <s>
+ *                       seconds per component (default 7200). Without it the CLI sleeps a
+ *                       fixed ~58 minutes per retry even if a slot frees three minutes later.
  *
  * Auth: the 21st CLI reads API_KEY_21ST or TWENTYFIRST_TOKEN from the environment,
  * or a saved `21st login` session. A TEAM API key is required for team libraries.
@@ -72,7 +76,7 @@ const fail = (msg) => {
 // Arguments
 // ---------------------------------------------------------------------------
 const argv = process.argv.slice(2);
-const flags = { only: null, visibility: null, to: null, auto: false, render: false, theme: false, dryRun: false, yesPublic: false, timeout: 900, covers: true };
+const flags = { only: null, visibility: null, to: null, auto: false, render: false, theme: false, dryRun: false, yesPublic: false, timeout: 900, covers: true, wait: 0 };
 for (let i = 0; i < argv.length; i++) {
   const a = argv[i];
   const value = (inline) => {
@@ -93,6 +97,7 @@ for (let i = 0; i < argv.length; i++) {
     case '--visibility': flags.visibility = value(inline); break;
     case '--to': flags.to = value(inline); break;
     case '--timeout': flags.timeout = Number(value(inline)); break;
+    case '--wait': flags.wait = inline != null ? Number(inline) : /^\d+$/.test(argv[i + 1] ?? '') ? Number(argv[++i]) : 7200; break;
     case '--help': case '-h':
       console.log(readFileSync(fileURLToPath(import.meta.url), 'utf8').split('*/')[0].replace(/^\/\*\*\n/, '').replace(/^ \* ?/gm, ''));
       process.exit(0);
@@ -101,6 +106,7 @@ for (let i = 0; i < argv.length; i++) {
 }
 if (flags.visibility && !VISIBILITIES.has(flags.visibility)) fail(`--visibility must be published or private`);
 if (!Number.isFinite(flags.timeout) || flags.timeout <= 0) fail('--timeout must be a positive number of seconds');
+if (!Number.isFinite(flags.wait) || flags.wait < 0) fail('--wait must be a number of seconds');
 if (flags.render && flags.theme) fail('--render and --theme are exclusive');
 
 // ---------------------------------------------------------------------------
@@ -275,6 +281,31 @@ const readAllowance = async () => {
 // ---------------------------------------------------------------------------
 const results = [];
 const now = () => new Date().toISOString();
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const POLL_EVERY_MS = 90_000;
+
+/**
+ * --wait: block until the allowance has a free slot, polling every 90s for up
+ * to --wait seconds. Returns the last allowance read (null if it could not be
+ * read, in which case the CLI is left to decide for itself).
+ */
+const waitForSlot = async (slug) => {
+  let a = await readAllowance();
+  if (!a || a.remaining >= 1) return a;
+  const deadline = Date.now() + flags.wait * 1000;
+  console.log(`  draft allowance exhausted (${a.remaining} of ${a.limit}) — polling every ${POLL_EVERY_MS / 1000}s for a slot, up to ${flags.wait}s, before starting ${slug}`);
+  while (Date.now() < deadline) {
+    await sleep(Math.min(POLL_EVERY_MS, deadline - Date.now()));
+    a = await readAllowance();
+    if (!a) return a;
+    if (a.remaining >= 1) {
+      console.log(`  slot free at ${now()} (${a.remaining} of ${a.limit})`);
+      return a;
+    }
+  }
+  console.error(`  no slot freed within ${flags.wait}s`);
+  return a;
+};
 
 if (flags.theme) {
   const th = manifest.theme;
@@ -305,12 +336,23 @@ if (flags.theme) {
   if (allowance) {
     console.log(`draft allowance: ${allowance.remaining} of ${allowance.limit} remaining — each render or publish uses one`);
     if (allowance.remaining < selected.length) {
-      console.log(`  only ${allowance.remaining} slot(s) for ${selected.length} component(s): the CLI will wait for the allowance to recover. Use --only to run what fits now.`);
+      console.log(
+        `  only ${allowance.remaining} slot(s) for ${selected.length} component(s): ` +
+          (flags.wait ? `--wait polls for a slot before each one.` : `the CLI sleeps ~58 minutes per retry when it runs out — pass --wait to poll for slots instead, or --only to run what fits now.`),
+      );
     }
   }
 
   for (const entry of selected) {
     console.log(`\n▸ ${entry.name} (${entry.slug})${entry.component ? ` → revision of component:${entry.component}` : ''}`);
+    if (flags.wait && !flags.dryRun) {
+      const a = await waitForSlot(entry.slug);
+      if (a && a.remaining < 1) {
+        console.log(`  ${EXIT_MEANING[4]}`);
+        results.push({ slug: entry.slug, status: 4, url: null });
+        continue;
+      }
+    }
     if (flags.render) {
       const out = join(RENDERS, entry.slug);
       if (!flags.dryRun) mkdirSync(out, { recursive: true });

@@ -30,6 +30,9 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    # --wait 3600 below can hold each component for up to an hour while the draft
+    # allowance recovers; cap the job so a bad day cannot run to the 6 h default.
+    timeout-minutes: 240
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -48,7 +51,7 @@ jobs:
           ONLY: ${{ inputs.only }}
           VISIBILITY: ${{ inputs.visibility }}
         run: |
-          node scripts/publish_21st.mjs --auto --visibility "$VISIBILITY" ${ONLY:+--only "$ONLY"}
+          node scripts/publish_21st.mjs --auto --wait 3600 --visibility "$VISIBILITY" ${ONLY:+--only "$ONLY"}
 
       # A successful publish writes the stable component:<id> refs into
       # registry/manifest.json. Those refs are what turn the next publish into

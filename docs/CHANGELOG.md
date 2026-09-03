@@ -23,7 +23,8 @@ All notable changes to the WRLD Design System are documented here. This project 
   registry kind, plus the target library (`wrld-tech`) and visibility (`private`); `scripts/publish_21st.mjs` drives
   the pinned `@21st-dev/cli` from it (`npm run registry:render | registry:publish | registry:publish:theme`), writes
   the stable `component:<id>` refs back after a publish, refuses to publish the theme without `--yes-public` because
-  21st themes are public, and mirrors the CLI exit codes.
+  21st themes are public, stages a verified local render as the cover so 21st does not regenerate one blind, polls the
+  draft allowance with `--wait` instead of letting the CLI sleep an hour per retry, and mirrors the CLI exit codes.
 - **CI** — a `registry` job in `validate.yml` (theme freshness + strict typecheck of every port and demo) and a
   manual `publish-21st.yml` workflow that publishes headlessly with the `API_KEY_21ST` repository secret and pushes
   the recorded refs to a branch.
