@@ -2,8 +2,11 @@ import * as React from "react";
 import { WrldAgentList, type WrldAgent } from "./wrld-agent-list";
 
 const frame: React.CSSProperties = {
+  // 21st's preview container is shrink-to-fit, so the frame needs a real width or
+  // auto-fit grids collapse to one column. 100vw keeps it inside narrow panes.
+  width: "min(720px, 100vw)",
+  boxSizing: "border-box",
   padding: 32,
-  maxWidth: 720,
   background: "var(--wrld-bg, var(--color-background, #ffffff))",
   color: "var(--wrld-fg, var(--color-foreground, #0a0a0a))",
   fontFamily: "var(--wrld-font-body, Ubuntu, system-ui, sans-serif)",

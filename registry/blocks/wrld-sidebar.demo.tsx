@@ -2,6 +2,10 @@ import * as React from "react";
 import { WrldSidebar } from "./wrld-sidebar";
 
 const frame: React.CSSProperties = {
+  // 21st's preview container is shrink-to-fit, so the frame needs a real width or
+  // auto-fit grids collapse to one column. 100vw keeps it inside narrow panes.
+  width: "min(1120px, 100vw)",
+  boxSizing: "border-box",
   display: "flex",
   height: 520,
   background: "var(--wrld-bg, var(--color-background, #ffffff))",

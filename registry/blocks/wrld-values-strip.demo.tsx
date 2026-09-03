@@ -2,6 +2,10 @@ import * as React from "react";
 import { WrldValuesStrip } from "./wrld-values-strip";
 
 const frame: React.CSSProperties = {
+  // 21st's preview container is shrink-to-fit, so the frame needs a real width or
+  // auto-fit grids collapse to one column. 100vw keeps it inside narrow panes.
+  width: "min(1280px, 100vw)",
+  boxSizing: "border-box",
   background: "var(--wrld-bg, var(--color-background, #ffffff))",
   color: "var(--wrld-fg, var(--color-foreground, #0a0a0a))",
   fontFamily: "var(--wrld-font-body, Ubuntu, system-ui, sans-serif)",
