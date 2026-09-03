@@ -37,3 +37,8 @@ tmp/
 # Wrangler local state (dev server cache, local KV/DO, build tmp).
 # The deployable output is dist/, already ignored above.
 .wrangler/
+
+# 21st.dev registry — local render output from `npm run registry:render`,
+# and the CLI's per-project design context (`21st init --design-context`).
+registry/.renders/
+.21st/

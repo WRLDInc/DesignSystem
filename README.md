@@ -267,10 +267,18 @@ WRLD.Tech Design System/
 ├── ui_kits/
 │   ├── wrld-tech/                    ← flagship marketing site UI kit
 │   └── wrld-ai/                      ← AI product / dashboard UI kit
+├── registry/                         ← 21st.dev registry: self-contained TSX ports of the kits + demos
+│   ├── manifest.json                 ← what publishes where, and the stable component refs
+│   ├── theme/wrld.css                ← GENERATED shadcn / Tailwind v4 theme (:root + .dark)
+│   ├── ui/                           ← atoms: button, eyebrow, lockup, help button, stat card, top bar, run history, agent list
+│   └── blocks/                       ← sections: hero, CTA, values strip, services grid, footer, sidebar, agent detail, header
 ├── wrangler.jsonc                    ← Cloudflare Worker config for wrld.design
 ├── deploy/                           ← web-root overlay: landing page, 404, _headers, robots
 ├── scripts/build_site.mjs            ← assembles the published dist/ (allowlist + link check)
-└── docs/CLOUDFLARE_DEPLOY.md         ← how wrld.design is built and deployed
+├── scripts/build_21st_theme.mjs      ← generates registry/theme/wrld.css from tokens/tokens.css
+├── scripts/publish_21st.mjs          ← manifest-driven publisher for the 21st.dev team library
+├── docs/CLOUDFLARE_DEPLOY.md         ← how wrld.design is built and deployed
+└── docs/21ST_PUBLISHING.md           ← how components reach the 21st.dev team library
 ```
 
 ## Published at wrld.design
@@ -287,6 +295,32 @@ link the token files directly from that origin (CORS is open):
 any published file references an asset that didn't make it. `npm run serve`
 previews the result. Full setup, the exact dashboard build settings, and the
 runbook are in [`docs/CLOUDFLARE_DEPLOY.md`](docs/CLOUDFLARE_DEPLOY.md).
+
+## Component registry (21st.dev)
+
+Every UI-kit component also ships as a **self-contained TypeScript port** under
+`registry/`, published to the WRLD team library on [21st.dev](https://21st.dev)
+so any WRLD or client project on React can install it with the shadcn CLI.
+The registry follows the rules 21st enforces: one component file plus one demo,
+every import declared in `package.json`, and portable tokens — each file resolves
+`--wrld-*` first, then the host's shadcn / Tailwind v4 theme (`--color-*`), then
+the WRLD light-mode literal, so a component looks right in the 21st preview, in a
+stock shadcn app, and on a page that links `tokens.css`.
+
+| What | Where | Command |
+| --- | --- | --- |
+| Install a component | any React project | `npx @21st-dev/cli add @ridgelawrence/wrld-button` — see [`docs/21ST_PUBLISHING.md`](docs/21ST_PUBLISHING.md) for the shadcn `components.json` registry setup |
+| Apply the WRLD theme to shadcn | `globals.css` | paste [`registry/theme/wrld.css`](registry/theme/wrld.css) (also served at `https://wrld.design/registry/theme/wrld.css`) |
+| Preview locally before publishing | `registry/.renders/` | `npm run registry:render` |
+| Publish or revise the library | 21st.dev, library `wrld-tech` | `npm run registry:publish` (Studio review) · `-- --auto` (headless) |
+| Regenerate the theme after a token change | `registry/theme/wrld.css` | `npm run registry:theme` (CI fails if it is stale) |
+
+`registry/manifest.json` is the source of truth for names, slugs, descriptions,
+tags and the stable `component:<id>` refs the publisher writes back; commit it
+after every publish so the next run revises instead of colliding. Publishing needs
+a **team** API key in `API_KEY_21ST` — never in the repo. The full runbook, the
+exit-code table and the CI workflow are in
+[`docs/21ST_PUBLISHING.md`](docs/21ST_PUBLISHING.md).
 
 ## Components
 
@@ -312,6 +346,10 @@ React components compiled into `_ds_bundle.js` and exposed on `window.WRLDTechDe
 - `AgentList` — selectable list of agents.
 - `AgentDetail` — detail pane for one agent + run history.
 - `RunHistory` — chronological list of agent run outcomes.
+
+Each of these has a typed, self-contained port in `registry/ui` or
+`registry/blocks` (prefixed `Wrld`, e.g. `WrldButton`), which is what the
+21st.dev team library serves. Change the kit and the port together.
 
 ## Caveats & open questions
 

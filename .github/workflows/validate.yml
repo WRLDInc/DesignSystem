@@ -32,6 +32,28 @@ jobs:
       - name: Assemble dist/ and verify every reference resolves
         run: node scripts/build_site.mjs
 
+  registry:
+    name: Typecheck the 21st registry and verify the generated theme
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      # The registry is the one part of the repo with real dependencies
+      # (React types, TypeScript, the 21st CLI), so this job installs from the
+      # lockfile. The other jobs stay zero-install on purpose.
+      - run: npm ci
+      # registry/theme/wrld.css is generated from tokens/tokens.css. A token
+      # edit without a regenerated theme fails here, not on 21st.dev.
+      - name: Theme CSS matches the tokens
+        run: node scripts/build_21st_theme.mjs --check
+      # Every component and demo that ships to the team library must compile
+      # under strict TypeScript before it reaches the 21st build sandbox.
+      - name: Registry components and demos typecheck
+        run: npx tsc -p registry/tsconfig.json
+
   logos:
     runs-on: ubuntu-latest
     steps:

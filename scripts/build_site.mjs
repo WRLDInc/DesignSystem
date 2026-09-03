@@ -77,6 +77,12 @@ const PUBLISH = [
   '_ds_bundle.js',
   '_ds_manifest.json',
 
+  // The 21st.dev registry: the shadcn-compatible theme (linkable at
+  // /registry/theme/wrld.css), the manifest of published components, and the
+  // self-contained TSX sources with their demos. Published to be READ, like
+  // the .jsx kits above; deploy/_headers labels .tsx as text/plain.
+  'registry',
+
   // Written brand guidance. Already public on GitHub; part of the system.
   'brand',
   'docs',
@@ -85,7 +91,12 @@ const PUBLISH = [
 ];
 
 /** Paths inside a published directory that must be skipped. */
-const EXCLUDE = new Set([join('styleguide', 'index-bundle-prep.html')]);
+const EXCLUDE = new Set([
+  join('styleguide', 'index-bundle-prep.html'),
+  // Typecheck config and local render output are tooling, not design content.
+  join('registry', 'tsconfig.json'),
+  join('registry', '.renders'),
+]);
 
 const log = (...a) => console.log(...a);
 const rel = (p) => relative(REPO, p).split(sep).join('/');
