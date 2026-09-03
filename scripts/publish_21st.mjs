@@ -24,6 +24,11 @@
  *   --dry-run           print the CLI commands and change nothing
  *   --timeout <s>       give up on one component after this many seconds (default 900).
  *                       The CLI gets SIGINT so it deletes its temporary draft first.
+ *   --no-covers         do not stage registry/.renders/<slug>/default.png as the cover.
+ *                       By default a publish stages that verified render (from
+ *                       `npm run registry:render`) with --preview, so 21st does not
+ *                       have to regenerate a cover — one of its render hosts sometimes
+ *                       returns a generic "Component Example" scaffold instead.
  *
  * Auth: the 21st CLI reads API_KEY_21ST or TWENTYFIRST_TOKEN from the environment,
  * or a saved `21st login` session. A TEAM API key is required for team libraries.
@@ -67,7 +72,7 @@ const fail = (msg) => {
 // Arguments
 // ---------------------------------------------------------------------------
 const argv = process.argv.slice(2);
-const flags = { only: null, visibility: null, to: null, auto: false, render: false, theme: false, dryRun: false, yesPublic: false, timeout: 900 };
+const flags = { only: null, visibility: null, to: null, auto: false, render: false, theme: false, dryRun: false, yesPublic: false, timeout: 900, covers: true };
 for (let i = 0; i < argv.length; i++) {
   const a = argv[i];
   const value = (inline) => {
@@ -83,6 +88,7 @@ for (let i = 0; i < argv.length; i++) {
     case '--theme': flags.theme = true; break;
     case '--dry-run': flags.dryRun = true; break;
     case '--yes-public': flags.yesPublic = true; break;
+    case '--no-covers': flags.covers = false; break;
     case '--only': flags.only = value(inline).split(',').map((s) => s.trim()).filter(Boolean); break;
     case '--visibility': flags.visibility = value(inline); break;
     case '--to': flags.to = value(inline); break;
@@ -201,6 +207,18 @@ const pick = (obj, ...keys) => {
   return null;
 };
 
+/** Width × height of a PNG from its IHDR chunk, or null. */
+const pngSize = (file) => {
+  try {
+    const fd = readFileSync(file);
+    if (fd.length < 24 || fd.toString('latin1', 1, 4) !== 'PNG') return null;
+    return { width: fd.readUInt32BE(16), height: fd.readUInt32BE(20) };
+  } catch {
+    return null;
+  }
+};
+const coverFor = (slug) => join(RENDERS, slug, 'default.png');
+
 // ---------------------------------------------------------------------------
 // Modes
 // ---------------------------------------------------------------------------
@@ -242,7 +260,12 @@ if (flags.theme) {
       if (entry.demo) args.push('--demo', abs(entry.demo));
       const r = runCli(args);
       const cover = pick(r.data, 'cover');
-      if (r.status === 0) console.log(`  rendered → ${cover ? rel(cover) : rel(out)}`);
+      if (r.status === 0) {
+        const size = cover ? pngSize(cover) : null;
+        const dims = size ? ` (${size.width}×${size.height})` : '';
+        console.log(`  rendered → ${cover ? rel(cover) : rel(out)}${dims}`);
+        console.log('  open the PNG: a generic "Component Example" counter means 21st\'s render host substituted its scaffold — re-run --only for this slug.');
+      }
       results.push({ slug: entry.slug, status: r.status, url: cover ? rel(cover) : null });
       continue;
     }
@@ -261,6 +284,13 @@ if (flags.theme) {
     if (entry.demo) args.push('--demo', abs(entry.demo));
     if (entry.component) args.push('--component', `component:${entry.component}`);
     if (flags.auto) args.push('--auto');
+    if (flags.covers && existsSync(coverFor(entry.slug))) {
+      // A cover you have looked at beats one 21st generates blind.
+      args.push('--preview', coverFor(entry.slug));
+      console.log(`  staging verified cover ${rel(coverFor(entry.slug))}`);
+    } else if (flags.covers && !flags.dryRun) {
+      console.log('  no local render for this slug — 21st will generate the cover (run `npm run registry:render -- --only ' + entry.slug + '` first to stage a verified one)');
+    }
 
     const r = runCli(args);
     const d = r.data ?? {};

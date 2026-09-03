@@ -127,8 +127,8 @@ All of these run from the repo root after `npm ci`.
 |---|---|
 | `npm run registry:theme` | Regenerate `registry/theme/wrld.css` from `tokens/tokens.css`. Run after any token change and commit the result. |
 | `npm run registry:check` | Theme freshness + strict typecheck of every port and demo. Part of `npm run check` and of CI. |
-| `npm run registry:render` | Build every component in 21st's sandbox and save a screenshot under `registry/.renders/<slug>/default.png`. Publishes nothing. Inspect these before a publish. |
-| `npm run registry:publish` | Create a reviewed draft per component and print its Studio **CLI Review** URL. Finish there: check every demo in light and dark, wait for the generated cover, publish. |
+| `npm run registry:render` | Build every component in 21st's sandbox and save a screenshot under `registry/.renders/<slug>/default.png`. Publishes nothing. Inspect these before a publish: one of 21st's render hosts sometimes returns a generic "Component Example" counter instead of the demo (its images are 2973×2232 rather than 3840×2880); re-run `-- --only <slug>` until the real capture comes back. |
+| `npm run registry:publish` | Create a reviewed draft per component and print its Studio **CLI Review** URL. Finish there: check every demo in light and dark, then publish. When `registry/.renders/<slug>/default.png` exists the script stages it as the cover (`--preview`), so a cover you have already looked at ships instead of a blind regeneration; `--no-covers` opts out. |
 | `npm run registry:publish -- --auto` | Headless: wait for the generated cover, publish, and record the refs. What CI uses. |
 | `npm run registry:publish -- --only wrld-button,wrld-lockup` | Limit any mode to specific slugs. |
 | `npm run registry:publish -- --visibility published` | Override the manifest visibility for this run. |
@@ -256,3 +256,8 @@ first publish and correct this section if it differs.
 - The renderer blocks cross-origin requests during capture (fonts, images,
   fetches). Anything a demo needs must be inline; that is why the mark is a
   data URI and why previews use system type.
+- Cover generation is not deterministic: one render host occasionally captures
+  a generic "Component Example" counter instead of the demo. Look at every
+  render, re-run the odd ones, and let the publisher stage the verified PNG.
+  Two render requests in flight at once have also stalled for half an hour;
+  run batches sequentially and rely on `--timeout`.
