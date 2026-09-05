@@ -14,7 +14,7 @@ change is a contract change for every row below.
 ## Requested atoms
 
 PulseWRLD needs two atoms that do not exist in the kit or the registry. They
-are tracked in the issue *Status pill and uptime bar atoms* and belong in
+are tracked in [issue #15 — Status pill and uptime bar atoms](https://github.com/WRLDInc/DesignSystem/issues/15) and belong in
 `registry/ui/` with a mirrored `ui_kits/wrld-ai/` source, per CONTRIBUTING.
 
 | Atom | Behaviour | Token rules |
