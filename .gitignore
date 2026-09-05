@@ -42,3 +42,6 @@ tmp/
 # and the CLI's per-project design context (`21st init --design-context`).
 registry/.renders/
 .21st/
+
+# Claude Code plugin state (claude-never-forgets writes per-session memories here)
+.claude/memories/
