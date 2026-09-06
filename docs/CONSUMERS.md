@@ -9,7 +9,7 @@ change is a contract change for every row below.
 | wrld.tech (rebuild) | `WRLDInc/wrld.tech` | `styles.css`, fonts, logos | `Header`, `Hero`, `ServicesGrid`, `ValuesStrip`, `CTA`, `Footer` | Flagship marketing kit |
 | WRLD.one | `WRLDInc/wrld.one` | `tokens/tokens.css`, `registry/theme/wrld.css` | `WrldButton`, `WrldStatCard`, `WrldTopBar` | Reads Better Stack for its own status strip |
 | WRLD.AI dashboard | `WRLDInc/CentralizeWRLD` | `registry/theme/wrld.css` | `WrldSidebar`, `WrldTopBar`, `WrldStatCard`, `WrldAgentList`, `WrldAgentDetail`, `WrldRunHistory`, `WrldHelpButton` | shadcn host |
-| **PulseWRLD** — public services status | `WRLDInc/publicServicesStatus-web` | `styles.css`, favicons, `wrld-mark-white.png` | `WrldTopBar`, `WrldEyebrow`, `WrldStatCard`; local stand-ins for a status pill and an uptime bar | Cloudflare Worker at a `*.wrld.tech` subdomain (name pending). Needs two new atoms — see below. |
+| **PulseWRLD** — public services status | `WRLDInc/publicServicesStatus-web` | `styles.css`, favicons, `wrld-mark-white.png` | `WrldTopBar`, `WrldEyebrow`, `WrldStatCard`; local stand-ins for a status pill and an uptime bar | Cloudflare Worker `pulsewrld` at <https://pulse.wrld.tech> (name decided 2026-09-06). Needs two new atoms — see below. |
 
 ## Requested atoms
 
