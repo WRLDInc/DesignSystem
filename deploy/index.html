@@ -167,6 +167,13 @@
     box-shadow: var(--wrld-shadow-accent-primary);
     transform: translateY(-2px);
   }
+  /* The link and the Use button are siblings inside .card, not nested —
+     a <button> inside an <a> is invalid interactive-content nesting. */
+  .card-link {
+    display: flex;
+    flex-direction: column;
+    gap: var(--wrld-space-2);
+  }
   .card .name {
     font-weight: var(--wrld-fw-medium);
     display: flex;
@@ -426,26 +433,34 @@
       <h2>Start here</h2>
       <p class="note">Four ways in, depending on whether you are designing, building, or checking a brand rule.</p>
       <div class="cards">
-        <a class="card" href="styleguide/">
-          <span class="name">Styleguide <span class="arrow" aria-hidden="true">&rarr;</span></span>
-          <p class="desc">The interactive reference — colors, type scale, spacing, components, logos, all live.</p>
+        <div class="card">
+          <a class="card-link" href="styleguide/">
+            <span class="name">Styleguide <span class="arrow" aria-hidden="true">&rarr;</span></span>
+            <p class="desc">The interactive reference — colors, type scale, spacing, components, logos, all live.</p>
+          </a>
           <button class="card-use" type="button" data-use="styleguide">Use</button>
-        </a>
-        <a class="card" href="#tokens">
-          <span class="name">Tokens <span class="arrow" aria-hidden="true">&rarr;</span></span>
-          <p class="desc">The canonical token suite as CSS custom properties, JSON, and typed TypeScript.</p>
+        </div>
+        <div class="card">
+          <a class="card-link" href="#tokens">
+            <span class="name">Tokens <span class="arrow" aria-hidden="true">&rarr;</span></span>
+            <p class="desc">The canonical token suite as CSS custom properties, JSON, and typed TypeScript.</p>
+          </a>
           <button class="card-use" type="button" data-use="tokens">Use</button>
-        </a>
-        <a class="card" href="#previews">
-          <span class="name">Previews <span class="arrow" aria-hidden="true">&rarr;</span></span>
-          <p class="desc">Small isolated cards for each token group, type step, component, and brand asset.</p>
+        </div>
+        <div class="card">
+          <a class="card-link" href="#previews">
+            <span class="name">Previews <span class="arrow" aria-hidden="true">&rarr;</span></span>
+            <p class="desc">Small isolated cards for each token group, type step, component, and brand asset.</p>
+          </a>
           <button class="card-use" type="button" data-use="previews">Use</button>
-        </a>
-        <a class="card" href="#kits">
-          <span class="name">UI kits <span class="arrow" aria-hidden="true">&rarr;</span></span>
-          <p class="desc">Per-product component sets — the WRLD.tech marketing shell and the WRLD.AI dashboard.</p>
+        </div>
+        <div class="card">
+          <a class="card-link" href="#kits">
+            <span class="name">UI kits <span class="arrow" aria-hidden="true">&rarr;</span></span>
+            <p class="desc">Per-product component sets — the WRLD.tech marketing shell and the WRLD.AI dashboard.</p>
+          </a>
           <button class="card-use" type="button" data-use="kits">Use</button>
-        </a>
+        </div>
       </div>
     </div>
   </section>
@@ -507,16 +522,20 @@
       <h2>UI kits</h2>
       <p class="note">Product-specific component sets, each with a runnable index page and typed component sources.</p>
       <div class="cards">
-        <a class="card" href="ui_kits/wrld-tech/">
-          <span class="name">WRLD.tech <span class="arrow" aria-hidden="true">&rarr;</span></span>
-          <p class="desc">Flagship marketing shell — header, hero, services grid, values strip, CTA, footer.</p>
+        <div class="card">
+          <a class="card-link" href="ui_kits/wrld-tech/">
+            <span class="name">WRLD.tech <span class="arrow" aria-hidden="true">&rarr;</span></span>
+            <p class="desc">Flagship marketing shell — header, hero, services grid, values strip, CTA, footer.</p>
+          </a>
           <button class="card-use" type="button" data-use="wrld-tech">Use</button>
-        </a>
-        <a class="card" href="ui_kits/wrld-ai/">
-          <span class="name">WRLD.AI <span class="arrow" aria-hidden="true">&rarr;</span></span>
-          <p class="desc">Product dashboard — sidebar, agent list, agent detail, run history, stat cards.</p>
+        </div>
+        <div class="card">
+          <a class="card-link" href="ui_kits/wrld-ai/">
+            <span class="name">WRLD.AI <span class="arrow" aria-hidden="true">&rarr;</span></span>
+            <p class="desc">Product dashboard — sidebar, agent list, agent detail, run history, stat cards.</p>
+          </a>
           <button class="card-use" type="button" data-use="wrld-ai">Use</button>
-        </a>
+        </div>
         <a class="card" href="docs/21ST_PUBLISHING.md">
           <span class="name">21st.dev registry <span class="arrow" aria-hidden="true">&rarr;</span></span>
           <p class="desc">Every kit component as a self-contained TypeScript port for React + shadcn projects, installable from the WRLD team library. How to install, render, and publish.</p>
@@ -786,10 +805,7 @@
     }
 
     document.querySelectorAll('[data-use]').forEach(function (btn) {
-      btn.addEventListener('click', function (e) {
-        // Cards are <a> wrappers — stop the click from also navigating.
-        e.preventDefault();
-        e.stopPropagation();
+      btn.addEventListener('click', function () {
         lastFocused = btn;
         openUseModal(btn.dataset.use);
       });
