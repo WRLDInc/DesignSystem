@@ -490,6 +490,124 @@
       color: var(--wrld-fg-muted);
     }
 
+    /* ---- Section head + Use button --------------------------------- */
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: var(--wrld-space-6);
+      flex-wrap: wrap;
+    }
+    .section-head .section-title { margin-bottom: 0; }
+    .btn-use {
+      flex: 0 0 auto;
+      padding: var(--wrld-space-2) var(--wrld-space-5);
+      font-size: var(--wrld-fs-caption);
+    }
+
+    /* ---- Use modal --------------------------------------------------
+       Opened by any [data-use] button. One shared dialog, content swapped
+       per section from the USE_PROMPTS map below. */
+    .use-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgb(0 0 0 / 0.5);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--wrld-space-6);
+      z-index: var(--wrld-z-modal);
+    }
+    .use-modal-overlay[hidden] { display: none; }
+    .use-modal {
+      width: 100%;
+      max-width: 640px;
+      max-height: 85vh;
+      overflow-y: auto;
+      background: var(--wrld-bg-elevated);
+      border: var(--wrld-border-hairline) solid var(--wrld-border);
+      border-radius: var(--wrld-radius-lg);
+      box-shadow: var(--wrld-shadow-lg);
+      padding: var(--wrld-space-8);
+    }
+    .use-modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--wrld-space-4);
+      margin-bottom: var(--wrld-space-2);
+    }
+    .use-modal-head h3 { margin: 0; font-size: var(--wrld-fs-h4); }
+    .use-modal-close {
+      background: transparent;
+      border: none;
+      color: var(--wrld-fg-muted);
+      font-size: 18px;
+      line-height: 1;
+      padding: var(--wrld-space-2);
+      cursor: pointer;
+      border-radius: var(--wrld-radius-sm);
+    }
+    .use-modal-close:hover { color: var(--wrld-accent-primary); }
+    .use-modal-close:focus-visible { outline: none; box-shadow: var(--wrld-focus-ring); }
+    .use-modal-desc {
+      color: var(--wrld-fg-muted);
+      font-size: var(--wrld-fs-body-sm);
+      margin: 0 0 var(--wrld-space-5);
+      max-width: 60ch;
+    }
+    .use-modal-prompt {
+      white-space: pre-wrap;
+      font-family: var(--wrld-font-mono);
+      font-size: var(--wrld-fs-body-sm);
+      line-height: 1.6;
+      background: var(--wrld-bg-subtle);
+      border: var(--wrld-border-hairline) solid var(--wrld-border);
+      border-radius: var(--wrld-radius-md);
+      padding: var(--wrld-space-4);
+      margin: 0 0 var(--wrld-space-5);
+    }
+    .use-modal-files { margin-bottom: var(--wrld-space-6); }
+    .use-modal-files-label {
+      display: block;
+      font-family: var(--wrld-font-mono);
+      font-size: var(--wrld-fs-caption);
+      text-transform: uppercase;
+      letter-spacing: var(--wrld-ls-eyebrow);
+      color: var(--wrld-fg-subtle);
+      margin-bottom: var(--wrld-space-2);
+    }
+    .use-modal-files ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .use-modal-files a {
+      font-family: var(--wrld-font-mono);
+      font-size: var(--wrld-fs-body-sm);
+      color: var(--wrld-fg-muted);
+      text-decoration: none;
+    }
+    .use-modal-files a:hover { color: var(--wrld-accent-primary); }
+    .use-modal-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--wrld-space-3);
+      flex-wrap: wrap;
+    }
+    .use-modal-copied {
+      font-size: var(--wrld-fs-caption);
+      color: var(--wrld-accent-primary);
+      opacity: 0;
+      transition: opacity var(--wrld-duration-default) var(--wrld-ease-standard);
+    }
+    .use-modal-copied.show { opacity: 1; }
+
     /* ---- Responsive -------------------------------------------------
        This page previously had no media queries at all, so the header row
        (brand + five nav links + theme toggle) never wrapped and forced the
@@ -593,8 +711,13 @@
 
     <!-- ====== COLORS ====== -->
     <section id="colors">
-      <div class="eyebrow">01 · Color</div>
-      <h2 class="section-title">A monochrome system with three interactive accents.</h2>
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">01 · Color</div>
+          <h2 class="section-title">A monochrome system with three interactive accents.</h2>
+        </div>
+        <button class="btn btn-ghost btn-use" data-use="colors">Use</button>
+      </div>
 
       <div class="swatch-group">
         <h3>Monochrome scale</h3>
@@ -617,8 +740,13 @@
 
     <!-- ====== TYPE ====== -->
     <section id="type">
-      <div class="eyebrow">02 · Typography</div>
-      <h2 class="section-title">Montserrat display · Ubuntu body · Ubuntu Mono.</h2>
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">02 · Typography</div>
+          <h2 class="section-title">Montserrat display · Ubuntu body · Ubuntu Mono.</h2>
+        </div>
+        <button class="btn btn-ghost btn-use" data-use="type">Use</button>
+      </div>
 
       <div class="type-row">
         <span class="label">display / xl</span>
@@ -668,8 +796,13 @@
 
     <!-- ====== LOGOS ====== -->
     <section id="logos">
-      <div class="eyebrow">03 · Logos</div>
-      <h2 class="section-title">One mark. One wordmark. One lockup pattern.</h2>
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">03 · Logos</div>
+          <h2 class="section-title">One mark. One wordmark. One lockup pattern.</h2>
+        </div>
+        <button class="btn btn-ghost btn-use" data-use="logos">Use</button>
+      </div>
       <p class="hint" style="max-width: 60ch; margin: calc(-1 * var(--wrld-space-2)) 0 var(--wrld-space-8);">
         The mark ships as a single PNG; theme handles dark/light by swapping which file is rendered.
         The full lockup is a recipe — mark + Montserrat <strong>WRLD</strong> + uppercase sub-label.
@@ -777,15 +910,25 @@
 
     <!-- ====== SPACING ====== -->
     <section id="spacing">
-      <div class="eyebrow">04 · Spacing</div>
-      <h2 class="section-title">4px base — 12 steps.</h2>
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">04 · Spacing</div>
+          <h2 class="section-title">4px base — 12 steps.</h2>
+        </div>
+        <button class="btn btn-ghost btn-use" data-use="spacing">Use</button>
+      </div>
       <div id="spacingScale"></div>
     </section>
 
     <!-- ====== COMPONENTS ====== -->
     <section id="components">
-      <div class="eyebrow">05 · Components</div>
-      <h2 class="section-title">Buttons, cards, focus states.</h2>
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">05 · Components</div>
+          <h2 class="section-title">Buttons, cards, focus states.</h2>
+        </div>
+        <button class="btn btn-ghost btn-use" data-use="components">Use</button>
+      </div>
 
       <h3 style="font-size: var(--wrld-fs-h4); margin-bottom: var(--wrld-space-4);">Buttons</h3>
       <div class="btn-row" style="margin-bottom: var(--wrld-space-10);">
@@ -819,6 +962,30 @@
       <div>© WRLD Inc. · Dallas, TX · <code>ridge@wrld.tech</code></div>
     </footer>
   </main>
+
+  <!-- ============ Use modal ================================================
+       One shared dialog. Content is swapped per section from USE_PROMPTS
+       below — same pattern as Claude Design's own "Use" affordance: a
+       ready-to-paste agent prompt plus the exact public files it needs. -->
+  <div class="use-modal-overlay" id="useModalOverlay" hidden>
+    <div class="use-modal" role="dialog" aria-modal="true" aria-labelledby="useModalTitle">
+      <div class="use-modal-head">
+        <h3 id="useModalTitle">Use</h3>
+        <button class="use-modal-close" id="useModalClose" aria-label="Close">✕</button>
+      </div>
+      <p class="use-modal-desc" id="useModalDesc"></p>
+      <pre class="use-modal-prompt" id="useModalPrompt"></pre>
+      <div class="use-modal-files">
+        <span class="use-modal-files-label">Files referenced</span>
+        <ul id="useModalFiles"></ul>
+      </div>
+      <div class="use-modal-actions">
+        <button class="btn btn-primary" id="useModalCopyPrompt">Copy prompt</button>
+        <button class="btn btn-ghost" id="useModalCopyFiles">Copy file list</button>
+        <span class="use-modal-copied" id="useModalCopied">Copied</span>
+      </div>
+    </div>
+  </div>
 
   <script>
     // ---------- Theme toggle ----------
@@ -891,6 +1058,204 @@
           <span class="caption">${rem}rem · ${px}px</span>
         </div>`;
     }).join('');
+  </script>
+
+  <!-- ============ Use modal: data + wiring ================================ -->
+  <script>
+    (function () {
+      var SITE = 'https://wrld.design/';
+
+      // One prompt + file list per top-level section. Every prompt ends on
+      // README.md so an agent that ignores everything else still gets the
+      // brand rules; every file list is public, so nothing here needs auth.
+      var USE_PROMPTS = {
+        colors: {
+          title: 'Use — Colors',
+          desc: 'Paste into a coding agent to build with the WRLD color system.',
+          files: ['tokens/tokens.css', 'tokens/tokens.json', 'colors_and_type.css', 'README.md'],
+          prompt:
+            'Build with the WRLD design system’s color tokens.\n\n' +
+            'Static surfaces stay 100% monochrome — no gradient hero backgrounds, no accent fills ' +
+            'behind cards. The three accents (#007fee primary, #00adee secondary, #EE9300 warm) are ' +
+            'interactive only: hover glows, focus rings, motion sweeps — never a static fill. Status ' +
+            'colors (success/warning/danger/info) are system semantic — use them on alerts and health ' +
+            'indicators, never on marketing surfaces.\n\n' +
+            'Semantic tokens (--wrld-bg, --wrld-fg, --wrld-border, --wrld-bg-elevated, etc.) re-map ' +
+            'automatically between light and dark via the [data-theme] attribute on <html>. Never ' +
+            'hardcode a hex value — reference the token.\n\n' +
+            'Reference these files:\n' +
+            '- tokens/tokens.css — canonical --wrld-* custom properties, light + dark\n' +
+            '- tokens/tokens.json — the same tokens as data\n' +
+            '- colors_and_type.css — color + type foundation, drop-in\n' +
+            '- README.md — full brand rules (Color, Hover states, Focus rings)'
+        },
+        type: {
+          title: 'Use — Typography',
+          desc: 'Paste into a coding agent to build with the WRLD type system.',
+          files: [
+            'colors_and_type.css',
+            'fonts/Montserrat-VariableFont_wght.ttf',
+            'fonts/Ubuntu-Regular.ttf',
+            'fonts/UbuntuMono-Regular.ttf',
+            'README.md'
+          ],
+          prompt:
+            'Build with the WRLD type system: Montserrat for display and headings (weight 500–700, ' +
+            'letter-spacing -0.02em), Ubuntu for body (weight 300–500, line-height 1.6), Ubuntu Mono ' +
+            'for code and technical labels. Fonts are self-hosted — never load from Google Fonts or ' +
+            'any other font CDN.\n\n' +
+            'Sentence case everywhere: headings, buttons, labels. Not Title Case, not ALL CAPS — caps ' +
+            'are reserved for eyebrow microtype (letter-spacing 0.12em) and the WRLD wordmark-as-type ' +
+            '(letter-spacing 0.28em).\n\n' +
+            'Reference these files:\n' +
+            '- colors_and_type.css — @font-face declarations + the full type scale as --wrld-fs-* tokens\n' +
+            '- fonts/Montserrat-VariableFont_wght.ttf\n' +
+            '- fonts/Ubuntu-Regular.ttf\n' +
+            '- fonts/UbuntuMono-Regular.ttf\n' +
+            '- README.md — Type + Casing & typography sections'
+        },
+        logos: {
+          title: 'Use — Logos',
+          desc: 'Paste into a coding agent to place the WRLD mark and lockup correctly.',
+          files: [
+            'assets/logos/wrld-mark-black.png',
+            'assets/logos/wrld-mark-white.png',
+            'assets/logos/wrld-tech-black.png',
+            'assets/logos/wrld-tech-white.png',
+            'logos/favicons/site.webmanifest',
+            'README.md'
+          ],
+          prompt:
+            'Use the WRLD mark and lockup exactly as shipped — never redraw, recolor, or add effects ' +
+            'to the starburst.\n\n' +
+            'The mark ships as authentic PNG raster (wrld-mark-black.png / wrld-mark-white.png); theme ' +
+            'handles dark/light by swapping which file renders, not by filtering or recoloring the art. ' +
+            'The full lockup is a recipe, not a single asset: mark + Montserrat "WRLD" (bold, 0.04em ' +
+            'tracking) + an uppercase sub-label (0.20em tracking) naming the property — Tech, Host, ' +
+            'Design, AI, Services. The favicon is the same 18-ray starburst, resized straight from the ' +
+            'master artwork — never a circle, disc, or gear.\n\n' +
+            'Reference these files:\n' +
+            '- assets/logos/wrld-mark-black.png, wrld-mark-white.png\n' +
+            '- assets/logos/wrld-tech-black.png, wrld-tech-white.png\n' +
+            '- logos/favicons/site.webmanifest — the complete favicon set\n' +
+            '- README.md — Iconography section for the full lockup recipe and file map'
+        },
+        spacing: {
+          title: 'Use — Spacing',
+          desc: 'Paste into a coding agent to build on the WRLD 4px spacing scale.',
+          files: ['tokens/tokens.css', 'tokens/tokens.json', 'README.md'],
+          prompt:
+            'Use the WRLD 4px spacing scale: 4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80, 120 — exposed ' +
+            'as --wrld-space-1 through --wrld-space-20 tokens. Sections breathe: minimum 64px vertical ' +
+            'rhythm between major hero blocks. Never use an arbitrary pixel value where a token exists.\n\n' +
+            'Reference these files:\n' +
+            '- tokens/tokens.css — --wrld-space-* custom properties\n' +
+            '- tokens/tokens.json — the same scale as data\n' +
+            '- README.md — Spacing + Layout rules sections'
+        },
+        components: {
+          title: 'Use — Components',
+          desc: 'Paste into a coding agent to build buttons and cards the WRLD way.',
+          files: [
+            '_ds_bundle.js',
+            '_ds_manifest.json',
+            'ui_kits/wrld-tech/Button.jsx',
+            'tokens/tokens.css',
+            'README.md'
+          ],
+          prompt:
+            'Build buttons and cards the WRLD way.\n\n' +
+            'Buttons: background fills with --wrld-fg on hover, text inverts, borders strengthen one ' +
+            'step — never the shrink-on-press pattern. Cards: 1px hairline border, 8px radius, ' +
+            '--wrld-bg-elevated background, no resting shadow; on hover, the border shifts to the accent ' +
+            'and lifts with an accent-tinted shadow. Focus rings are always visible: a 3px outset ring at ' +
+            '28% (light) / 40% (dark) accent opacity, never blurred.\n\n' +
+            'Reference these files:\n' +
+            '- _ds_bundle.js + _ds_manifest.json — compiled React components, incl. Button\n' +
+            '- ui_kits/wrld-tech/Button.jsx — component source\n' +
+            '- tokens/tokens.css — --wrld-radius-*, --wrld-shadow-*, --wrld-focus-ring tokens\n' +
+            '- README.md — Hover states, Press states, Focus rings, Cards sections'
+        }
+      };
+
+      var overlay = document.getElementById('useModalOverlay');
+      var titleEl = document.getElementById('useModalTitle');
+      var descEl = document.getElementById('useModalDesc');
+      var promptEl = document.getElementById('useModalPrompt');
+      var filesEl = document.getElementById('useModalFiles');
+      var closeBtn = document.getElementById('useModalClose');
+      var copyPromptBtn = document.getElementById('useModalCopyPrompt');
+      var copyFilesBtn = document.getElementById('useModalCopyFiles');
+      var copiedTag = document.getElementById('useModalCopied');
+      var lastFocused = null;
+      var copiedTimer = null;
+
+      function openUseModal(key) {
+        var data = USE_PROMPTS[key];
+        if (!data) return;
+        titleEl.textContent = data.title;
+        descEl.textContent = data.desc;
+        promptEl.textContent = data.prompt;
+        filesEl.innerHTML = data.files
+          .map(function (f) {
+            return '<li><a href="' + SITE + f + '" target="_blank" rel="noopener">' + f + '</a></li>';
+          })
+          .join('');
+        overlay.hidden = false;
+        document.body.style.overflow = 'hidden';
+        closeBtn.focus();
+      }
+
+      function closeUseModal() {
+        overlay.hidden = true;
+        document.body.style.overflow = '';
+        if (lastFocused) lastFocused.focus();
+      }
+
+      function showCopied() {
+        copiedTag.classList.add('show');
+        clearTimeout(copiedTimer);
+        copiedTimer = setTimeout(function () { copiedTag.classList.remove('show'); }, 1600);
+      }
+
+      function copyText(text) {
+        function fallback() {
+          var ta = document.createElement('textarea');
+          ta.value = text;
+          ta.style.position = 'fixed';
+          ta.style.opacity = '0';
+          document.body.appendChild(ta);
+          ta.select();
+          try { document.execCommand('copy'); } catch (e) {}
+          document.body.removeChild(ta);
+        }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(showCopied, fallback);
+        } else {
+          fallback();
+          showCopied();
+        }
+      }
+
+      document.querySelectorAll('[data-use]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          lastFocused = btn;
+          openUseModal(btn.dataset.use);
+        });
+      });
+
+      closeBtn.addEventListener('click', closeUseModal);
+      overlay.addEventListener('click', function (e) { if (e.target === overlay) closeUseModal(); });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && !overlay.hidden) closeUseModal();
+      });
+
+      copyPromptBtn.addEventListener('click', function () { copyText(promptEl.textContent); });
+      copyFilesBtn.addEventListener('click', function () {
+        var links = Array.prototype.map.call(filesEl.querySelectorAll('a'), function (a) { return a.href; });
+        copyText(links.join('\n'));
+      });
+    })();
   </script>
 
   <!-- ============ Tweaks panel ============================================ -->
