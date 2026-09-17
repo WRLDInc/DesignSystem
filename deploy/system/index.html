@@ -1,21 +1,145 @@
-<!doctype html>
-<!-- TODO(wrld.design): interim stop-gap. The landing page links /system#foundations, /system#components and
-     /system#brand as placeholders for the not-yet-built system pages. Until those ship, this forwards to the
-     live styleguide, mapping the placeholder anchors onto the sections the styleguide has today. Delete this
-     file (and the TODO comments in deploy/index.html) when /system is real. -->
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
 <head>
-<meta charset="utf-8">
-<meta name="robots" content="noindex">
-<title>WRLD.design — forwarding to the styleguide</title>
-<script>
-(function () {
-  var map = { '#foundations': '#colors', '#components': '#components', '#brand': '#logos' };
-  var hash = location.hash.toLowerCase();
-  location.replace('/styleguide/' + (map[hash] || ''));
-})();
-</script>
-<noscript><meta http-equiv="refresh" content="0; url=/styleguide/"></noscript>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>WRLD design system</title>
+<meta name="description" content="The interactive WRLD design system — every token group, type scale, logo lockup, component, and UI kit rendered live, each with a ready-to-use implementation prompt wired to the real files." />
+<meta name="color-scheme" content="light dark" />
+
+<!-- This page lives at /system/, so every path is root-absolute. -->
+<link rel="icon" href="/logos/favicons/favicon.ico" sizes="any" />
+<link rel="icon" type="image/png" sizes="32x32" href="/logos/favicons/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/logos/favicons/favicon-16x16.png" />
+<link rel="apple-touch-icon" href="/logos/favicons/apple-touch-icon.png" />
+<link rel="manifest" href="/logos/favicons/site.webmanifest" />
+
+<meta property="og:title" content="WRLD design system" />
+<meta property="og:description" content="Tokens, typefaces, logos, brand briefs, and UI kits for every WRLD brand — live, with implementation prompts." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://wrld.design/system/" />
+<meta property="og:image" content="https://wrld.design/logos/favicons/favicon-512x512.png" />
+<meta name="twitter:card" content="summary_large_image" />
+
+<!-- The system's own entry stylesheet: tokens/tokens.css + colors_and_type.css,
+     with self-hosted @font-face pointing at /fonts/. No external font CDN. -->
+<link rel="stylesheet" href="/styles.css" />
+<link rel="stylesheet" href="/system/app.css" />
 </head>
-<body><p>Forwarding to <a href="/styleguide/">the WRLD design system styleguide</a>.</p></body>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <a class="brand" href="#top" aria-label="WRLD design system, back to top">
+      <img class="brand-mark" data-brand-art="on-light" src="/assets/logos/wrld-mark-black.png" alt="" />
+      <img class="brand-mark" data-brand-art="on-dark" src="/assets/logos/wrld-mark-white.png" alt="" />
+      <span class="brand-text">
+        <span class="brand-word">WRLD</span>
+        <span class="brand-sub">Design system</span>
+      </span>
+    </a>
+
+    <div class="top-search">
+      <input id="search" type="search" placeholder="Search the system…" aria-label="Search components, colors, and tokens" autocomplete="off" />
+    </div>
+
+    <div class="top-actions">
+      <a class="ghost-link" href="/">WRLD.design</a>
+      <a class="ghost-link" href="/styleguide/">Styleguide</a>
+      <a class="ghost-link" href="https://github.com/WRLDInc/DesignSystem" target="_blank" rel="noopener">Source repo</a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Colour theme: auto. Activate to change.">
+        <span class="theme-toggle-dot" aria-hidden="true"></span>
+        <span id="theme-toggle-label">Auto</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="shell" id="top">
+  <aside class="sidenav" aria-label="Design system sections">
+    <div class="sidenav-inner">
+      <p class="sidenav-eyebrow">Sections</p>
+      <nav id="sidenav-list"></nav>
+    </div>
+  </aside>
+
+  <main class="content">
+    <section class="hero">
+      <p class="eyebrow">WRLD Inc. &middot; DBA WRLD Tech Co.</p>
+      <h1>The WRLD design system</h1>
+      <p class="hero-lede">Modern minimalist. Dark/light monochromatic. Accents are interactive, never decorative. Every token group, type scale, logo lockup, component, and UI kit below is live — click <strong>Use</strong> on anything to get an implementation-ready prompt wired to the real files.</p>
+      <p class="hero-meta">Source of truth: <code>github.com/WRLDInc/DesignSystem</code> &middot; Maintainer: Ridgeway Lawrence</p>
+    </section>
+
+    <!-- Anchor the landing page's /system#foundations link. app.js moves this
+         alias in front of the Colors section once the cards render; until then
+         it lands at the top of the generated sections. #brand and #components
+         are real section ids generated from the manifest groups. -->
+    <span id="foundations" class="anchor-alias" style="display:block;scroll-margin-top:84px" aria-hidden="true"></span>
+
+    <!-- Sections + cards are rendered here from /_ds_manifest.json by app.js. -->
+    <div id="sections"></div>
+
+    <!-- Populated by app.js from the manifest's preview cards. (The build's
+         PREVIEW_LIST injection only applies to the apex index.html.) -->
+    <section class="ds-section ds-section-index" id="all-previews">
+      <h2>All previews</h2>
+      <p class="section-note">Every card above as a standalone page — handy for embedding one idea in a doc or a design tool.</p>
+      <ul class="links" id="preview-index"></ul>
+    </section>
+  </main>
+</div>
+
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <!-- The lockup is a recipe, not an asset: authentic mark + Montserrat WRLD + sub-label. -->
+    <span class="footer-lockup" aria-label="WRLD">
+      <img class="footer-mark" data-brand-art="on-light" src="/assets/logos/wrld-mark-black.png" alt="" />
+      <img class="footer-mark" data-brand-art="on-dark" src="/assets/logos/wrld-mark-white.png" alt="" />
+      <span class="footer-lockup-text"><span class="brand-word">WRLD</span><span class="brand-sub">Inc.</span></span>
+    </span>
+    <p>WRLD Inc. (DBA WRLD Tech Co.) &middot; EIN 84-5122446 &middot; DUNS 03-999-5454</p>
+    <p class="footer-links">
+      <a href="/">WRLD.design</a>
+      <a href="/README.md">Read the system</a>
+      <a href="/brand/CLAUDE.md">Brand brief</a>
+      <a href="/docs/CHANGELOG.md">Changelog</a>
+      <a href="/_ds_manifest.json">Raw manifest</a>
+      <a href="https://github.com/WRLDInc/DesignSystem">Source</a>
+    </p>
+  </div>
+</footer>
+
+<!-- One shared "Use" dialog. app.js fills it per card. -->
+<div class="modal-backdrop" id="modal-backdrop" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-head">
+      <div>
+        <p class="modal-eyebrow" id="modal-group"></p>
+        <h2 id="modal-title"></h2>
+        <p class="modal-subtitle" id="modal-subtitle"></p>
+      </div>
+      <button class="modal-close" id="modal-close" type="button" aria-label="Close">&times;</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="modal-col">
+        <p class="modal-label">Implementation prompt — paste into your coding agent</p>
+        <textarea id="modal-prompt" class="modal-prompt" readonly rows="16" aria-label="Implementation prompt"></textarea>
+        <div class="modal-actions">
+          <button class="btn btn-primary" id="modal-copy" type="button">Copy prompt</button>
+          <button class="btn btn-ghost" id="modal-copy-files" type="button">Copy file list</button>
+          <span class="use-status" id="modal-status" role="status" aria-live="polite" aria-atomic="true"></span>
+        </div>
+      </div>
+      <div class="modal-col modal-col-narrow">
+        <p class="modal-label">Files this prompt points to</p>
+        <ul class="modal-files" id="modal-files"></ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/system/app.js"></script>
+</body>
 </html>
