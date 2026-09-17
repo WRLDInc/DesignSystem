@@ -1,880 +1,469 @@
-<!DOCTYPE html>
-<html lang="en" data-theme="auto">
+<!doctype html>
+<html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>WRLD design system</title>
-<meta name="description" content="The canonical design system for WRLD Inc. and every WRLD brand — tokens, typefaces, logos, brand briefs, and per-product UI kits." />
-<meta name="color-scheme" content="light dark" />
-
-<link rel="icon" href="logos/favicons/favicon.ico" sizes="any" />
-<link rel="icon" type="image/png" sizes="32x32" href="logos/favicons/favicon-32x32.png" />
-<link rel="icon" type="image/png" sizes="16x16" href="logos/favicons/favicon-16x16.png" />
-<link rel="apple-touch-icon" href="logos/favicons/apple-touch-icon.png" />
-<link rel="manifest" href="logos/favicons/site.webmanifest" />
-
-<meta property="og:title" content="WRLD design system" />
-<meta property="og:description" content="Tokens, typefaces, logos, brand briefs, and UI kits for every WRLD brand." />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://wrld.design/" />
-<meta property="og:image" content="https://wrld.design/logos/favicons/favicon-512x512.png" />
-<meta name="twitter:card" content="summary_large_image" />
-
-<!-- The system's own entry stylesheet: tokens/tokens.css + colors_and_type.css,
-     with self-hosted @font-face pointing at fonts/. No external font CDN. -->
-<link rel="stylesheet" href="styles.css" />
-
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>WRLD.design — the design system behind every WRLD surface</title>
+<meta name="description" content="WRLD.design is the open design system of WRLD Tech Co.: tokens, type, components and brand for WRLD.tech, WRLD.host, WRLD.AI, WRLD.Services, WRLD.Support, WRLD.Press and WRLD.Tel — served from the Cloudflare edge.">
+<meta property="og:title" content="WRLD.design — Design that ships.">
+<meta property="og:description" content="The design system behind every WRLD surface, open to everyone.">
+<meta name="theme-color" content="#0a0a0a">
+<link rel="icon" href="logos/favicons/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="logos/favicons/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="logos/favicons/favicon-16x16.png">
+<link rel="apple-touch-icon" href="logos/favicons/apple-touch-icon.png">
+<link rel="manifest" href="logos/favicons/site.webmanifest">
+<!-- Fonts: self-hosted from /fonts/ (same files colors_and_type.css uses; deploy/_headers caches them immutable). -->
+<link rel="preload" href="/fonts/Montserrat-VariableFont_wght.ttf" as="font" type="font/ttf" crossorigin>
+<link rel="preload" href="/fonts/Ubuntu-Regular.ttf" as="font" type="font/ttf" crossorigin>
 <style>
-  /* This page consumes var(--wrld-*) only — never a raw hex. Surfaces stay
-     monochrome; the accent appears on hover and focus, never as a fill. */
-  *, *::before, *::after { box-sizing: border-box; }
+@font-face{font-family:'Montserrat';src:url(/fonts/Montserrat-VariableFont_wght.ttf) format('truetype');font-weight:100 900;font-style:normal;font-display:swap}
+@font-face{font-family:'Ubuntu';src:url(/fonts/Ubuntu-Light.ttf) format('truetype');font-weight:300;font-style:normal;font-display:swap}
+@font-face{font-family:'Ubuntu';src:url(/fonts/Ubuntu-Regular.ttf) format('truetype');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'Ubuntu';src:url(/fonts/Ubuntu-Medium.ttf) format('truetype');font-weight:500;font-style:normal;font-display:swap}
+@font-face{font-family:'Ubuntu';src:url(/fonts/Ubuntu-Bold.ttf) format('truetype');font-weight:700;font-style:normal;font-display:swap}
+@font-face{font-family:'Ubuntu Mono';src:url(/fonts/UbuntuMono-Regular.ttf) format('truetype');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'Ubuntu Mono';src:url(/fonts/UbuntuMono-Bold.ttf) format('truetype');font-weight:700;font-style:normal;font-display:swap}
+</style>
+<style>
+/* ── WRLD tokens (tokens/tokens.css · WRLDInc/DesignSystem) ─────────────── */
+:root{
+  --wrld-mono-0:#ffffff;--wrld-mono-50:#fafafa;--wrld-mono-100:#f4f4f5;--wrld-mono-200:#e4e4e7;--wrld-mono-300:#d4d4d8;--wrld-mono-400:#a1a1aa;--wrld-mono-500:#71717a;--wrld-mono-600:#52525b;--wrld-mono-700:#3f3f46;--wrld-mono-800:#27272a;--wrld-mono-900:#18181b;--wrld-mono-950:#0a0a0a;
+  --wrld-accent-primary:#007fee;--wrld-accent-secondary:#00adee;--wrld-accent-warm:#ee9300;
+  --wrld-accent-primary-rgb:0 127 238;--wrld-accent-secondary-rgb:0 173 238;--wrld-accent-warm-rgb:238 147 0;
+  --wrld-font-display:'Montserrat','Helvetica Neue',Arial,sans-serif;--wrld-font-body:'Ubuntu',system-ui,-apple-system,sans-serif;--wrld-font-mono:'Ubuntu Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --wrld-space-1:.25rem;--wrld-space-2:.5rem;--wrld-space-3:.75rem;--wrld-space-4:1rem;--wrld-space-5:1.25rem;--wrld-space-6:1.5rem;--wrld-space-8:2rem;--wrld-space-10:2.5rem;--wrld-space-12:3rem;--wrld-space-16:4rem;--wrld-space-20:5rem;--wrld-space-30:7.5rem;
+  --wrld-radius-sm:4px;--wrld-radius-md:8px;--wrld-radius-pill:9999px;
+  --wrld-ease-standard:cubic-bezier(.2,.8,.2,1);--wrld-ease-precise:cubic-bezier(.83,0,.17,1);
+  --wrld-duration-micro:120ms;--wrld-duration-default:200ms;--wrld-duration-emphasis:320ms;--wrld-duration-reveal:600ms;
+  --wrld-ls-display:-.02em;--wrld-ls-eyebrow:.12em;--wrld-ls-caps-xl:.28em;
+  /* semantic · light */
+  --wrld-bg:var(--wrld-mono-0);--wrld-bg-subtle:var(--wrld-mono-50);--wrld-bg-muted:var(--wrld-mono-100);--wrld-bg-elevated:var(--wrld-mono-0);
+  --wrld-fg:var(--wrld-mono-950);--wrld-fg-muted:var(--wrld-mono-600);--wrld-fg-subtle:var(--wrld-mono-500);--wrld-fg-inverse:var(--wrld-mono-0);
+  --wrld-border:var(--wrld-mono-200);--wrld-border-strong:var(--wrld-mono-300);
+  --wrld-shadow-md:0 4px 12px 0 rgb(0 0 0 / .08),0 2px 4px 0 rgb(0 0 0 / .04);--wrld-shadow-accent-primary:0 10px 40px -8px rgb(var(--wrld-accent-primary-rgb) / .22);
+  --hero-ground:#efefef;--hero-ground2:#ffffff;--grain:.05;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --wrld-bg:var(--wrld-mono-950);--wrld-bg-subtle:var(--wrld-mono-900);--wrld-bg-muted:var(--wrld-mono-800);--wrld-bg-elevated:var(--wrld-mono-900);
+  --wrld-fg:var(--wrld-mono-50);--wrld-fg-muted:var(--wrld-mono-400);--wrld-fg-subtle:var(--wrld-mono-500);--wrld-fg-inverse:var(--wrld-mono-950);
+  --wrld-border:var(--wrld-mono-800);--wrld-border-strong:var(--wrld-mono-700);
+  --wrld-shadow-md:0 4px 12px 0 rgb(0 0 0 / .45),0 2px 4px 0 rgb(0 0 0 / .25);--wrld-shadow-accent-primary:0 10px 40px -8px rgb(var(--wrld-accent-primary-rgb) / .36);
+  --hero-ground:#0a0a0a;--hero-ground2:#18181b;--grain:.07;}}
+:root[data-theme="dark"]{
+  --wrld-bg:var(--wrld-mono-950);--wrld-bg-subtle:var(--wrld-mono-900);--wrld-bg-muted:var(--wrld-mono-800);--wrld-bg-elevated:var(--wrld-mono-900);
+  --wrld-fg:var(--wrld-mono-50);--wrld-fg-muted:var(--wrld-mono-400);--wrld-fg-subtle:var(--wrld-mono-500);--wrld-fg-inverse:var(--wrld-mono-950);
+  --wrld-border:var(--wrld-mono-800);--wrld-border-strong:var(--wrld-mono-700);
+  --wrld-shadow-md:0 4px 12px 0 rgb(0 0 0 / .45),0 2px 4px 0 rgb(0 0 0 / .25);--wrld-shadow-accent-primary:0 10px 40px -8px rgb(var(--wrld-accent-primary-rgb) / .36);
+  --hero-ground:#0a0a0a;--hero-ground2:#18181b;--grain:.07;}
 
-  html { -webkit-text-size-adjust: 100%; }
+/* ── base ──────────────────────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--wrld-bg);color:var(--wrld-fg);font-family:var(--wrld-font-body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+a{color:inherit;text-decoration:none}
+h1,h2,h3{font-family:var(--wrld-font-display);letter-spacing:var(--wrld-ls-display);margin:0;text-wrap:balance}
+p{margin:0;text-wrap:pretty}
+.eyebrow{font-size:12px;font-weight:500;letter-spacing:var(--wrld-ls-eyebrow);text-transform:uppercase;color:var(--wrld-fg-muted)}
+.mono{font-family:var(--wrld-font-mono)}
+.wrap{max-width:1280px;margin:0 auto;padding:0 var(--wrld-space-8)}
+@media (max-width:640px){.wrap{padding:0 var(--wrld-space-5)}}
+:focus-visible{outline:none;box-shadow:0 0 0 3px rgb(var(--wrld-accent-primary-rgb) / .28)}
+img,svg{display:block}
+.mark{width:1em;height:1em}
 
-  body {
-    margin: 0;
-    background: var(--wrld-bg);
-    color: var(--wrld-fg);
-    font-family: var(--wrld-font-body);
-    font-size: var(--wrld-fs-body);
-    line-height: var(--wrld-lh-body);
-  }
+/* ── hero (template: full-dvh, pill nav, bottom-pinned copy, shader backdrop) ── */
+.hero{position:relative;display:flex;flex-direction:column;height:100dvh;min-height:640px;overflow:hidden;background:var(--hero-ground)}
+.hero canvas,.hero .fallback{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.hero .fallback{background:radial-gradient(120% 80% at 70% 30%,rgb(var(--wrld-accent-primary-rgb) / .18),transparent 60%),radial-gradient(90% 70% at 20% 90%,rgb(var(--wrld-accent-warm-rgb) / .14),transparent 60%),linear-gradient(var(--hero-ground),var(--hero-ground2))}
+.hero header{position:relative;z-index:2;max-width:1440px;width:100%;margin:0 auto;padding:var(--wrld-space-3)}
+.pill-nav{display:flex;align-items:center;justify-content:space-between;background:var(--wrld-bg-elevated);border-radius:var(--wrld-radius-pill);padding:5px;border:1px solid var(--wrld-border)}
+.pill-nav .left{display:flex;align-items:center;gap:var(--wrld-space-6)}
+.lockup{display:flex;align-items:center;gap:8px;padding-left:2px}
+.lockup .disc{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:var(--wrld-fg);color:var(--wrld-fg-inverse);font-size:26px}
+.lockup .word{font-family:var(--wrld-font-display);font-weight:700;font-size:16px;letter-spacing:.04em}
+.lockup .sub{font-family:var(--wrld-font-display);font-weight:500;font-size:11px;letter-spacing:.18em;color:var(--wrld-fg-subtle);margin-left:2px}
+.links{display:none;gap:var(--wrld-space-6)}
+.links a{font-size:14px;transition:color var(--wrld-duration-emphasis) var(--wrld-ease-standard)}
+.links a:hover{color:var(--wrld-accent-primary)}
+.right{display:none;align-items:center;gap:var(--wrld-space-4)}
+.right .note{font-size:13px;color:var(--wrld-fg-muted)}
+@media (min-width:768px){.links,.right{display:flex}.burger{display:none!important}}
+/* pill CTA with roll-text + rotating arrow (template signature, kept only for the hero + footer CTAs) */
+.cta{--cta-bg:var(--wrld-fg);--cta-fg:var(--wrld-fg-inverse);display:inline-flex;align-items:center;gap:8px;border:0;cursor:pointer;border-radius:var(--wrld-radius-pill);background:var(--cta-bg);color:var(--cta-fg);padding:6px 6px 6px 20px;font:inherit;font-size:14px;font-weight:500;transition:box-shadow var(--wrld-duration-default) var(--wrld-ease-standard),transform var(--wrld-duration-default) var(--wrld-ease-standard)}
+.cta:hover{box-shadow:var(--wrld-shadow-accent-primary);transform:translateY(-1px)}
+.cta:active{transform:translateY(1px);box-shadow:none}
+.cta .roll{display:block;height:20px;overflow:hidden}
+.cta .roll span{display:flex;flex-direction:column;transition:transform 500ms cubic-bezier(.25,.1,.25,1)}
+.cta .roll i{display:block;height:20px;line-height:20px;font-style:normal}
+.cta:hover .roll span{transform:translateY(-50%)}
+.cta .disc{display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:var(--cta-fg);color:var(--cta-bg)}
+.cta .disc svg{width:16px;height:16px;transition:transform 500ms cubic-bezier(.25,.1,.25,1)}
+.cta:hover .disc svg{transform:rotate(-45deg)}
+.cta.small{padding:4px 4px 4px 16px;font-size:13px}.cta.small .disc{width:24px;height:24px}.cta.small .disc svg{width:14px;height:14px}
+.burger{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;border:0;background:var(--wrld-fg);color:var(--wrld-fg-inverse);cursor:pointer}
+.hero-body{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;justify-content:flex-end}
+.hero-body .wrap{width:100%;padding-bottom:var(--wrld-space-16)}
+.hero h1{font-weight:600;font-size:clamp(2.25rem,6vw,4.75rem);line-height:1.05;max-width:1000px;margin-top:var(--wrld-space-5)}
+.hero .lede{font-size:20px;line-height:1.55;color:var(--wrld-fg-muted);max-width:640px;margin-top:var(--wrld-space-6)}
+.hero .row{display:flex;flex-wrap:wrap;align-items:center;gap:var(--wrld-space-4);margin-top:var(--wrld-space-10)}
+.chip{display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:var(--wrld-radius-sm);background:var(--wrld-bg-elevated);border:1px solid var(--wrld-border);font-size:13px;font-weight:500;box-shadow:0 2px 8px rgb(0 0 0 / .08);transition:box-shadow var(--wrld-duration-default) var(--wrld-ease-standard)}
+.chip:hover{box-shadow:0 4px 16px rgb(0 0 0 / .12)}
+.chip .tag{background:var(--wrld-fg);color:var(--wrld-fg-inverse);font-size:11px;padding:2px 8px;border-radius:var(--wrld-radius-sm)}
+.chip .mark{font-size:20px;color:var(--wrld-fg)}
 
-  .wrap {
-    max-width: 1080px;
-    margin: 0 auto;
-    padding: 0 var(--wrld-space-6);
-  }
+/* ── sections ─────────────────────────────────────────────────────────── */
+section.band{padding:var(--wrld-space-20) 0;border-top:1px solid var(--wrld-border)}
+.head{display:flex;align-items:baseline;justify-content:space-between;gap:var(--wrld-space-6);margin-bottom:var(--wrld-space-10);flex-wrap:wrap}
+.head h2{font-weight:600;font-size:clamp(1.75rem,3.2vw,2.75rem);line-height:1.1;max-width:720px;margin-top:var(--wrld-space-4)}
+.head .side{font-size:14px;color:var(--wrld-fg-muted);max-width:360px}
+.grid{display:grid;gap:var(--wrld-space-4);grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
+.card{position:relative;display:block;padding:var(--wrld-space-6);background:var(--wrld-bg-elevated);border:1px solid var(--wrld-border);border-radius:var(--wrld-radius-md);transition:transform var(--wrld-duration-default) var(--wrld-ease-standard),box-shadow var(--wrld-duration-default) var(--wrld-ease-standard),border-color var(--wrld-duration-default)}
+.card:hover{transform:translateY(-2px);box-shadow:var(--wrld-shadow-md),var(--wrld-shadow-accent-primary);border-color:var(--wrld-border-strong)}
+.card.ai-secondary:hover{box-shadow:var(--wrld-shadow-md),0 10px 40px -8px rgb(var(--wrld-accent-secondary-rgb) / .22)}
+.card.ai-warm:hover{box-shadow:var(--wrld-shadow-md),0 10px 40px -8px rgb(var(--wrld-accent-warm-rgb) / .22)}
+.card .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--wrld-space-5)}
+.card .brand{font-family:var(--wrld-font-display);font-weight:700;font-size:15px;letter-spacing:.02em}
+.card .brand b{font-weight:500;color:var(--wrld-fg-subtle)}
+.card .brand .caps{text-transform:none}
+.card p{font-size:14px;line-height:1.55;color:var(--wrld-fg-muted)}
+.card .url{display:flex;justify-content:space-between;margin-top:var(--wrld-space-5);font-family:var(--wrld-font-mono);font-size:11px;color:var(--wrld-fg-subtle);transition:color var(--wrld-duration-default)}
+.card:hover .url{color:var(--wrld-accent-primary)}
+.icon-tile{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:var(--wrld-radius-sm);background:var(--wrld-bg-muted);color:var(--wrld-fg)}
+.previews{margin-top:var(--wrld-space-8);border-top:1px solid var(--wrld-border);padding-top:var(--wrld-space-5)}
+.previews summary{display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--wrld-space-4);cursor:pointer;list-style:none}
+.previews summary::-webkit-details-marker{display:none}
+.previews summary .mono{font-size:12px;color:var(--wrld-fg-subtle)}
+.previews summary::after{content:"+";margin-left:auto;font-family:var(--wrld-font-mono);color:var(--wrld-fg-subtle)}
+.previews[open] summary::after{content:"−"}
+.previews ul{display:flex;flex-wrap:wrap;gap:var(--wrld-space-2);list-style:none;margin:var(--wrld-space-5) 0 0;padding:0}
+.previews li a{display:inline-block;padding:6px 10px;border:1px solid var(--wrld-border);border-radius:var(--wrld-radius-sm);font-family:var(--wrld-font-mono);font-size:12px;color:var(--wrld-fg-muted);transition:color var(--wrld-duration-default),border-color var(--wrld-duration-default)}
+.previews li a:hover{color:var(--wrld-accent-primary);border-color:var(--wrld-border-strong)}
 
-  a { color: inherit; text-decoration: none; }
+/* ── Lucide Animated icons — ported from github.com/pqoqubbw/icons (MIT), imported inline, hover-triggered ── */
+.li{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;overflow:visible}
+.li [pathLength]{stroke-dasharray:1;stroke-dashoffset:0}
+@keyframes li-server-top{0%,100%{transform:translateY(0)}35%,65%{transform:translateY(12px)}}
+@keyframes li-server-bot{0%,100%{transform:translateY(0)}35%,65%{transform:translateY(-12px)}}
+.card:hover .li-server .t{animation:li-server-top .9s ease-in-out 2}.card:hover .li-server .b{animation:li-server-bot .9s ease-in-out 2}
+@keyframes li-draw{from{stroke-dashoffset:1;opacity:0}to{stroke-dashoffset:0;opacity:1}}
+.card:hover .li-earth path{animation:li-draw .3s ease .1s both}.card:hover .li-earth circle{animation:li-draw .3s ease .15s both}
+@keyframes li-blink{0%,100%{transform:scaleY(1)}50%{transform:scaleY(0)}}
+.card:hover .li-bot line{animation:li-blink .5s ease-in-out .2s;transform-box:fill-box;transform-origin:center}
+@keyframes li-pen{0%,20%{transform:rotate(0) translateY(0)}40%{transform:rotate(8deg) translateY(2px)}60%{transform:rotate(-3deg)}80%{transform:rotate(8deg) translateY(-1px)}100%{transform:rotate(0)}}
+.card:hover .li-pen{animation:li-pen 1s ease-in-out;transform-origin:center}.card:hover .li-pen .nib{animation:li-draw .5s ease .4s both}
+@keyframes li-phone{0%{transform:rotate(10deg) scale(1)}25%{transform:rotate(20deg) scale(1.1)}50%{transform:rotate(-10deg)}75%{transform:rotate(10deg)}100%{transform:rotate(0) scale(1)}}
+.card:hover .li-phone{animation:li-phone .9s ease-in-out;transform-origin:center}
+@keyframes li-check{from{stroke-dashoffset:1;opacity:0;transform:scale(.5)}to{stroke-dashoffset:0;opacity:1;transform:scale(1)}}
+.card:hover .li-shield .chk{animation:li-check .4s ease both;transform-origin:center;transform-box:fill-box}
+@keyframes li-arrow-line{0%,100%{d:path("M5 12h14")}50%{d:path("M5 12h9")}}
+@keyframes li-arrow-head{0%,100%{transform:translateX(0)}50%{transform:translateX(-3px)}}
+.card:hover .li-arrow .ln{animation:li-arrow-line .4s ease}.card:hover .li-arrow .hd{animation:li-arrow-head .4s ease}
+@keyframes li-activity{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+.card:hover .li-activity path{animation:li-activity .6s linear .1s both}
 
-  :focus-visible {
-    outline: 2px solid var(--wrld-accent-primary);
-    outline-offset: 3px;
-    border-radius: var(--wrld-radius-sm);
-  }
+/* ── editorial about ──────────────────────────────────────────────────── */
+.about{display:grid;gap:var(--wrld-space-12);grid-template-columns:1fr;align-items:start}
+@media (min-width:900px){.about{grid-template-columns:5fr 7fr}}
+.about h2{font-weight:600;font-size:clamp(1.75rem,3.2vw,2.75rem);line-height:1.1}
+.about .big{font-size:22px;line-height:1.5;color:var(--wrld-fg)}
+.about .big+p{margin-top:var(--wrld-space-5);color:var(--wrld-fg-muted)}
+.facts{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--wrld-space-6) var(--wrld-space-8);margin-top:var(--wrld-space-10)}
+@media (min-width:640px){.facts{grid-template-columns:repeat(4,1fr)}}
+.fact{border-top:1px solid var(--wrld-fg);padding-top:var(--wrld-space-4)}
+.fact .n{font-family:var(--wrld-font-display);font-weight:600;font-size:32px;letter-spacing:var(--wrld-ls-display);line-height:1.1}
+.fact .l{font-size:13px;color:var(--wrld-fg-muted);margin-top:4px}
 
-  /* ---------- header ---------- */
-  header.site {
-    border-bottom: 1px solid var(--wrld-border);
-    position: sticky;
-    top: 0;
-    background: var(--wrld-bg);
-    z-index: var(--wrld-z-sticky);
-  }
-  header.site .wrap {
-    height: 64px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--wrld-space-4);
-  }
-  .lockup {
-    display: flex;
-    align-items: center;
-    gap: var(--wrld-space-3);
-  }
-  /* No display here: .lockup is flex (children blockify), and a
-     .lockup img rule would outweigh the [data-brand-art] theme swap. */
-  .lockup img { height: 36px; width: 36px; object-fit: contain; }
-  .lockup .lockup-text { display: inline-flex; flex-direction: column; line-height: 1; }
-  .lockup .wordmark {
-    font-family: var(--wrld-font-display);
-    font-weight: var(--wrld-fw-bold);
-    font-size: 20px;
-    letter-spacing: 0.04em;
-    color: var(--wrld-fg);
-  }
-  .lockup .sub {
-    font-family: var(--wrld-font-display);
-    font-weight: var(--wrld-fw-medium);
-    font-size: 10px;
-    letter-spacing: 0.20em;
-    text-transform: uppercase;
-    color: var(--wrld-fg-muted);
-    margin-top: 4px;
-  }
+/* ── swatch strip (the system, literally) ─────────────────────────────── */
+.strip{display:grid;grid-template-columns:repeat(12,1fr);height:88px;border-radius:var(--wrld-radius-md);overflow:hidden;border:1px solid var(--wrld-border);margin-top:var(--wrld-space-10)}
+.strip span{position:relative}
+.strip span::after{content:attr(data-v);position:absolute;left:8px;bottom:6px;font-family:var(--wrld-font-mono);font-size:10px;color:var(--wrld-fg-subtle);mix-blend-mode:difference}
 
-  .theme-toggle {
-    font-family: var(--wrld-font-mono);
-    font-size: var(--wrld-fs-caption);
-    color: var(--wrld-fg-muted);
-    background: transparent;
-    border: 1px solid var(--wrld-border);
-    border-radius: var(--wrld-radius-pill);
-    padding: 6px 14px;
-    cursor: pointer;
-    transition: color var(--wrld-duration-micro) var(--wrld-ease-standard),
-                border-color var(--wrld-duration-micro) var(--wrld-ease-standard);
-  }
-  .theme-toggle:hover {
-    color: var(--wrld-accent-primary);
-    border-color: var(--wrld-accent-primary);
-  }
+/* ── footer (template: dark closing band with CTA) ───────────────────── */
+footer{background:var(--wrld-mono-950);color:var(--wrld-mono-50);padding:var(--wrld-space-20) 0 var(--wrld-space-8)}
+footer .close{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:var(--wrld-space-8);padding-bottom:var(--wrld-space-16);border-bottom:1px solid var(--wrld-mono-800)}
+footer h2{font-weight:600;font-size:clamp(2rem,4.5vw,3.5rem);line-height:1.05;max-width:720px;margin-top:var(--wrld-space-4)}
+footer .eyebrow{color:var(--wrld-mono-400)}
+footer .cta{--cta-bg:var(--wrld-mono-50);--cta-fg:var(--wrld-mono-950)}
+footer .contact{font-family:var(--wrld-font-mono);font-size:12px;color:var(--wrld-mono-400);margin-top:var(--wrld-space-3);text-align:right}
+footer .cols{display:grid;gap:var(--wrld-space-8);grid-template-columns:1fr;padding:var(--wrld-space-12) 0}
+@media (min-width:768px){footer .cols{grid-template-columns:2fr 1fr 1fr 1fr}}
+footer .cols .eyebrow{margin-bottom:var(--wrld-space-3)}
+footer .cols a{display:block;font-size:13px;padding:4px 0;transition:color var(--wrld-duration-default)}
+footer .cols a:hover{color:var(--wrld-accent-primary)}
+footer .desc{font-size:13px;color:var(--wrld-mono-400);max-width:320px;line-height:1.55;margin-top:var(--wrld-space-4)}
+footer .legal{display:flex;flex-wrap:wrap;justify-content:space-between;gap:var(--wrld-space-3);border-top:1px solid var(--wrld-mono-800);padding-top:var(--wrld-space-5);font-family:var(--wrld-font-mono);font-size:12px;color:var(--wrld-mono-400)}
+footer .lockup .disc{background:var(--wrld-mono-50);color:var(--wrld-mono-950)}
+footer .lockup .sub{color:var(--wrld-mono-400)}
 
-  /* ---------- hero ---------- */
-  .hero { padding: var(--wrld-space-16) 0 var(--wrld-space-12); }
-  .hero .eyebrow { color: var(--wrld-fg-subtle); margin-bottom: var(--wrld-space-4); }
-  .hero h1 {
-    font-family: var(--wrld-font-display);
-    font-size: var(--wrld-fs-display-md);
-    line-height: var(--wrld-lh-display);
-    letter-spacing: var(--wrld-ls-display);
-    margin: 0 0 var(--wrld-space-5);
-    max-width: 20ch;
-  }
-  .hero p.lede {
-    font-size: var(--wrld-fs-body-lg);
-    color: var(--wrld-fg-muted);
-    max-width: 62ch;
-    margin: 0;
-  }
-
-  /* ---------- sections ---------- */
-  section { padding: var(--wrld-space-10) 0; border-top: 1px solid var(--wrld-border); }
-  section > .wrap > h2 {
-    font-family: var(--wrld-font-display);
-    font-size: var(--wrld-fs-h4);
-    margin: 0 0 var(--wrld-space-2);
-  }
-  section > .wrap > p.note {
-    color: var(--wrld-fg-muted);
-    font-size: var(--wrld-fs-body-sm);
-    margin: 0 0 var(--wrld-space-6);
-    max-width: 68ch;
-  }
-
-  /* ---------- cards ---------- */
-  .cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(232px, 1fr));
-    gap: var(--wrld-space-4);
-  }
-  .card {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: var(--wrld-space-2);
-    padding: var(--wrld-space-5);
-    border: 1px solid var(--wrld-border);
-    border-radius: var(--wrld-radius-md);
-    background: var(--wrld-bg-elevated);
-    transition: border-color var(--wrld-duration-default) var(--wrld-ease-standard),
-                box-shadow var(--wrld-duration-default) var(--wrld-ease-standard),
-                transform var(--wrld-duration-default) var(--wrld-ease-standard);
-  }
-  .card:hover {
-    border-color: var(--wrld-accent-primary);
-    box-shadow: var(--wrld-shadow-accent-primary);
-    transform: translateY(-2px);
-  }
-  /* The link and the Use button are siblings inside .card, not nested —
-     a <button> inside an <a> is invalid interactive-content nesting. */
-  .card-link {
-    display: flex;
-    flex-direction: column;
-    gap: var(--wrld-space-2);
-  }
-  /* Stretched-link pattern: the pseudo-element covers the whole .card
-     (including its padding), restoring the full click area the old
-     button-in-anchor markup had, without nesting the Use button inside
-     the link. The button sits after it in the DOM, so it paints on top
-     and stays independently clickable. */
-  .card-link::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-  }
-  .card .name {
-    font-weight: var(--wrld-fw-medium);
-    display: flex;
-    align-items: baseline;
-    gap: var(--wrld-space-2);
-  }
-  .card .name .arrow {
-    color: var(--wrld-fg-subtle);
-    transition: transform var(--wrld-duration-default) var(--wrld-ease-standard),
-                color var(--wrld-duration-default) var(--wrld-ease-standard);
-  }
-  .card:hover .name .arrow { color: var(--wrld-accent-primary); transform: translateX(3px); }
-  .card .desc { color: var(--wrld-fg-muted); font-size: var(--wrld-fs-body-sm); margin: 0; }
-
-  /* ---------- card "Use" button ---------- */
-  .card-use {
-    /* Sit above .card-link::after's stretched hit area so the button
-       stays independently clickable. */
-    position: relative;
-    z-index: 1;
-    align-self: flex-start;
-    margin-top: var(--wrld-space-1);
-    padding: 5px 14px;
-    font-family: var(--wrld-font-mono);
-    font-size: 12px;
-    background: transparent;
-    color: var(--wrld-fg-muted);
-    border: 1px solid var(--wrld-border);
-    border-radius: var(--wrld-radius-pill);
-    cursor: pointer;
-    transition: color var(--wrld-duration-micro) var(--wrld-ease-standard),
-                border-color var(--wrld-duration-micro) var(--wrld-ease-standard);
-  }
-  .card-use:hover { color: var(--wrld-accent-primary); border-color: var(--wrld-accent-primary); }
-  .card-use:focus-visible { outline: 2px solid var(--wrld-accent-primary); outline-offset: 2px; }
-
-  /* ---------- Use modal ----------
-     Same pattern as styleguide/index.html: one shared dialog, content
-     swapped per card from USE_PROMPTS. Kept as a self-contained duplicate
-     rather than a shared script — this origin has no shared JS file today,
-     and each page here is deliberately self-contained. */
-  .use-modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgb(0 0 0 / 0.5);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: var(--wrld-space-6);
-    z-index: 1000;
-  }
-  .use-modal-overlay[hidden] { display: none; }
-  .use-modal {
-    width: 100%;
-    max-width: 640px;
-    max-height: 85vh;
-    overflow-y: auto;
-    background: var(--wrld-bg-elevated);
-    border: 1px solid var(--wrld-border);
-    border-radius: var(--wrld-radius-lg);
-    box-shadow: var(--wrld-shadow-lg);
-    padding: var(--wrld-space-8);
-  }
-  .use-modal-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: var(--wrld-space-4);
-    margin-bottom: var(--wrld-space-2);
-  }
-  .use-modal-head h3 { margin: 0; font-size: var(--wrld-fs-h4); font-family: var(--wrld-font-display); }
-  .use-modal-close {
-    background: transparent;
-    border: none;
-    color: var(--wrld-fg-muted);
-    font-size: 18px;
-    line-height: 1;
-    padding: var(--wrld-space-2);
-    cursor: pointer;
-    border-radius: var(--wrld-radius-sm);
-  }
-  .use-modal-close:hover { color: var(--wrld-accent-primary); }
-  .use-modal-close:focus-visible { outline: none; box-shadow: 0 0 0 3px rgb(var(--wrld-accent-primary-rgb) / 0.28); }
-  .use-modal-desc { color: var(--wrld-fg-muted); font-size: var(--wrld-fs-body-sm); margin: 0 0 var(--wrld-space-5); max-width: 60ch; }
-  .use-modal-prompt {
-    white-space: pre-wrap;
-    font-family: var(--wrld-font-mono);
-    font-size: var(--wrld-fs-body-sm);
-    line-height: 1.6;
-    background: var(--wrld-bg-subtle);
-    border: 1px solid var(--wrld-border);
-    border-radius: var(--wrld-radius-md);
-    padding: var(--wrld-space-4);
-    margin: 0 0 var(--wrld-space-5);
-  }
-  .use-modal-files { margin-bottom: var(--wrld-space-6); }
-  .use-modal-files-label {
-    display: block;
-    font-family: var(--wrld-font-mono);
-    font-size: var(--wrld-fs-caption);
-    text-transform: uppercase;
-    letter-spacing: var(--wrld-ls-eyebrow);
-    color: var(--wrld-fg-subtle);
-    margin-bottom: var(--wrld-space-2);
-  }
-  .use-modal-files ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
-  .use-modal-files a { font-family: var(--wrld-font-mono); font-size: var(--wrld-fs-body-sm); color: var(--wrld-fg-muted); text-decoration: none; }
-  .use-modal-files a:hover { color: var(--wrld-accent-primary); }
-  .use-modal-actions { display: flex; align-items: center; gap: var(--wrld-space-3); flex-wrap: wrap; }
-  .use-modal-actions button {
-    font: inherit;
-    font-family: var(--wrld-font-body);
-    font-size: var(--wrld-fs-body-sm);
-    padding: var(--wrld-space-2) var(--wrld-space-5);
-    border-radius: var(--wrld-radius-sm);
-    cursor: pointer;
-    border: 1px solid transparent;
-  }
-  .use-modal-actions .btn-primary { background: var(--wrld-fg); color: var(--wrld-bg); }
-  .use-modal-actions .btn-primary:hover { box-shadow: var(--wrld-shadow-accent-primary); }
-  .use-modal-actions .btn-ghost { background: transparent; color: var(--wrld-fg); border-color: var(--wrld-border-strong); }
-  .use-modal-actions .btn-ghost:hover { border-color: var(--wrld-accent-primary); color: var(--wrld-accent-primary); }
-  .use-modal-copied { font-size: var(--wrld-fs-caption); color: var(--wrld-accent-primary); opacity: 0; transition: opacity 200ms; }
-  .use-modal-copied.show { opacity: 1; }
-
-  /* ---------- consume / code ---------- */
-  pre.snippet {
-    margin: 0;
-    padding: var(--wrld-space-4) var(--wrld-space-5);
-    border: 1px solid var(--wrld-border);
-    border-radius: var(--wrld-radius-md);
-    background: var(--wrld-bg-subtle);
-    overflow-x: auto;
-    font-family: var(--wrld-font-mono);
-    font-size: var(--wrld-fs-body-sm);
-    line-height: var(--wrld-lh-ui);
-  }
-  pre.snippet .c { color: var(--wrld-fg-subtle); }
-
-  table.endpoints {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: var(--wrld-fs-body-sm);
-    margin-top: var(--wrld-space-5);
-  }
-  table.endpoints th,
-  table.endpoints td {
-    text-align: left;
-    padding: var(--wrld-space-3) var(--wrld-space-3);
-    border-bottom: 1px solid var(--wrld-border);
-    vertical-align: top;
-  }
-  table.endpoints th {
-    font-size: var(--wrld-fs-caption);
-    text-transform: uppercase;
-    letter-spacing: var(--wrld-ls-eyebrow);
-    color: var(--wrld-fg-subtle);
-    font-weight: var(--wrld-fw-medium);
-  }
-  table.endpoints td.path { font-family: var(--wrld-font-mono); white-space: nowrap; }
-  table.endpoints td.path a { border-bottom: 1px solid transparent; }
-  table.endpoints td.path a:hover {
-    color: var(--wrld-accent-primary);
-    border-bottom-color: var(--wrld-accent-primary);
-  }
-  table.endpoints td.what { color: var(--wrld-fg-muted); }
-  .scroll-x { overflow-x: auto; }
-
-  /* ---------- link lists ---------- */
-  ul.links {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(196px, 1fr));
-    gap: var(--wrld-space-1) var(--wrld-space-5);
-  }
-  ul.links li { border-bottom: 1px solid var(--wrld-border); }
-  ul.links a {
-    display: block;
-    padding: var(--wrld-space-2) 0;
-    font-size: var(--wrld-fs-body-sm);
-    color: var(--wrld-fg-muted);
-    font-family: var(--wrld-font-mono);
-    transition: color var(--wrld-duration-micro) var(--wrld-ease-standard);
-  }
-  ul.links a:hover { color: var(--wrld-accent-primary); }
-
-  /* ---------- footer ---------- */
-  footer.site {
-    border-top: 1px solid var(--wrld-border);
-    padding: var(--wrld-space-8) 0 var(--wrld-space-12);
-    color: var(--wrld-fg-subtle);
-    font-size: var(--wrld-fs-body-sm);
-  }
-  footer.site .wrap { display: flex; flex-wrap: wrap; gap: var(--wrld-space-4); justify-content: space-between; }
-  footer.site a { border-bottom: 1px solid transparent; }
-  footer.site a:hover { color: var(--wrld-accent-primary); border-bottom-color: var(--wrld-accent-primary); }
-
-  /* ---------- brand artwork, theme-matched ----------
-     '-dark' art is near-black (for light surfaces); '-light' art is
-     near-white (for dark surfaces). Mirrors how tokens.css resolves
-     data-theme="auto" against prefers-color-scheme. */
-  [data-brand-art="on-dark"] { display: none; }
-  :root[data-theme="dark"] [data-brand-art="on-light"] { display: none; }
-  :root[data-theme="dark"] [data-brand-art="on-dark"] { display: block; }
-  @media (prefers-color-scheme: dark) {
-    :root[data-theme="auto"] [data-brand-art="on-light"] { display: none; }
-    :root[data-theme="auto"] [data-brand-art="on-dark"] { display: block; }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
-      transition-duration: 0.01ms !important;
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-    }
-    .card:hover { transform: none; }
-    .card:hover .name .arrow { transform: none; }
-  }
-
-  @media (max-width: 640px) {
-    .hero { padding: var(--wrld-space-10) 0 var(--wrld-space-8); }
-    .hero h1 { font-size: var(--wrld-fs-h1); }
-  }
+/* ── mobile sheet ─────────────────────────────────────────────────────── */
+.sheet{position:fixed;inset:0;z-index:50;opacity:0;pointer-events:none;transition:opacity 500ms}
+.sheet.open{opacity:1;pointer-events:auto}
+.sheet .scrim{position:absolute;inset:0;background:rgb(0 0 0 / .6)}
+.sheet .panel{position:absolute;left:12px;right:12px;bottom:12px;background:var(--wrld-bg-elevated);border-radius:var(--wrld-radius-md);padding:var(--wrld-space-6);transform:translateY(100%);transition:transform 500ms cubic-bezier(.32,.72,0,1)}
+.sheet.open .panel{transform:none}
+.sheet .panel a{display:block;font-family:var(--wrld-font-display);font-weight:500;font-size:28px;line-height:32px;padding:6px 0}
+.reveal{opacity:0;transform:translateY(12px);transition:opacity var(--wrld-duration-reveal) var(--wrld-ease-standard),transform var(--wrld-duration-reveal) var(--wrld-ease-standard)}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){*{animation-duration:1ms!important;transition-duration:1ms!important}.reveal{opacity:1;transform:none}}
 </style>
 </head>
 <body>
 
-<header class="site">
+<section class="hero" id="top">
+  <canvas id="gl" aria-hidden="true"></canvas>
+  <div class="fallback" id="fallback" hidden></div>
+
+  <header>
+    <nav class="pill-nav" aria-label="Primary">
+      <div class="left">
+        <a class="lockup" href="#top" aria-label="WRLD.design home">
+          <span class="disc"><svg class="mark" viewBox="0 0 200 200" aria-hidden="true"><g fill="currentColor"><polygon points="130.55,171.68 135.27,167.16 100,100 153.23,156.91 137.7,188.44 130.55,171.68"/><polygon points="153.23,156.91 156.11,151.05 100,100 169.48,135.27 165.67,170.21 153.23,156.91"/><polygon points="169.48,135.27 170.19,128.78 100,100 177.35,109.38 185.73,143.52 169.48,135.27"/><polygon points="177.35,109.38 175.8,103.04 100,100 175.9,82.36 195.44,111.57 177.35,109.38"/><polygon points="175.9,82.36 172.27,76.93 100,100 165.29,57.47 193.64,78.23 175.9,82.36"/><polygon points="165.29,57.47 160.02,53.6 100,100 146.8,37.7 180.55,47.52 165.29,57.47"/><polygon points="146.8,37.7 140.53,35.88 100,100 122.67,25.45 157.74,23.13 146.8,37.7"/><polygon points="122.67,25.45 116.15,25.88 100,100 95.81,22.19 127.97,8.02 122.67,25.45"/><polygon points="95.81,22.19 89.83,24.83 100,100 69.45,28.32 94.82,4 95.81,22.19"/><polygon points="69.45,28.32 64.73,32.84 100,100 46.77,43.09 62.31,11.56 69.45,28.32"/><polygon points="46.77,43.09 43.89,48.95 100,100 30.52,64.73 34.33,29.79 46.77,43.09"/><polygon points="30.52,64.73 29.81,71.22 100,100 22.65,90.62 14.27,56.48 30.52,64.73"/><polygon points="22.65,90.62 24.2,96.96 100,100 24.1,117.64 4.56,88.42 22.65,90.62"/><polygon points="24.1,117.64 27.74,123.07 100,100 34.72,142.53 6.36,121.77 24.1,117.64"/><polygon points="34.72,142.53 39.98,146.4 100,100 53.2,162.3 19.45,152.48 34.72,142.53"/><polygon points="53.2,162.3 59.47,164.12 100,100 77.33,174.55 42.26,176.87 53.2,162.3"/><polygon points="77.33,174.55 83.85,174.12 100,100 104.2,177.81 72.03,191.98 77.33,174.55"/><polygon points="104.2,177.81 110.17,175.17 100,100 130.55,171.68 105.18,196 104.2,177.81"/></g></svg></span>
+          <span class="word">WRLD</span><span class="sub">DESIGN</span>
+        </a>
+        <div class="links">
+          <a href="#system">The system</a>
+          <a href="#properties">Properties</a>
+          <a href="#foundations">Foundations</a>
+          <a href="https://github.com/WRLDInc/DesignSystem" rel="noopener">GitHub</a>
+        </div>
+      </div>
+      <div class="right">
+        <span class="note">Design that ships.</span>
+        <a class="cta small" href="https://wrld.tech/contact"><span class="roll"><span><i>Start a conversation</i><i aria-hidden="true">Start a conversation</i></span></span><span class="disc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span></a>
+      </div>
+      <button class="burger" type="button" aria-label="Open menu" id="burger"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+    </nav>
+  </header>
+
+  <div class="hero-body">
+    <div class="wrap">
+      <span class="eyebrow">WRLD.design · the design system of WRLD Tech Co.</span>
+      <h1>Design that ships. The system behind every WRLD surface, open to everyone.</h1>
+      <p class="lede">Tokens, type, components and brand for WRLD.tech, WRLD.host, WRLD.AI and every property in the federation — one monochrome system, accents only where something moves, served from the Cloudflare edge.</p>
+      <div class="row">
+        <a class="cta" href="#system"><span class="roll"><span><i>Open the design system</i><i aria-hidden="true">Open the design system</i></span></span><span class="disc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span></a>
+        <a class="chip" href="https://github.com/WRLDInc/DesignSystem" rel="noopener"><svg class="mark" viewBox="0 0 200 200" aria-hidden="true"><g fill="currentColor"><polygon points="130.55,171.68 135.27,167.16 100,100 153.23,156.91 137.7,188.44 130.55,171.68"/><polygon points="153.23,156.91 156.11,151.05 100,100 169.48,135.27 165.67,170.21 153.23,156.91"/><polygon points="169.48,135.27 170.19,128.78 100,100 177.35,109.38 185.73,143.52 169.48,135.27"/><polygon points="177.35,109.38 175.8,103.04 100,100 175.9,82.36 195.44,111.57 177.35,109.38"/><polygon points="175.9,82.36 172.27,76.93 100,100 165.29,57.47 193.64,78.23 175.9,82.36"/><polygon points="165.29,57.47 160.02,53.6 100,100 146.8,37.7 180.55,47.52 165.29,57.47"/><polygon points="146.8,37.7 140.53,35.88 100,100 122.67,25.45 157.74,23.13 146.8,37.7"/><polygon points="122.67,25.45 116.15,25.88 100,100 95.81,22.19 127.97,8.02 122.67,25.45"/><polygon points="95.81,22.19 89.83,24.83 100,100 69.45,28.32 94.82,4 95.81,22.19"/><polygon points="69.45,28.32 64.73,32.84 100,100 46.77,43.09 62.31,11.56 69.45,28.32"/><polygon points="46.77,43.09 43.89,48.95 100,100 30.52,64.73 34.33,29.79 46.77,43.09"/><polygon points="30.52,64.73 29.81,71.22 100,100 22.65,90.62 14.27,56.48 30.52,64.73"/><polygon points="22.65,90.62 24.2,96.96 100,100 24.1,117.64 4.56,88.42 22.65,90.62"/><polygon points="24.1,117.64 27.74,123.07 100,100 34.72,142.53 6.36,121.77 24.1,117.64"/><polygon points="34.72,142.53 39.98,146.4 100,100 53.2,162.3 19.45,152.48 34.72,142.53"/><polygon points="53.2,162.3 59.47,164.12 100,100 77.33,174.55 42.26,176.87 53.2,162.3"/><polygon points="77.33,174.55 83.85,174.12 100,100 104.2,177.81 72.03,191.98 77.33,174.55"/><polygon points="104.2,177.81 110.17,175.17 100,100 130.55,171.68 105.18,196 104.2,177.81"/></g></svg><span>WRLDInc/DesignSystem</span><span class="tag">v<span data-version>0.4.0</span></span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="system">
   <div class="wrap">
-    <a class="lockup" href="./" aria-label="WRLD design system, home">
-      <img data-brand-art="on-light" src="assets/logos/wrld-mark-black.png" alt="" />
-      <img data-brand-art="on-dark" src="assets/logos/wrld-mark-white.png" alt="" />
-      <span class="lockup-text">
-        <span class="wordmark">WRLD</span>
-        <span class="sub">Design</span>
-      </span>
-    </a>
-    <button class="theme-toggle" type="button" data-theme-toggle aria-live="polite">auto</button>
-  </div>
-</header>
-
-<main>
-  <div class="wrap hero">
-    <p class="eyebrow">WRLD design system</p>
-    <h1>One source of truth for every WRLD surface.</h1>
-    <p class="lede">
-      Tokens, typefaces, logos, brand briefs, and per-product UI kits. Modern minimalist,
-      monochromatic in light and dark, with accents reserved for interaction — never decoration.
-      Everything here is served straight from the
-      <a href="https://github.com/WRLDInc/DesignSystem" style="border-bottom:1px solid var(--wrld-border)">WRLDInc/DesignSystem</a>
-      repository, so the site and the source never drift.
-    </p>
-  </div>
-
-  <section>
-    <div class="wrap">
-      <h2>Start here</h2>
-      <p class="note">Four ways in, depending on whether you are designing, building, or checking a brand rule.</p>
-      <div class="cards">
-        <div class="card">
-          <a class="card-link" href="styleguide/">
-            <span class="name">Styleguide <span class="arrow" aria-hidden="true">&rarr;</span></span>
-            <p class="desc">The interactive reference — colors, type scale, spacing, components, logos, all live.</p>
-          </a>
-          <button class="card-use" type="button" data-use="styleguide" aria-label="Use styleguide">Use</button>
-        </div>
-        <div class="card">
-          <a class="card-link" href="#tokens">
-            <span class="name">Tokens <span class="arrow" aria-hidden="true">&rarr;</span></span>
-            <p class="desc">The canonical token suite as CSS custom properties, JSON, and typed TypeScript.</p>
-          </a>
-          <button class="card-use" type="button" data-use="tokens" aria-label="Use tokens">Use</button>
-        </div>
-        <div class="card">
-          <a class="card-link" href="#previews">
-            <span class="name">Previews <span class="arrow" aria-hidden="true">&rarr;</span></span>
-            <p class="desc">Small isolated cards for each token group, type step, component, and brand asset.</p>
-          </a>
-          <button class="card-use" type="button" data-use="previews" aria-label="Use previews">Use</button>
-        </div>
-        <div class="card">
-          <a class="card-link" href="#kits">
-            <span class="name">UI kits <span class="arrow" aria-hidden="true">&rarr;</span></span>
-            <p class="desc">Per-product component sets — the WRLD.tech marketing shell and the WRLD.AI dashboard.</p>
-          </a>
-          <button class="card-use" type="button" data-use="kits" aria-label="Use UI kits">Use</button>
-        </div>
-      </div>
+    <div class="head reveal">
+      <div><span class="eyebrow">Inside the system</span><h2>Everything a WRLD surface is made of, documented and live.</h2></div>
+      <p class="side">Every card opens the live system: the tokens as they compile, the components as they render, the rules as we write them.</p>
     </div>
-  </section>
-
-  <section id="tokens">
-    <div class="wrap">
-      <h2>Consume the system</h2>
-      <p class="note">
-        Link one stylesheet and you have the full foundation: the token suite, the four
-        self-hosted typefaces, and semantic element styles. Light and dark are driven by
-        <code>data-theme</code> on the root element — <code>light</code>, <code>dark</code>, or
-        <code>auto</code> to follow the operating system.
-      </p>
-      <pre class="snippet"><span class="c">&lt;!-- everything: tokens + fonts + element styles --&gt;</span>
-&lt;link rel="stylesheet" href="https://wrld.design/styles.css"&gt;
-
-<span class="c">&lt;!-- or just the token layer --&gt;</span>
-&lt;link rel="stylesheet" href="https://wrld.design/tokens/tokens.css"&gt;
-
-&lt;html data-theme="auto"&gt;</pre>
-
-      <div class="scroll-x">
-        <table class="endpoints">
-          <thead>
-            <tr><th scope="col">Path</th><th scope="col">What it is</th></tr>
-          </thead>
-          <tbody>
-            <tr><td class="path"><a href="styles.css">/styles.css</a></td><td class="what">Entry point. Imports the token suite, then the type and color foundation.</td></tr>
-            <tr><td class="path"><a href="tokens/tokens.css">/tokens/tokens.css</a></td><td class="what">Full token suite as <code>--wrld-*</code> custom properties, light and dark.</td></tr>
-            <tr><td class="path"><a href="tokens/tokens.json">/tokens/tokens.json</a></td><td class="what">The same tokens as data, for tooling and design-tool sync.</td></tr>
-            <tr><td class="path"><a href="tokens/tokens.ts">/tokens/tokens.ts</a></td><td class="what">Typed token exports for TypeScript consumers.</td></tr>
-            <tr><td class="path"><a href="colors_and_type.css">/colors_and_type.css</a></td><td class="what">Standalone color and type foundation, including the <code>@font-face</code> set.</td></tr>
-            <tr><td class="path"><a href="registry/theme/wrld.css">/registry/theme/wrld.css</a></td><td class="what">The same tokens as a shadcn / Tailwind v4 theme (<code>:root</code> + <code>.dark</code>), generated from the token suite. Paste into <code>globals.css</code>.</td></tr>
-            <tr><td class="path"><a href="registry/manifest.json">/registry/manifest.json</a></td><td class="what">What the 21st.dev team library serves — component names, slugs, descriptions and stable refs.</td></tr>
-            <!-- Directory paths are shown as text, not links: this origin serves
-                 files only, with no directory listing, so /fonts/ would 404.
-                 Each row links one representative file instead. -->
-            <tr><td class="path"><code>/fonts/</code></td><td class="what">Self-hosted Ubuntu, Ubuntu Mono, and Montserrat — for example <a href="fonts/Ubuntu-Regular.ttf">Ubuntu-Regular.ttf</a>. Never load these from a font CDN.</td></tr>
-            <tr><td class="path"><code>/assets/logos/</code></td><td class="what">Authentic mark and lockup artwork (PNG) — for example <a href="assets/logos/wrld-mark-black.png">wrld-mark-black.png</a>.</td></tr>
-            <tr><td class="path"><code>/logos/favicons/</code></td><td class="what">Complete favicon and web-manifest set, including <a href="logos/favicons/site.webmanifest">site.webmanifest</a>.</td></tr>
-          </tbody>
-        </table>
-      </div>
+    <div class="grid reveal">
+      <!-- TODO(wrld.design): /system#… is a placeholder until the system pages ship; deploy/system/index.html forwards to /styleguide/ meanwhile. -->
+      <a class="card" href="/system#foundations">
+        <div class="top"><span class="brand">Foundations</span><span class="icon-tile"><svg class="li li-activity" viewBox="0 0 24 24"><path pathLength="1" d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"/></svg></span></div>
+        <p>A 12-step monochrome scale anchored on #0a0a0a, three interactive accents, Montserrat and Ubuntu, a 4px spacing grid, four radii, neutral and tinted shadows — 156 tokens, three themes, every one with a usage note.</p>
+        <div class="url"><span>tokens.css · tokens.json</span><span>→</span></div>
+      </a>
+      <a class="card" href="/system#components">
+        <div class="top"><span class="brand">Components</span><span class="icon-tile"><svg class="li li-server" viewBox="0 0 24 24"><g class="t"><rect x="2" y="2" width="20" height="8" rx="2"/><path d="M6 6h4"/></g><g class="b"><rect x="2" y="14" width="20" height="8" rx="2"/><path d="M6 18h4"/></g></svg></span></div>
+        <p>Fifteen React components across the WRLD.tech marketing kit and the WRLD.AI dashboard kit, each with a live preview and guidelines that say what you provide and what the system decides.</p>
+        <div class="url"><span>ui_kits/wrld-tech · ui_kits/wrld-ai</span><span>→</span></div>
+      </a>
+      <a class="card" href="/system#brand">
+        <div class="top"><span class="brand">Brand</span><span class="icon-tile"><svg class="li li-pen" viewBox="0 0 24 24"><path d="M15.707 21.293a1 1 0 0 1-1.414 0l-1.586-1.586a1 1 0 0 1 0-1.414l5.586-5.586a1 1 0 0 1 1.414 0l1.586 1.586a1 1 0 0 1 0 1.414z"/><path d="m18 13-1.375-6.874a1 1 0 0 0-.746-.776L3.235 2.028a1 1 0 0 0-1.207 1.207L5.35 15.879a1 1 0 0 0 .776.746L13 18"/><path class="nib" pathLength="1" d="m2.3 2.3 7.286 7.286"/><circle cx="11" cy="11" r="2"/></svg></span></div>
+        <p>Voice, naming, the starburst mark and its lockups, on-brand versus off-brand copy, and the rules for motion, states and imagery — the book every WRLD designer and agent works from.</p>
+        <div class="url"><span>brand book · assets/logos</span><span>→</span></div>
+      </a>
     </div>
-  </section>
-
-  <section id="previews">
-    <div class="wrap">
-      <h2>Previews</h2>
-      <p class="note">One card per idea. Useful for seeing a single token group or component in isolation.</p>
-      <ul class="links">
+    <details class="previews reveal">
+      <summary><span class="eyebrow">Preview cards</span><span class="mono">every card in /preview/, generated at build</span></summary>
+      <ul>
         <!--PREVIEW_LIST-->
       </ul>
-    </div>
-  </section>
+    </details>
+  </div>
+</section>
 
-  <section id="kits">
-    <div class="wrap">
-      <h2>UI kits</h2>
-      <p class="note">Product-specific component sets, each with a runnable index page and typed component sources.</p>
-      <div class="cards">
-        <div class="card">
-          <a class="card-link" href="ui_kits/wrld-tech/">
-            <span class="name">WRLD.tech <span class="arrow" aria-hidden="true">&rarr;</span></span>
-            <p class="desc">Flagship marketing shell — header, hero, services grid, values strip, CTA, footer.</p>
-          </a>
-          <button class="card-use" type="button" data-use="wrld-tech" aria-label="Use WRLD.tech UI kit">Use</button>
+<section class="band" id="properties">
+  <div class="wrap">
+    <div class="head reveal">
+      <div><span class="eyebrow">One system, every property</span><h2>Seven service branches. One partner. One look.</h2></div>
+      <p class="side">WRLD Tech Co. is the technology arm of SMBs that move fast — hosting to hardware to AI, under one roof. Each property below is built on this system.</p>
+    </div>
+    <div class="grid reveal">
+      <a class="card" href="https://wrld.tech" rel="noopener">
+        <div class="top"><span class="brand">WRLD<b>.tech</b></span><span class="icon-tile"><svg class="li li-arrow" viewBox="0 0 24 24"><path class="ln" d="M5 12h14"/><path class="hd" d="m12 5 7 7-7 7"/></svg></span></div>
+        <p>The flagship. Your strategic partner in technology and business growth — and the home of every WRLD service.</p>
+        <div class="url"><span>wrld.tech</span><span>↗</span></div>
+      </a>
+      <a class="card ai-secondary" href="https://wrld.host" rel="noopener">
+        <div class="top"><span class="brand">WRLD<b>.host</b></span><span class="icon-tile"><svg class="li li-earth" viewBox="0 0 24 24"><path pathLength="1" d="M21.54 15H17a2 2 0 0 0-2 2v4.54"/><path pathLength="1" d="M7 3.34V5a3 3 0 0 0 3 3a2 2 0 0 1 2 2c0 1.1.9 2 2 2a2 2 0 0 0 2-2c0-1.1.9-2 2-2h3.17"/><path pathLength="1" d="M11 21.95V18a2 2 0 0 0-2-2a2 2 0 0 1-2-2v-1a2 2 0 0 0-2-2H2.05"/><circle pathLength="1" cx="12" cy="12" r="10"/></svg></span></div>
+        <p>Clustered, ethically-operated hosting. Fast by default, no noisy neighbors — reserved for clients and approved partners.</p>
+        <div class="url"><span>wrld.host</span><span>↗</span></div>
+      </a>
+      <!-- TODO(wrld.design): /system#… is a placeholder until the system pages ship; deploy/system/index.html forwards to /styleguide/ meanwhile. -->
+      <a class="card" href="/system">
+        <div class="top"><span class="brand">WRLD<b>.design</b></span><span class="icon-tile"><svg class="li li-pen" viewBox="0 0 24 24"><path d="M15.707 21.293a1 1 0 0 1-1.414 0l-1.586-1.586a1 1 0 0 1 0-1.414l5.586-5.586a1 1 0 0 1 1.414 0l1.586 1.586a1 1 0 0 1 0 1.414z"/><path d="m18 13-1.375-6.874a1 1 0 0 0-.746-.776L3.235 2.028a1 1 0 0 0-1.207 1.207L5.35 15.879a1 1 0 0 0 .776.746L13 18"/><path class="nib" pathLength="1" d="m2.3 2.3 7.286 7.286"/><circle cx="11" cy="11" r="2"/></svg></span></div>
+        <p>Design that ships. We build the sites we design, and we build them to work — you are looking at the system we build them with.</p>
+        <div class="url"><span>wrld.design</span><span>→</span></div>
+      </a>
+      <a class="card ai-secondary" href="https://wrld.ai" rel="noopener">
+        <div class="top"><span class="brand">WRLD<b>.AI</b></span><span class="icon-tile"><svg class="li li-bot" viewBox="0 0 24 24"><path d="M12 8V4H8"/><rect x="4" y="8" width="16" height="12" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><line x1="15" y1="13" x2="15" y2="15"/><line x1="9" y1="13" x2="9" y2="15"/></svg></span></div>
+        <p>Tailored agents tuned by humans who know your operations. Business AI, Copilot agents and automations that actually run.</p>
+        <div class="url"><span>wrld.ai</span><span>↗</span></div>
+      </a>
+      <a class="card" href="https://services.wrld.tech" rel="noopener">
+        <div class="top"><span class="brand">WRLD<b>.Services</b></span><span class="icon-tile"><svg class="li li-server" viewBox="0 0 24 24"><g class="t"><rect x="2" y="2" width="20" height="8" rx="2"/><path d="M6 6h4"/></g><g class="b"><rect x="2" y="14" width="20" height="8" rx="2"/><path d="M6 18h4"/></g></svg></span></div>
+        <p>24/7 monitoring, patching and proactive infrastructure care. Managed IT that is explicitly not break-fix.</p>
+        <div class="url"><span>services.wrld.tech</span><span>↗</span></div>
+      </a>
+      <a class="card" href="https://support.wrld.tech" rel="noopener">
+        <div class="top"><span class="brand">WRLD<b>.Support</b></span><span class="icon-tile"><svg class="li li-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path class="chk" pathLength="1" d="m9 12 2 2 4-4"/></svg></span></div>
+        <p>Real humans on the other end of every ticket, around the clock. SLA-backed.</p>
+        <div class="url"><span>support.wrld.tech</span><span>↗</span></div>
+      </a>
+      <a class="card ai-warm" href="https://wrld.press" rel="noopener">
+        <div class="top"><span class="brand">WRLD<b>.Press</b></span><span class="icon-tile"><svg class="li li-arrow" viewBox="0 0 24 24"><path class="ln" d="M5 12h14"/><path class="hd" d="m12 5 7 7-7 7"/></svg></span></div>
+        <p>Premium WordPress hosting with WRLD-tuned plugins.</p>
+        <div class="url"><span>wrld.press</span><span>↗</span></div>
+      </a>
+      <!-- TODO(WRLD.Tel): https://wrld.tech/tel is a placeholder until WRLD.Tel has its own property. -->
+      <a class="card" href="https://wrld.tech/tel" rel="noopener">
+        <div class="top"><span class="brand">WRLD<b>.Tel</b></span><span class="icon-tile"><svg class="li li-phone" viewBox="0 0 24 24"><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"/></svg></span></div>
+        <p>UCaaS and VoIP — business communications that keep up with the rest of your stack.</p>
+        <div class="url"><span>wrld.tech/tel</span><span>↗</span></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="foundations">
+  <div class="wrap">
+    <div class="about">
+      <div class="reveal"><span class="eyebrow">How it is built</span><h2 style="margin-top:var(--wrld-space-4)">Modern minimalist. Monochrome. Accents only when something moves.</h2></div>
+      <div class="reveal">
+        <p class="big">Static surfaces stay grayscale — #0a0a0a as ink in light mode, #fafafa as paper in dark. The three accents appear on hover, focus and motion, never as decoration. Geometry beats illustration; whitespace beats ornament.</p>
+        <p>The system is the same code our clients ship on: tokens compiled straight from <span class="mono">WRLDInc/DesignSystem</span>, fonts we host ourselves, components rendered live in both themes. It is published here because we would rather show our work than describe it.</p>
+        <div class="facts">
+          <div class="fact"><div class="n">156</div><div class="l">tokens, each with a usage note</div></div>
+          <div class="fact"><div class="n">3</div><div class="l">themes — light, dark, auto</div></div>
+          <div class="fact"><div class="n">15</div><div class="l">live React components</div></div>
+          <div class="fact"><div class="n">7</div><div class="l">self-hosted font files</div></div>
         </div>
-        <div class="card">
-          <a class="card-link" href="ui_kits/wrld-ai/">
-            <span class="name">WRLD.AI <span class="arrow" aria-hidden="true">&rarr;</span></span>
-            <p class="desc">Product dashboard — sidebar, agent list, agent detail, run history, stat cards.</p>
-          </a>
-          <button class="card-use" type="button" data-use="wrld-ai" aria-label="Use WRLD.AI UI kit">Use</button>
-        </div>
-        <a class="card" href="docs/21ST_PUBLISHING.md">
-          <span class="name">21st.dev registry <span class="arrow" aria-hidden="true">&rarr;</span></span>
-          <p class="desc">Every kit component as a self-contained TypeScript port for React + shadcn projects, installable from the WRLD team library. How to install, render, and publish.</p>
-        </a>
       </div>
     </div>
-  </section>
-
-  <section id="brand">
-    <div class="wrap">
-      <h2>Brand briefs</h2>
-      <p class="note">
-        How each property differs in tone, warmth, and accent weighting. Read the master brief
-        first, then the property you are working on. Names are case-sensitive.
-      </p>
-      <ul class="links">
-        <li><a href="brand/CLAUDE.md">master brief</a></li>
-        <li><a href="brand/wrld-inc.md">WRLD Inc.</a></li>
-        <li><a href="brand/wrld-tech.md">WRLD.tech</a></li>
-        <li><a href="brand/wrld-design.md">WRLD.design</a></li>
-        <li><a href="brand/wrld-host.md">WRLD.host</a></li>
-        <li><a href="brand/wrld-ai.md">WRLD.AI</a></li>
-        <li><a href="brand/wrld-services.md">WRLD.Services</a></li>
-        <li><a href="brand/wrld-one.md">WRLD.one</a></li>
-      </ul>
+    <div class="strip reveal" aria-label="The monochrome scale and the three accents">
+      <span style="background:#0a0a0a" data-v="950"></span><span style="background:#18181b" data-v="900"></span><span style="background:#27272a" data-v="800"></span><span style="background:#3f3f46" data-v="700"></span><span style="background:#52525b" data-v="600"></span><span style="background:#71717a" data-v="500"></span><span style="background:#a1a1aa" data-v="400"></span><span style="background:#d4d4d8" data-v="300"></span><span style="background:#e4e4e7" data-v="200"></span><span style="background:#007fee" data-v="007fee"></span><span style="background:#00adee" data-v="00adee"></span><span style="background:#ee9300" data-v="ee9300"></span>
     </div>
-  </section>
-</main>
+  </div>
+</section>
 
-<footer class="site">
+<footer id="contact">
   <div class="wrap">
-    <span>WRLD Inc. · design system v<span data-version>0.2.0</span></span>
-    <span>
-      <a href="README.md">Read the system</a> ·
-      <a href="docs/CHANGELOG.md">Changelog</a> ·
-      <a href="https://github.com/WRLDInc/DesignSystem">Source</a>
-    </span>
+    <div class="close reveal">
+      <div><span class="eyebrow">Get in touch</span><h2>Tech that moves with you.</h2></div>
+      <div>
+        <a class="cta" href="https://wrld.tech/contact"><span class="roll"><span><i>Start a conversation</i><i aria-hidden="true">Start a conversation</i></span></span><span class="disc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span></a>
+        <div class="contact">ridge@wrld.tech · Dallas, TX</div>
+      </div>
+    </div>
+    <div class="cols">
+      <div>
+        <a class="lockup" href="#top"><span class="disc"><svg class="mark" viewBox="0 0 200 200" aria-hidden="true"><g fill="currentColor"><polygon points="130.55,171.68 135.27,167.16 100,100 153.23,156.91 137.7,188.44 130.55,171.68"/><polygon points="153.23,156.91 156.11,151.05 100,100 169.48,135.27 165.67,170.21 153.23,156.91"/><polygon points="169.48,135.27 170.19,128.78 100,100 177.35,109.38 185.73,143.52 169.48,135.27"/><polygon points="177.35,109.38 175.8,103.04 100,100 175.9,82.36 195.44,111.57 177.35,109.38"/><polygon points="175.9,82.36 172.27,76.93 100,100 165.29,57.47 193.64,78.23 175.9,82.36"/><polygon points="165.29,57.47 160.02,53.6 100,100 146.8,37.7 180.55,47.52 165.29,57.47"/><polygon points="146.8,37.7 140.53,35.88 100,100 122.67,25.45 157.74,23.13 146.8,37.7"/><polygon points="122.67,25.45 116.15,25.88 100,100 95.81,22.19 127.97,8.02 122.67,25.45"/><polygon points="95.81,22.19 89.83,24.83 100,100 69.45,28.32 94.82,4 95.81,22.19"/><polygon points="69.45,28.32 64.73,32.84 100,100 46.77,43.09 62.31,11.56 69.45,28.32"/><polygon points="46.77,43.09 43.89,48.95 100,100 30.52,64.73 34.33,29.79 46.77,43.09"/><polygon points="30.52,64.73 29.81,71.22 100,100 22.65,90.62 14.27,56.48 30.52,64.73"/><polygon points="22.65,90.62 24.2,96.96 100,100 24.1,117.64 4.56,88.42 22.65,90.62"/><polygon points="24.1,117.64 27.74,123.07 100,100 34.72,142.53 6.36,121.77 24.1,117.64"/><polygon points="34.72,142.53 39.98,146.4 100,100 53.2,162.3 19.45,152.48 34.72,142.53"/><polygon points="53.2,162.3 59.47,164.12 100,100 77.33,174.55 42.26,176.87 53.2,162.3"/><polygon points="77.33,174.55 83.85,174.12 100,100 104.2,177.81 72.03,191.98 77.33,174.55"/><polygon points="104.2,177.81 110.17,175.17 100,100 130.55,171.68 105.18,196 104.2,177.81"/></g></svg></span><span class="word">WRLD</span><span class="sub">DESIGN</span></a>
+        <p class="desc">WRLD Tech Co., a DBA of WRLD Inc. SMB business technology, automation and AI solutions.</p>
+      </div>
+      <div><div class="eyebrow">Properties</div><a href="https://wrld.tech">WRLD.tech</a><a href="https://wrld.host">WRLD.host</a><a href="https://wrld.ai">WRLD.AI</a><a href="https://services.wrld.tech">WRLD.Services</a><a href="https://support.wrld.tech">WRLD.Support</a><a href="https://wrld.press">WRLD.Press</a></div>
+      <!-- TODO(wrld.design): /system#… is a placeholder until the system pages ship; deploy/system/index.html forwards to /styleguide/ meanwhile. -->
+      <div><div class="eyebrow">System</div><a href="/system#foundations">Foundations</a><a href="/system#components">Components</a><a href="/system#brand">Brand book</a><a href="https://github.com/WRLDInc/DesignSystem">GitHub</a></div>
+      <div><div class="eyebrow">Company</div><a href="https://wrld.tech/about">About</a><a href="https://wrld.tech/values">Values</a><a href="https://wrld.tech/contact">Contact</a><a href="https://wrld.tech/privacy">Privacy</a></div>
+    </div>
+    <div class="legal"><span>© 2026 WRLD Inc. · EIN 84-5122446 · Dallas, TX</span><span>Served from the Cloudflare edge · Icons: Lucide, animated after pqoqubbw/icons (MIT)</span></div>
   </div>
 </footer>
 
-<!-- ============ Use modal ================================================ -->
-<div class="use-modal-overlay" id="useModalOverlay" hidden>
-  <div class="use-modal" role="dialog" aria-modal="true" aria-labelledby="useModalTitle">
-    <div class="use-modal-head">
-      <h3 id="useModalTitle">Use</h3>
-      <button class="use-modal-close" id="useModalClose" aria-label="Close">✕</button>
-    </div>
-    <p class="use-modal-desc" id="useModalDesc"></p>
-    <pre class="use-modal-prompt" id="useModalPrompt"></pre>
-    <div class="use-modal-files">
-      <span class="use-modal-files-label">Files referenced</span>
-      <ul id="useModalFiles"></ul>
-    </div>
-    <div class="use-modal-actions">
-      <button class="btn-primary" id="useModalCopyPrompt">Copy prompt</button>
-      <button class="btn-ghost" id="useModalCopyFiles">Copy file list</button>
-      <span class="use-modal-copied" id="useModalCopied" role="status" aria-live="polite" aria-atomic="true"></span>
-    </div>
+<div class="sheet" id="sheet">
+  <div class="scrim" id="scrim"></div>
+  <div class="panel">
+    <a href="#system">The system</a><a href="#properties">Properties</a><a href="#foundations">Foundations</a><a href="https://github.com/WRLDInc/DesignSystem">GitHub</a>
+    <a class="cta" style="margin-top:20px;width:100%;justify-content:space-between" href="https://wrld.tech/contact"><span class="roll"><span><i>Start a conversation</i><i aria-hidden="true">Start a conversation</i></span></span><span class="disc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span></a>
   </div>
 </div>
 
 <script>
-  // Theme: cycles auto → light → dark. 'auto' defers to prefers-color-scheme,
-  // which tokens.css already handles via :root[data-theme="auto"].
-  (function () {
-    var KEY = 'wrld-theme';
-    var ORDER = ['auto', 'light', 'dark'];
-    var root = document.documentElement;
-    var btn = document.querySelector('[data-theme-toggle]');
-
-    function apply(theme) {
-      root.setAttribute('data-theme', theme);
-      if (btn) {
-        btn.textContent = theme;
-        btn.setAttribute('aria-label', 'Colour theme: ' + theme + '. Activate to change.');
-      }
+// ── Hero backdrop: the template's shader stack (Swirl → ChromaFlow → FlutedGlass → FilmGrain),
+//    re-written as one GLSL pass in WRLD colours: a monochrome ground, the three accents as the
+//    pointer-driven flow (the one place the brand allows the accent gradient), vertical fluted-glass
+//    refraction with chromatic aberration, and a light grain. Falls back to a CSS gradient without WebGL.
+(function () {
+  var canvas = document.getElementById('gl'), fb = document.getElementById('fallback');
+  var gl = canvas.getContext('webgl', { antialias: false, alpha: false, powerPreference: 'low-power' });
+  if (!gl) { canvas.hidden = true; fb.hidden = false; return; }
+  var V = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
+  var F = [
+  'precision highp float;',
+  'uniform vec2 R;uniform float T;uniform vec2 M;uniform vec2 MV;uniform vec3 G0;uniform vec3 G1;uniform float GR;',
+  'const vec3 A0=vec3(0.,.498,.933);const vec3 A1=vec3(0.,.678,.933);const vec3 A2=vec3(.933,.576,0.);',
+  'vec3 hash3(vec2 p){vec3 q=vec3(dot(p,vec2(127.1,311.7)),dot(p,vec2(269.5,183.3)),dot(p,vec2(419.2,371.9)));return fract(sin(q)*43758.5453);}',
+  'float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);float a=hash3(i).x,b=hash3(i+vec2(1,0)).x,c=hash3(i+vec2(0,1)).x,d=hash3(i+vec2(1,1)).x;return mix(mix(a,b,f.x),mix(c,d,f.x),f.y);}',
+  'float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<5;i++){v+=a*noise(p);p=p*2.03+vec2(1.7,9.2);a*=.5;}return v;}',
+  'vec3 scene(vec2 uv,float shift){',
+  '  vec2 q=uv;q.x*=R.x/R.y;',
+  '  float n=fbm(q*1.7+T*.05);float ang=(n-.5)*3.2;',        // Swirl: rotate the field by noise (detail 1.7)
+  '  vec2 c=q-vec2(.5*R.x/R.y,.5);vec2 r=vec2(c.x*cos(ang)-c.y*sin(ang),c.x*sin(ang)+c.y*cos(ang));',
+  '  float g=fbm(r*2.2+T*.03);vec3 col=mix(G0,G1,smoothstep(.25,.85,g));',  // mono ground between the two greys
+  '  vec2 m=vec2(M.x*R.x/R.y,M.y);float d=length(q-m);',
+  '  float blob=exp(-d*d*5.5);',                           // ChromaFlow: radius 3.5, momentum from pointer velocity
+  '  vec2 dir=normalize(MV+vec2(1e-4));float t=T*.15;',
+  '  vec3 acc=mix(A0,A1,.5+.5*sin(t+r.x*1.3));acc=mix(acc,A2,clamp(dir.y*.5+.5,0.,1.)*.55*smoothstep(.02,.4,length(MV)*13.));',
+  '  float drift=fbm(r*1.4-T*.04+shift);float flow=blob*(.45+.55*drift)+.14*smoothstep(.72,.98,drift);',
+  '  return mix(col,acc,clamp(flow,0.,1.)*.62);}',
+  'void main(){',
+  '  vec2 uv=gl_FragCoord.xy/R;',
+  '  float a=radians(31.);vec2 ax=vec2(cos(a),sin(a));float s=dot(uv*vec2(R.x/R.y,1.),ax)*8.;',  // FlutedGlass: 8 flutes at 31°
+  '  float ph=fract(s);float ridge=smoothstep(0.,1.,ph)*(1.-smoothstep(0.,1.,ph));float bend=(ph-.5)*4.*.012;',  // refraction 4
+  '  vec2 off=ax*bend*(.6+.4*sin(T*.15+s*.5));',
+  '  vec3 col=vec3(scene(uv+off*(1.+.61),0.).r,scene(uv+off,0.).g,scene(uv+off*(1.-.61),0.).b);',  // aberration .61
+  '  col+=ridge*.12*(1.-smoothstep(.0,.15,abs(ph-.5)));',       // highlight .12, light from -90°
+  '  col+=(hash3(gl_FragCoord.xy+fract(T)).x-.5)*GR;',          // FilmGrain
+  '  gl_FragColor=vec4(col,1.);}'].join('\n');
+  function sh(t, s) { var o = gl.createShader(t); gl.shaderSource(o, s); gl.compileShader(o); if (!gl.getShaderParameter(o, gl.COMPILE_STATUS)) { throw gl.getShaderInfoLog(o); } return o; }
+  var prog; try { prog = gl.createProgram(); gl.attachShader(prog, sh(gl.VERTEX_SHADER, V)); gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, F)); gl.linkProgram(prog); } catch (e) { canvas.hidden = true; fb.hidden = false; return; }
+  gl.useProgram(prog);
+  var buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
+  var loc = gl.getAttribLocation(prog, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+  var U = {}; ['R','T','M','MV','G0','G1','GR'].forEach(function (k) { U[k] = gl.getUniformLocation(prog, k); });
+  function hex(h) { h = h.trim().replace('#',''); return [parseInt(h.slice(0,2),16)/255, parseInt(h.slice(2,4),16)/255, parseInt(h.slice(4,6),16)/255]; }
+  var cs = getComputedStyle(document.documentElement);
+  function theme() { var g0 = hex(cs.getPropertyValue('--hero-ground')), g1 = hex(cs.getPropertyValue('--hero-ground2')); gl.uniform3fv(U.G0, g0); gl.uniform3fv(U.G1, g1); gl.uniform1f(U.GR, parseFloat(cs.getPropertyValue('--grain')) || .05); }
+  var DPR = Math.min(window.devicePixelRatio || 1, 1.5);
+  function size() { var w = canvas.clientWidth, h = canvas.clientHeight; canvas.width = Math.round(w * DPR * .75); canvas.height = Math.round(h * DPR * .75); gl.viewport(0, 0, canvas.width, canvas.height); gl.uniform2f(U.R, canvas.width, canvas.height); }
+  var tx = .68, ty = .62, mx = tx, my = ty, vx = 0, vy = 0, last = 0;
+  window.addEventListener('pointermove', function (e) { var r = canvas.getBoundingClientRect(); tx = (e.clientX - r.left) / r.width; ty = 1 - (e.clientY - r.top) / r.height; }, { passive: true });
+  window.addEventListener('resize', size); size(); theme();
+  var mq = window.matchMedia('(prefers-color-scheme: dark)'); mq.addEventListener && mq.addEventListener('change', theme);
+  var rm = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var t0 = performance.now(); var vis = true;
+  new IntersectionObserver(function (es) { vis = es[0].isIntersecting; }).observe(canvas);
+  function frame(now) {
+    if (vis && !document.hidden) {
+      var dt = Math.min((now - last) / 1000, .05); last = now;
+      var k = 1 - Math.pow(1 - .13, dt * 60);              // momentum 13
+      var nx = mx + (tx - mx) * k, ny = my + (ty - my) * k; vx = vx * .9 + (nx - mx); vy = vy * .9 + (ny - my); mx = nx; my = ny;
+      gl.uniform1f(U.T, rm.matches ? 0 : (now - t0) / 1000); gl.uniform2f(U.M, mx, my); gl.uniform2f(U.MV, vx, vy);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     }
-
-    var stored;
-    try { stored = localStorage.getItem(KEY); } catch (e) { stored = null; }
-    apply(ORDER.indexOf(stored) > -1 ? stored : 'auto');
-
-    if (btn) {
-      btn.addEventListener('click', function () {
-        var next = ORDER[(ORDER.indexOf(root.getAttribute('data-theme')) + 1) % ORDER.length];
-        apply(next);
-        try { localStorage.setItem(KEY, next); } catch (e) {}
-      });
-    }
-  })();
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+// ── Mobile sheet + scroll reveals
+(function () {
+  var sheet = document.getElementById('sheet'), b = document.getElementById('burger');
+  function toggle(o) { sheet.classList.toggle('open', o); document.body.style.overflow = o ? 'hidden' : ''; b.setAttribute('aria-label', o ? 'Close menu' : 'Open menu'); }
+  b.addEventListener('click', function () { toggle(!sheet.classList.contains('open')); });
+  document.getElementById('scrim').addEventListener('click', function () { toggle(false); });
+  sheet.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', function () { toggle(false); }); });
+  var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }); }, { rootMargin: '0px 0px -10% 0px' });
+  document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+})();
 </script>
-
-<!-- ============ Use modal: data + wiring ================================ -->
-<script>
-  (function () {
-    var USE_PROMPTS = {
-      styleguide: {
-        title: 'Use — Styleguide',
-        desc: 'Paste into a coding agent to build against the full interactive reference.',
-        files: ['README.md', 'tokens/tokens.css', 'colors_and_type.css', 'styleguide/index.html'],
-        prompt:
-          'Build a new WRLD surface using the design system’s interactive styleguide as reference.\n\n' +
-          'The styleguide demonstrates every token group and base component live: the monochrome + ' +
-          'three-accent color system, the Montserrat/Ubuntu/Ubuntu Mono type scale, the mark and lockup ' +
-          'pattern, the 4px spacing scale, and button/card component states. Match what it shows, not ' +
-          'just what it says.\n\n' +
-          'Reference these files:\n' +
-          '- styleguide/index.html — the live reference, view source for exact markup and states\n' +
-          '- tokens/tokens.css — canonical --wrld-* custom properties\n' +
-          '- colors_and_type.css — color + type foundation, drop-in\n' +
-          '- README.md — full brand rules'
-      },
-      tokens: {
-        title: 'Use — Tokens',
-        desc: 'Paste into a coding agent to consume the WRLD token suite directly.',
-        files: ['tokens/tokens.css', 'tokens/tokens.json', 'tokens/tokens.ts', 'styles.css', 'README.md'],
-        prompt:
-          'Consume the WRLD design token suite as the foundation for a new project.\n\n' +
-          'Link tokens/tokens.css (or the full styles.css, which also adds semantic element styles) and ' +
-          'you get every --wrld-* custom property in both light and dark, switched by a [data-theme] ' +
-          'attribute on <html> (light / dark / auto). Prefer tokens.json for tooling that needs the ' +
-          'values as data, or tokens.ts for typed access from TypeScript.\n\n' +
-          'Reference these files:\n' +
-          '- tokens/tokens.css\n' +
-          '- tokens/tokens.json\n' +
-          '- tokens/tokens.ts\n' +
-          '- styles.css — entry point: tokens + type + color foundation\n' +
-          '- README.md — full brand rules'
-      },
-      previews: {
-        title: 'Use — Previews',
-        desc: 'Paste into a coding agent to build from one isolated token group or component.',
-        files: ['preview/_shared.css', 'tokens/tokens.css', 'README.md'],
-        prompt:
-          'Each file in preview/ is a small, isolated demonstration of one token group, type step, ' +
-          'component, or brand asset — useful for pointing an agent at exactly one thing instead of ' +
-          'the whole system.\n\n' +
-          'Open the specific preview page you need (for example preview/colors-accents.html or ' +
-          'preview/components-buttons.html), then build a matching implementation using the shared ' +
-          'tokens below.\n\n' +
-          'Reference these files:\n' +
-          '- preview/_shared.css — the layout every preview card shares\n' +
-          '- tokens/tokens.css — canonical --wrld-* custom properties\n' +
-          '- README.md — full brand rules'
-      },
-      kits: {
-        title: 'Use — UI kits',
-        desc: 'Paste into a coding agent to build with the per-product component sets.',
-        files: ['_ds_bundle.js', '_ds_manifest.json', 'ui_kits/wrld-tech/README.md', 'ui_kits/wrld-ai/README.md', 'README.md'],
-        prompt:
-          'Build with the WRLD per-product UI kits: ui_kits/wrld-tech (flagship marketing shell — ' +
-          'header, hero, services grid, values strip, CTA, footer) and ui_kits/wrld-ai (product dashboard ' +
-          '— sidebar, agent list, agent detail, run history, stat cards). Each kit is a set of React ' +
-          'components compiled into _ds_bundle.js and exposed on window.WRLDTechDesignSystemRemix_6276ea.\n\n' +
-          'Reference these files:\n' +
-          '- _ds_bundle.js + _ds_manifest.json — compiled components\n' +
-          '- ui_kits/wrld-tech/README.md, ui_kits/wrld-ai/README.md — per-kit component list\n' +
-          '- README.md — full brand rules'
-      },
-      'wrld-tech': {
-        title: 'Use — WRLD.tech UI kit',
-        desc: 'Paste into a coding agent to build the flagship marketing shell.',
-        files: [
-          'ui_kits/wrld-tech/Header.jsx',
-          'ui_kits/wrld-tech/Hero.jsx',
-          'ui_kits/wrld-tech/ServicesGrid.jsx',
-          'ui_kits/wrld-tech/ValuesStrip.jsx',
-          'ui_kits/wrld-tech/CTA.jsx',
-          'ui_kits/wrld-tech/Footer.jsx',
-          'ui_kits/wrld-tech/Button.jsx',
-          '_ds_bundle.js',
-          'README.md'
-        ],
-        prompt:
-          'Build a WRLD.tech marketing page using the flagship UI kit: Header (sticky nav, animated ' +
-          'submenu, traveling underline), Hero (display headline + lede + CTA row), ServicesGrid (grid of ' +
-          'sub-brand service cards), ValuesStrip (numbered values strip), CTA (closing call-to-action ' +
-          'band), and Footer (link columns + lockup + legal line). wrld.tech carries the #007fee accent.\n\n' +
-          'Reference these files:\n' +
-          '- ui_kits/wrld-tech/Header.jsx, Hero.jsx, ServicesGrid.jsx, ValuesStrip.jsx, CTA.jsx, Footer.jsx, Button.jsx\n' +
-          '- _ds_bundle.js — the compiled versions of the same components\n' +
-          '- README.md — full brand rules, incl. wrld.tech’s tone and accent weighting'
-      },
-      'wrld-ai': {
-        title: 'Use — WRLD.AI UI kit',
-        desc: 'Paste into a coding agent to build the AI product dashboard.',
-        files: [
-          'ui_kits/wrld-ai/Sidebar.jsx',
-          'ui_kits/wrld-ai/TopBar.jsx',
-          'ui_kits/wrld-ai/AgentList.jsx',
-          'ui_kits/wrld-ai/AgentDetail.jsx',
-          'ui_kits/wrld-ai/RunHistory.jsx',
-          'ui_kits/wrld-ai/StatCard.jsx',
-          '_ds_bundle.js',
-          'README.md'
-        ],
-        prompt:
-          'Build a WRLD.AI dashboard using the product UI kit: Sidebar (left nav), TopBar (title + ' +
-          'subtitle + primary action), StatCard (single KPI tile with signed delta), AgentList (selectable ' +
-          'list of agents), AgentDetail (detail pane for one agent + run history), and RunHistory ' +
-          '(chronological list of agent run outcomes). WRLD.AI carries the #00adee accent (signal/' +
-          'intelligence).\n\n' +
-          'Reference these files:\n' +
-          '- ui_kits/wrld-ai/Sidebar.jsx, TopBar.jsx, AgentList.jsx, AgentDetail.jsx, RunHistory.jsx, StatCard.jsx\n' +
-          '- _ds_bundle.js — the compiled versions of the same components\n' +
-          '- README.md — full brand rules, incl. WRLD.AI’s tone and accent weighting'
-      }
-    };
-
-    var overlay = document.getElementById('useModalOverlay');
-    var titleEl = document.getElementById('useModalTitle');
-    var descEl = document.getElementById('useModalDesc');
-    var promptEl = document.getElementById('useModalPrompt');
-    var filesEl = document.getElementById('useModalFiles');
-    var closeBtn = document.getElementById('useModalClose');
-    var copyPromptBtn = document.getElementById('useModalCopyPrompt');
-    var copyFilesBtn = document.getElementById('useModalCopyFiles');
-    var copiedTag = document.getElementById('useModalCopied');
-    var lastFocused = null;
-    var copiedTimer = null;
-
-    function openUseModal(key) {
-      var data = USE_PROMPTS[key];
-      if (!data) return;
-      titleEl.textContent = data.title;
-      descEl.textContent = data.desc;
-      promptEl.textContent = data.prompt;
-      filesEl.innerHTML = data.files
-        .map(function (f) {
-          return '<li><a href="' + f + '" target="_blank" rel="noopener">' + f + '</a></li>';
-        })
-        .join('');
-      overlay.hidden = false;
-      document.body.style.overflow = 'hidden';
-      closeBtn.focus();
-    }
-
-    function closeUseModal() {
-      overlay.hidden = true;
-      document.body.style.overflow = '';
-      if (lastFocused) lastFocused.focus();
-    }
-
-    // A live region, not just a visual toggle — set text here (never in
-    // markup) so assistive tech actually announces it, and say what really
-    // happened rather than assuming success.
-    function announceCopyResult(ok) {
-      copiedTag.textContent = ok ? 'Copied' : 'Copy failed — select and copy manually';
-      copiedTag.classList.add('show');
-      clearTimeout(copiedTimer);
-      copiedTimer = setTimeout(function () {
-        copiedTag.classList.remove('show');
-        copiedTag.textContent = '';
-      }, 1600);
-    }
-
-    function copyText(text) {
-      // Whatever had focus (the Copy button) before the fallback path
-      // steals it for the temp textarea — put it back, or the Tab trap
-      // has nothing inside the modal to wrap between.
-      var refocus = document.activeElement;
-      function fallback() {
-        var ta = document.createElement('textarea');
-        ta.value = text;
-        ta.style.position = 'fixed';
-        ta.style.opacity = '0';
-        document.body.appendChild(ta);
-        ta.select();
-        var ok = false;
-        try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
-        document.body.removeChild(ta);
-        if (refocus && typeof refocus.focus === 'function') refocus.focus();
-        return ok;
-      }
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(
-          function () { announceCopyResult(true); },
-          function () { announceCopyResult(fallback()); }
-        );
-      } else {
-        announceCopyResult(fallback());
-      }
-    }
-
-    document.querySelectorAll('[data-use]').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        lastFocused = btn;
-        openUseModal(btn.dataset.use);
-      });
-    });
-
-    var FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
-
-    closeBtn.addEventListener('click', closeUseModal);
-    overlay.addEventListener('click', function (e) { if (e.target === overlay) closeUseModal(); });
-    document.addEventListener('keydown', function (e) {
-      if (overlay.hidden) return;
-      if (e.key === 'Escape') { closeUseModal(); return; }
-      // Trap Tab inside the dialog — otherwise it leaks focus onto the
-      // (visually obscured but still interactive) page behind the overlay.
-      if (e.key === 'Tab') {
-        var nodes = overlay.querySelectorAll(FOCUSABLE);
-        if (!nodes.length) return;
-        var first = nodes[0];
-        var last = nodes[nodes.length - 1];
-        if (e.shiftKey && document.activeElement === first) {
-          e.preventDefault();
-          last.focus();
-        } else if (!e.shiftKey && document.activeElement === last) {
-          e.preventDefault();
-          first.focus();
-        }
-      }
-    });
-
-    copyPromptBtn.addEventListener('click', function () { copyText(promptEl.textContent); });
-    copyFilesBtn.addEventListener('click', function () {
-      // .href (not getAttribute) so relative paths on this page resolve to
-      // the absolute https://wrld.design/... URL an external agent needs.
-      var links = Array.prototype.map.call(filesEl.querySelectorAll('a'), function (a) { return a.href; });
-      copyText(links.join('\n'));
-    });
-  })();
-</script>
-
 </body>
 </html>

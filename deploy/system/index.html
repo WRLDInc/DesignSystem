@@ -1,0 +1,21 @@
+<!doctype html>
+<!-- TODO(wrld.design): interim stop-gap. The landing page links /system#foundations, /system#components and
+     /system#brand as placeholders for the not-yet-built system pages. Until those ship, this forwards to the
+     live styleguide, mapping the placeholder anchors onto the sections the styleguide has today. Delete this
+     file (and the TODO comments in deploy/index.html) when /system is real. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<title>WRLD.design — forwarding to the styleguide</title>
+<script>
+(function () {
+  var map = { '#foundations': '#colors', '#components': '#components', '#brand': '#logos' };
+  var hash = location.hash.toLowerCase();
+  location.replace('/styleguide/' + (map[hash] || ''));
+})();
+</script>
+<noscript><meta http-equiv="refresh" content="0; url=/styleguide/"></noscript>
+</head>
+<body><p>Forwarding to <a href="/styleguide/">the WRLD design system styleguide</a>.</p></body>
+</html>
