@@ -795,15 +795,35 @@
       });
     });
 
+    var FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
     closeBtn.addEventListener('click', closeUseModal);
     overlay.addEventListener('click', function (e) { if (e.target === overlay) closeUseModal(); });
     document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && !overlay.hidden) closeUseModal();
+      if (overlay.hidden) return;
+      if (e.key === 'Escape') { closeUseModal(); return; }
+      // Trap Tab inside the dialog — otherwise it leaks focus onto the
+      // (visually obscured but still interactive) page behind the overlay.
+      if (e.key === 'Tab') {
+        var nodes = overlay.querySelectorAll(FOCUSABLE);
+        if (!nodes.length) return;
+        var first = nodes[0];
+        var last = nodes[nodes.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     });
 
     copyPromptBtn.addEventListener('click', function () { copyText(promptEl.textContent); });
     copyFilesBtn.addEventListener('click', function () {
-      var links = Array.prototype.map.call(filesEl.querySelectorAll('a'), function (a) { return a.getAttribute('href'); });
+      // .href (not getAttribute) so relative paths on this page resolve to
+      // the absolute https://wrld.design/... URL an external agent needs.
+      var links = Array.prototype.map.call(filesEl.querySelectorAll('a'), function (a) { return a.href; });
       copyText(links.join('\n'));
     });
   })();

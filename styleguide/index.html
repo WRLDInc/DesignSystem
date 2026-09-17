@@ -1146,8 +1146,10 @@
           files: ['tokens/tokens.css', 'tokens/tokens.json', 'README.md'],
           prompt:
             'Use the WRLD 4px spacing scale: 4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80, 120 — exposed ' +
-            'as --wrld-space-1 through --wrld-space-20 tokens. Sections breathe: minimum 64px vertical ' +
-            'rhythm between major hero blocks. Never use an arbitrary pixel value where a token exists.\n\n' +
+            'as --wrld-space-* tokens, numbered in quarter-rem steps (--wrld-space-20 = 80px, ' +
+            '--wrld-space-30 = 120px — check tokens.css for the exact step you need, the numbering ' +
+            'is not 1:1 with the visual order). Sections breathe: minimum 64px vertical rhythm between ' +
+            'major hero blocks. Never use an arbitrary pixel value where a token exists.\n\n' +
             'Reference these files:\n' +
             '- tokens/tokens.css — --wrld-space-* custom properties\n' +
             '- tokens/tokens.json — the same scale as data\n' +
@@ -1244,10 +1246,28 @@
         });
       });
 
+      var FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
       closeBtn.addEventListener('click', closeUseModal);
       overlay.addEventListener('click', function (e) { if (e.target === overlay) closeUseModal(); });
       document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' && !overlay.hidden) closeUseModal();
+        if (overlay.hidden) return;
+        if (e.key === 'Escape') { closeUseModal(); return; }
+        // Trap Tab inside the dialog — otherwise it leaks focus onto the
+        // (visually obscured but still interactive) page behind the overlay.
+        if (e.key === 'Tab') {
+          var nodes = overlay.querySelectorAll(FOCUSABLE);
+          if (!nodes.length) return;
+          var first = nodes[0];
+          var last = nodes[nodes.length - 1];
+          if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
       });
 
       copyPromptBtn.addEventListener('click', function () { copyText(promptEl.textContent); });
