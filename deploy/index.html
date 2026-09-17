@@ -151,6 +151,7 @@
     gap: var(--wrld-space-4);
   }
   .card {
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: var(--wrld-space-2);
@@ -167,6 +168,23 @@
     box-shadow: var(--wrld-shadow-accent-primary);
     transform: translateY(-2px);
   }
+  /* The link and the Use button are siblings inside .card, not nested —
+     a <button> inside an <a> is invalid interactive-content nesting. */
+  .card-link {
+    display: flex;
+    flex-direction: column;
+    gap: var(--wrld-space-2);
+  }
+  /* Stretched-link pattern: the pseudo-element covers the whole .card
+     (including its padding), restoring the full click area the old
+     button-in-anchor markup had, without nesting the Use button inside
+     the link. The button sits after it in the DOM, so it paints on top
+     and stays independently clickable. */
+  .card-link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
   .card .name {
     font-weight: var(--wrld-fw-medium);
     display: flex;
@@ -180,6 +198,119 @@
   }
   .card:hover .name .arrow { color: var(--wrld-accent-primary); transform: translateX(3px); }
   .card .desc { color: var(--wrld-fg-muted); font-size: var(--wrld-fs-body-sm); margin: 0; }
+
+  /* ---------- card "Use" button ---------- */
+  .card-use {
+    /* Sit above .card-link::after's stretched hit area so the button
+       stays independently clickable. */
+    position: relative;
+    z-index: 1;
+    align-self: flex-start;
+    margin-top: var(--wrld-space-1);
+    padding: 5px 14px;
+    font-family: var(--wrld-font-mono);
+    font-size: 12px;
+    background: transparent;
+    color: var(--wrld-fg-muted);
+    border: 1px solid var(--wrld-border);
+    border-radius: var(--wrld-radius-pill);
+    cursor: pointer;
+    transition: color var(--wrld-duration-micro) var(--wrld-ease-standard),
+                border-color var(--wrld-duration-micro) var(--wrld-ease-standard);
+  }
+  .card-use:hover { color: var(--wrld-accent-primary); border-color: var(--wrld-accent-primary); }
+  .card-use:focus-visible { outline: 2px solid var(--wrld-accent-primary); outline-offset: 2px; }
+
+  /* ---------- Use modal ----------
+     Same pattern as styleguide/index.html: one shared dialog, content
+     swapped per card from USE_PROMPTS. Kept as a self-contained duplicate
+     rather than a shared script — this origin has no shared JS file today,
+     and each page here is deliberately self-contained. */
+  .use-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgb(0 0 0 / 0.5);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--wrld-space-6);
+    z-index: 1000;
+  }
+  .use-modal-overlay[hidden] { display: none; }
+  .use-modal {
+    width: 100%;
+    max-width: 640px;
+    max-height: 85vh;
+    overflow-y: auto;
+    background: var(--wrld-bg-elevated);
+    border: 1px solid var(--wrld-border);
+    border-radius: var(--wrld-radius-lg);
+    box-shadow: var(--wrld-shadow-lg);
+    padding: var(--wrld-space-8);
+  }
+  .use-modal-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--wrld-space-4);
+    margin-bottom: var(--wrld-space-2);
+  }
+  .use-modal-head h3 { margin: 0; font-size: var(--wrld-fs-h4); font-family: var(--wrld-font-display); }
+  .use-modal-close {
+    background: transparent;
+    border: none;
+    color: var(--wrld-fg-muted);
+    font-size: 18px;
+    line-height: 1;
+    padding: var(--wrld-space-2);
+    cursor: pointer;
+    border-radius: var(--wrld-radius-sm);
+  }
+  .use-modal-close:hover { color: var(--wrld-accent-primary); }
+  .use-modal-close:focus-visible { outline: none; box-shadow: 0 0 0 3px rgb(var(--wrld-accent-primary-rgb) / 0.28); }
+  .use-modal-desc { color: var(--wrld-fg-muted); font-size: var(--wrld-fs-body-sm); margin: 0 0 var(--wrld-space-5); max-width: 60ch; }
+  .use-modal-prompt {
+    white-space: pre-wrap;
+    font-family: var(--wrld-font-mono);
+    font-size: var(--wrld-fs-body-sm);
+    line-height: 1.6;
+    background: var(--wrld-bg-subtle);
+    border: 1px solid var(--wrld-border);
+    border-radius: var(--wrld-radius-md);
+    padding: var(--wrld-space-4);
+    margin: 0 0 var(--wrld-space-5);
+  }
+  .use-modal-files { margin-bottom: var(--wrld-space-6); }
+  .use-modal-files-label {
+    display: block;
+    font-family: var(--wrld-font-mono);
+    font-size: var(--wrld-fs-caption);
+    text-transform: uppercase;
+    letter-spacing: var(--wrld-ls-eyebrow);
+    color: var(--wrld-fg-subtle);
+    margin-bottom: var(--wrld-space-2);
+  }
+  .use-modal-files ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+  .use-modal-files a { font-family: var(--wrld-font-mono); font-size: var(--wrld-fs-body-sm); color: var(--wrld-fg-muted); text-decoration: none; }
+  .use-modal-files a:hover { color: var(--wrld-accent-primary); }
+  .use-modal-actions { display: flex; align-items: center; gap: var(--wrld-space-3); flex-wrap: wrap; }
+  .use-modal-actions button {
+    font: inherit;
+    font-family: var(--wrld-font-body);
+    font-size: var(--wrld-fs-body-sm);
+    padding: var(--wrld-space-2) var(--wrld-space-5);
+    border-radius: var(--wrld-radius-sm);
+    cursor: pointer;
+    border: 1px solid transparent;
+  }
+  .use-modal-actions .btn-primary { background: var(--wrld-fg); color: var(--wrld-bg); }
+  .use-modal-actions .btn-primary:hover { box-shadow: var(--wrld-shadow-accent-primary); }
+  .use-modal-actions .btn-ghost { background: transparent; color: var(--wrld-fg); border-color: var(--wrld-border-strong); }
+  .use-modal-actions .btn-ghost:hover { border-color: var(--wrld-accent-primary); color: var(--wrld-accent-primary); }
+  .use-modal-copied { font-size: var(--wrld-fs-caption); color: var(--wrld-accent-primary); opacity: 0; transition: opacity 200ms; }
+  .use-modal-copied.show { opacity: 1; }
 
   /* ---------- consume / code ---------- */
   pre.snippet {
@@ -317,22 +448,34 @@
       <h2>Start here</h2>
       <p class="note">Four ways in, depending on whether you are designing, building, or checking a brand rule.</p>
       <div class="cards">
-        <a class="card" href="styleguide/">
-          <span class="name">Styleguide <span class="arrow" aria-hidden="true">&rarr;</span></span>
-          <p class="desc">The interactive reference — colors, type scale, spacing, components, logos, all live.</p>
-        </a>
-        <a class="card" href="#tokens">
-          <span class="name">Tokens <span class="arrow" aria-hidden="true">&rarr;</span></span>
-          <p class="desc">The canonical token suite as CSS custom properties, JSON, and typed TypeScript.</p>
-        </a>
-        <a class="card" href="#previews">
-          <span class="name">Previews <span class="arrow" aria-hidden="true">&rarr;</span></span>
-          <p class="desc">Small isolated cards for each token group, type step, component, and brand asset.</p>
-        </a>
-        <a class="card" href="#kits">
-          <span class="name">UI kits <span class="arrow" aria-hidden="true">&rarr;</span></span>
-          <p class="desc">Per-product component sets — the WRLD.tech marketing shell and the WRLD.AI dashboard.</p>
-        </a>
+        <div class="card">
+          <a class="card-link" href="styleguide/">
+            <span class="name">Styleguide <span class="arrow" aria-hidden="true">&rarr;</span></span>
+            <p class="desc">The interactive reference — colors, type scale, spacing, components, logos, all live.</p>
+          </a>
+          <button class="card-use" type="button" data-use="styleguide" aria-label="Use styleguide">Use</button>
+        </div>
+        <div class="card">
+          <a class="card-link" href="#tokens">
+            <span class="name">Tokens <span class="arrow" aria-hidden="true">&rarr;</span></span>
+            <p class="desc">The canonical token suite as CSS custom properties, JSON, and typed TypeScript.</p>
+          </a>
+          <button class="card-use" type="button" data-use="tokens" aria-label="Use tokens">Use</button>
+        </div>
+        <div class="card">
+          <a class="card-link" href="#previews">
+            <span class="name">Previews <span class="arrow" aria-hidden="true">&rarr;</span></span>
+            <p class="desc">Small isolated cards for each token group, type step, component, and brand asset.</p>
+          </a>
+          <button class="card-use" type="button" data-use="previews" aria-label="Use previews">Use</button>
+        </div>
+        <div class="card">
+          <a class="card-link" href="#kits">
+            <span class="name">UI kits <span class="arrow" aria-hidden="true">&rarr;</span></span>
+            <p class="desc">Per-product component sets — the WRLD.tech marketing shell and the WRLD.AI dashboard.</p>
+          </a>
+          <button class="card-use" type="button" data-use="kits" aria-label="Use UI kits">Use</button>
+        </div>
       </div>
     </div>
   </section>
@@ -394,14 +537,20 @@
       <h2>UI kits</h2>
       <p class="note">Product-specific component sets, each with a runnable index page and typed component sources.</p>
       <div class="cards">
-        <a class="card" href="ui_kits/wrld-tech/">
-          <span class="name">WRLD.tech <span class="arrow" aria-hidden="true">&rarr;</span></span>
-          <p class="desc">Flagship marketing shell — header, hero, services grid, values strip, CTA, footer.</p>
-        </a>
-        <a class="card" href="ui_kits/wrld-ai/">
-          <span class="name">WRLD.AI <span class="arrow" aria-hidden="true">&rarr;</span></span>
-          <p class="desc">Product dashboard — sidebar, agent list, agent detail, run history, stat cards.</p>
-        </a>
+        <div class="card">
+          <a class="card-link" href="ui_kits/wrld-tech/">
+            <span class="name">WRLD.tech <span class="arrow" aria-hidden="true">&rarr;</span></span>
+            <p class="desc">Flagship marketing shell — header, hero, services grid, values strip, CTA, footer.</p>
+          </a>
+          <button class="card-use" type="button" data-use="wrld-tech" aria-label="Use WRLD.tech UI kit">Use</button>
+        </div>
+        <div class="card">
+          <a class="card-link" href="ui_kits/wrld-ai/">
+            <span class="name">WRLD.AI <span class="arrow" aria-hidden="true">&rarr;</span></span>
+            <p class="desc">Product dashboard — sidebar, agent list, agent detail, run history, stat cards.</p>
+          </a>
+          <button class="card-use" type="button" data-use="wrld-ai" aria-label="Use WRLD.AI UI kit">Use</button>
+        </div>
         <a class="card" href="docs/21ST_PUBLISHING.md">
           <span class="name">21st.dev registry <span class="arrow" aria-hidden="true">&rarr;</span></span>
           <p class="desc">Every kit component as a self-contained TypeScript port for React + shadcn projects, installable from the WRLD team library. How to install, render, and publish.</p>
@@ -442,6 +591,27 @@
   </div>
 </footer>
 
+<!-- ============ Use modal ================================================ -->
+<div class="use-modal-overlay" id="useModalOverlay" hidden>
+  <div class="use-modal" role="dialog" aria-modal="true" aria-labelledby="useModalTitle">
+    <div class="use-modal-head">
+      <h3 id="useModalTitle">Use</h3>
+      <button class="use-modal-close" id="useModalClose" aria-label="Close">✕</button>
+    </div>
+    <p class="use-modal-desc" id="useModalDesc"></p>
+    <pre class="use-modal-prompt" id="useModalPrompt"></pre>
+    <div class="use-modal-files">
+      <span class="use-modal-files-label">Files referenced</span>
+      <ul id="useModalFiles"></ul>
+    </div>
+    <div class="use-modal-actions">
+      <button class="btn-primary" id="useModalCopyPrompt">Copy prompt</button>
+      <button class="btn-ghost" id="useModalCopyFiles">Copy file list</button>
+      <span class="use-modal-copied" id="useModalCopied" role="status" aria-live="polite" aria-atomic="true"></span>
+    </div>
+  </div>
+</div>
+
 <script>
   // Theme: cycles auto → light → dark. 'auto' defers to prefers-color-scheme,
   // which tokens.css already handles via :root[data-theme="auto"].
@@ -470,6 +640,239 @@
         try { localStorage.setItem(KEY, next); } catch (e) {}
       });
     }
+  })();
+</script>
+
+<!-- ============ Use modal: data + wiring ================================ -->
+<script>
+  (function () {
+    var USE_PROMPTS = {
+      styleguide: {
+        title: 'Use — Styleguide',
+        desc: 'Paste into a coding agent to build against the full interactive reference.',
+        files: ['README.md', 'tokens/tokens.css', 'colors_and_type.css', 'styleguide/index.html'],
+        prompt:
+          'Build a new WRLD surface using the design system’s interactive styleguide as reference.\n\n' +
+          'The styleguide demonstrates every token group and base component live: the monochrome + ' +
+          'three-accent color system, the Montserrat/Ubuntu/Ubuntu Mono type scale, the mark and lockup ' +
+          'pattern, the 4px spacing scale, and button/card component states. Match what it shows, not ' +
+          'just what it says.\n\n' +
+          'Reference these files:\n' +
+          '- styleguide/index.html — the live reference, view source for exact markup and states\n' +
+          '- tokens/tokens.css — canonical --wrld-* custom properties\n' +
+          '- colors_and_type.css — color + type foundation, drop-in\n' +
+          '- README.md — full brand rules'
+      },
+      tokens: {
+        title: 'Use — Tokens',
+        desc: 'Paste into a coding agent to consume the WRLD token suite directly.',
+        files: ['tokens/tokens.css', 'tokens/tokens.json', 'tokens/tokens.ts', 'styles.css', 'README.md'],
+        prompt:
+          'Consume the WRLD design token suite as the foundation for a new project.\n\n' +
+          'Link tokens/tokens.css (or the full styles.css, which also adds semantic element styles) and ' +
+          'you get every --wrld-* custom property in both light and dark, switched by a [data-theme] ' +
+          'attribute on <html> (light / dark / auto). Prefer tokens.json for tooling that needs the ' +
+          'values as data, or tokens.ts for typed access from TypeScript.\n\n' +
+          'Reference these files:\n' +
+          '- tokens/tokens.css\n' +
+          '- tokens/tokens.json\n' +
+          '- tokens/tokens.ts\n' +
+          '- styles.css — entry point: tokens + type + color foundation\n' +
+          '- README.md — full brand rules'
+      },
+      previews: {
+        title: 'Use — Previews',
+        desc: 'Paste into a coding agent to build from one isolated token group or component.',
+        files: ['preview/_shared.css', 'tokens/tokens.css', 'README.md'],
+        prompt:
+          'Each file in preview/ is a small, isolated demonstration of one token group, type step, ' +
+          'component, or brand asset — useful for pointing an agent at exactly one thing instead of ' +
+          'the whole system.\n\n' +
+          'Open the specific preview page you need (for example preview/colors-accents.html or ' +
+          'preview/components-buttons.html), then build a matching implementation using the shared ' +
+          'tokens below.\n\n' +
+          'Reference these files:\n' +
+          '- preview/_shared.css — the layout every preview card shares\n' +
+          '- tokens/tokens.css — canonical --wrld-* custom properties\n' +
+          '- README.md — full brand rules'
+      },
+      kits: {
+        title: 'Use — UI kits',
+        desc: 'Paste into a coding agent to build with the per-product component sets.',
+        files: ['_ds_bundle.js', '_ds_manifest.json', 'ui_kits/wrld-tech/README.md', 'ui_kits/wrld-ai/README.md', 'README.md'],
+        prompt:
+          'Build with the WRLD per-product UI kits: ui_kits/wrld-tech (flagship marketing shell — ' +
+          'header, hero, services grid, values strip, CTA, footer) and ui_kits/wrld-ai (product dashboard ' +
+          '— sidebar, agent list, agent detail, run history, stat cards). Each kit is a set of React ' +
+          'components compiled into _ds_bundle.js and exposed on window.WRLDTechDesignSystemRemix_6276ea.\n\n' +
+          'Reference these files:\n' +
+          '- _ds_bundle.js + _ds_manifest.json — compiled components\n' +
+          '- ui_kits/wrld-tech/README.md, ui_kits/wrld-ai/README.md — per-kit component list\n' +
+          '- README.md — full brand rules'
+      },
+      'wrld-tech': {
+        title: 'Use — WRLD.tech UI kit',
+        desc: 'Paste into a coding agent to build the flagship marketing shell.',
+        files: [
+          'ui_kits/wrld-tech/Header.jsx',
+          'ui_kits/wrld-tech/Hero.jsx',
+          'ui_kits/wrld-tech/ServicesGrid.jsx',
+          'ui_kits/wrld-tech/ValuesStrip.jsx',
+          'ui_kits/wrld-tech/CTA.jsx',
+          'ui_kits/wrld-tech/Footer.jsx',
+          'ui_kits/wrld-tech/Button.jsx',
+          '_ds_bundle.js',
+          'README.md'
+        ],
+        prompt:
+          'Build a WRLD.tech marketing page using the flagship UI kit: Header (sticky nav, animated ' +
+          'submenu, traveling underline), Hero (display headline + lede + CTA row), ServicesGrid (grid of ' +
+          'sub-brand service cards), ValuesStrip (numbered values strip), CTA (closing call-to-action ' +
+          'band), and Footer (link columns + lockup + legal line). wrld.tech carries the #007fee accent.\n\n' +
+          'Reference these files:\n' +
+          '- ui_kits/wrld-tech/Header.jsx, Hero.jsx, ServicesGrid.jsx, ValuesStrip.jsx, CTA.jsx, Footer.jsx, Button.jsx\n' +
+          '- _ds_bundle.js — the compiled versions of the same components\n' +
+          '- README.md — full brand rules, incl. wrld.tech’s tone and accent weighting'
+      },
+      'wrld-ai': {
+        title: 'Use — WRLD.AI UI kit',
+        desc: 'Paste into a coding agent to build the AI product dashboard.',
+        files: [
+          'ui_kits/wrld-ai/Sidebar.jsx',
+          'ui_kits/wrld-ai/TopBar.jsx',
+          'ui_kits/wrld-ai/AgentList.jsx',
+          'ui_kits/wrld-ai/AgentDetail.jsx',
+          'ui_kits/wrld-ai/RunHistory.jsx',
+          'ui_kits/wrld-ai/StatCard.jsx',
+          '_ds_bundle.js',
+          'README.md'
+        ],
+        prompt:
+          'Build a WRLD.AI dashboard using the product UI kit: Sidebar (left nav), TopBar (title + ' +
+          'subtitle + primary action), StatCard (single KPI tile with signed delta), AgentList (selectable ' +
+          'list of agents), AgentDetail (detail pane for one agent + run history), and RunHistory ' +
+          '(chronological list of agent run outcomes). WRLD.AI carries the #00adee accent (signal/' +
+          'intelligence).\n\n' +
+          'Reference these files:\n' +
+          '- ui_kits/wrld-ai/Sidebar.jsx, TopBar.jsx, AgentList.jsx, AgentDetail.jsx, RunHistory.jsx, StatCard.jsx\n' +
+          '- _ds_bundle.js — the compiled versions of the same components\n' +
+          '- README.md — full brand rules, incl. WRLD.AI’s tone and accent weighting'
+      }
+    };
+
+    var overlay = document.getElementById('useModalOverlay');
+    var titleEl = document.getElementById('useModalTitle');
+    var descEl = document.getElementById('useModalDesc');
+    var promptEl = document.getElementById('useModalPrompt');
+    var filesEl = document.getElementById('useModalFiles');
+    var closeBtn = document.getElementById('useModalClose');
+    var copyPromptBtn = document.getElementById('useModalCopyPrompt');
+    var copyFilesBtn = document.getElementById('useModalCopyFiles');
+    var copiedTag = document.getElementById('useModalCopied');
+    var lastFocused = null;
+    var copiedTimer = null;
+
+    function openUseModal(key) {
+      var data = USE_PROMPTS[key];
+      if (!data) return;
+      titleEl.textContent = data.title;
+      descEl.textContent = data.desc;
+      promptEl.textContent = data.prompt;
+      filesEl.innerHTML = data.files
+        .map(function (f) {
+          return '<li><a href="' + f + '" target="_blank" rel="noopener">' + f + '</a></li>';
+        })
+        .join('');
+      overlay.hidden = false;
+      document.body.style.overflow = 'hidden';
+      closeBtn.focus();
+    }
+
+    function closeUseModal() {
+      overlay.hidden = true;
+      document.body.style.overflow = '';
+      if (lastFocused) lastFocused.focus();
+    }
+
+    // A live region, not just a visual toggle — set text here (never in
+    // markup) so assistive tech actually announces it, and say what really
+    // happened rather than assuming success.
+    function announceCopyResult(ok) {
+      copiedTag.textContent = ok ? 'Copied' : 'Copy failed — select and copy manually';
+      copiedTag.classList.add('show');
+      clearTimeout(copiedTimer);
+      copiedTimer = setTimeout(function () {
+        copiedTag.classList.remove('show');
+        copiedTag.textContent = '';
+      }, 1600);
+    }
+
+    function copyText(text) {
+      // Whatever had focus (the Copy button) before the fallback path
+      // steals it for the temp textarea — put it back, or the Tab trap
+      // has nothing inside the modal to wrap between.
+      var refocus = document.activeElement;
+      function fallback() {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        var ok = false;
+        try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+        document.body.removeChild(ta);
+        if (refocus && typeof refocus.focus === 'function') refocus.focus();
+        return ok;
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(
+          function () { announceCopyResult(true); },
+          function () { announceCopyResult(fallback()); }
+        );
+      } else {
+        announceCopyResult(fallback());
+      }
+    }
+
+    document.querySelectorAll('[data-use]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        lastFocused = btn;
+        openUseModal(btn.dataset.use);
+      });
+    });
+
+    var FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+    closeBtn.addEventListener('click', closeUseModal);
+    overlay.addEventListener('click', function (e) { if (e.target === overlay) closeUseModal(); });
+    document.addEventListener('keydown', function (e) {
+      if (overlay.hidden) return;
+      if (e.key === 'Escape') { closeUseModal(); return; }
+      // Trap Tab inside the dialog — otherwise it leaks focus onto the
+      // (visually obscured but still interactive) page behind the overlay.
+      if (e.key === 'Tab') {
+        var nodes = overlay.querySelectorAll(FOCUSABLE);
+        if (!nodes.length) return;
+        var first = nodes[0];
+        var last = nodes[nodes.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    });
+
+    copyPromptBtn.addEventListener('click', function () { copyText(promptEl.textContent); });
+    copyFilesBtn.addEventListener('click', function () {
+      // .href (not getAttribute) so relative paths on this page resolve to
+      // the absolute https://wrld.design/... URL an external agent needs.
+      var links = Array.prototype.map.call(filesEl.querySelectorAll('a'), function (a) { return a.href; });
+      copyText(links.join('\n'));
+    });
   })();
 </script>
 
