@@ -786,6 +786,10 @@
     }
 
     function copyText(text) {
+      // Whatever had focus (the Copy button) before the fallback path
+      // steals it for the temp textarea — put it back, or the Tab trap
+      // has nothing inside the modal to wrap between.
+      var refocus = document.activeElement;
       function fallback() {
         var ta = document.createElement('textarea');
         ta.value = text;
@@ -795,6 +799,7 @@
         ta.select();
         try { document.execCommand('copy'); } catch (e) {}
         document.body.removeChild(ta);
+        if (refocus && typeof refocus.focus === 'function') refocus.focus();
       }
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(text).then(showCopied, fallback);
