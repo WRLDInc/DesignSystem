@@ -34,6 +34,7 @@
 
   async function init() {
     initTheme();
+    initHeaderOffset();
     initModal();
     const sectionsEl = document.getElementById("sections");
     sectionsEl.innerHTML = '<p class="ds-status">Loading the system…</p>';
@@ -52,6 +53,25 @@
     sectionsEl.innerHTML = "";
     render(state.manifest);
     initSearch();
+  }
+
+  // -------------------------------------------------------- header offset
+  // The sticky header wraps onto extra rows at narrow widths, so anchor
+  // scroll-margins and the side nav's sticky top can't be a fixed number.
+  // Publish its live height as --header-h; app.css does the arithmetic.
+  function initHeaderOffset() {
+    const header = document.querySelector("header.top");
+    if (!header) return;
+    const root = document.documentElement;
+    const publish = () => root.style.setProperty("--header-h", `${Math.ceil(header.getBoundingClientRect().height)}px`);
+    publish();
+    if ("ResizeObserver" in window) {
+      new ResizeObserver(publish).observe(header);
+    } else {
+      window.addEventListener("resize", publish);
+    }
+    // Fonts swapping in can change the header's height after first paint.
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(publish);
   }
 
   // ---------------------------------------------------------------- theme
@@ -131,10 +151,22 @@
     // Deep links from the landing page (/system#foundations, #components,
     // #brand) point at elements that only exist — or only settle into place —
     // after this render, so the browser's initial hash scroll misses them.
-    if (location.hash.length > 1) {
+    settleHashScroll();
+  }
+
+  // Scroll to the hash target now, then again once web fonts have swapped in
+  // (text above the target re-wraps, most visibly on phones) and once more
+  // after the first previews have laid out, so the heading ends up where the
+  // scroll-margin says it should.
+  function settleHashScroll() {
+    if (location.hash.length < 2) return;
+    const go = () => {
       const target = document.getElementById(location.hash.slice(1));
       if (target) target.scrollIntoView();
-    }
+    };
+    go();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(go);
+    setTimeout(go, 600);
   }
 
   function buildSection(id, title, cardNodes) {
@@ -180,6 +212,7 @@
     el.className = "ds-card";
     el.dataset.name = card.name.toLowerCase();
     el.dataset.subtitle = (card.subtitle || "").toLowerCase();
+    el.dataset.group = (card.group || "").toLowerCase();
 
     const preview = document.createElement("div");
     preview.className = "ds-card-preview";
@@ -233,6 +266,7 @@
     el.className = "ds-card template-card";
     el.dataset.name = tpl.name.toLowerCase();
     el.dataset.subtitle = (tpl.description || "").toLowerCase();
+    el.dataset.group = "templates";
 
     const preview = document.createElement("div");
     preview.className = "ds-card-preview";
@@ -308,8 +342,10 @@
     input.addEventListener("input", () => {
       const q = input.value.trim().toLowerCase();
       document.querySelectorAll(".ds-card").forEach((card) => {
-        const match = !q || card.dataset.name.includes(q) || card.dataset.subtitle.includes(q);
-        card.hidden = !match;
+        // Name, subtitle, and the section (manifest group) the card sits in,
+        // so "brand" or "components" finds everything under that heading.
+        const haystack = `${card.dataset.name} ${card.dataset.subtitle} ${card.dataset.group || ""}`;
+        card.hidden = !!q && !haystack.includes(q);
       });
       document.querySelectorAll("#sections .ds-section").forEach((section) => {
         section.hidden = ![...section.querySelectorAll(".ds-card")].some((c) => !c.hidden);
@@ -451,7 +487,9 @@
     lines.push("");
     lines.push("Core system files (always apply, on every WRLD surface):");
     CORE_FILES.forEach((f) => lines.push(`- ${ORIGIN}/${f.path} — ${f.label.split(" — ")[1] || f.label}`));
-    lines.push(`- ${ORIGIN}/fonts/ — self-hosted Montserrat (variable), Ubuntu family, Ubuntu Mono; never substitute Google Fonts`);
+    lines.push("");
+    lines.push("Self-hosted type (Montserrat variable, Ubuntu family, Ubuntu Mono) — load these exact files; never substitute Google Fonts:");
+    FONT_FILES.forEach((f) => lines.push(`- ${ORIGIN}/${f}`));
     lines.push("");
     lines.push("Non-negotiables (from README.md):");
     lines.push("- Static surfaces stay 100% monochrome. The accents (#007fee primary, #00adee secondary, #EE9300 warm) are interactive-only — hover, focus, press — never a decorative fill or gradient background.");

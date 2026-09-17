@@ -93,7 +93,15 @@ header.top {
   border-color: var(--accent-primary);
   box-shadow: var(--focus-ring);
 }
-.top-actions { display: flex; align-items: center; gap: var(--wrld-space-4, 16px); flex-shrink: 0; }
+.top-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;            /* at ~320px the four controls wrap instead of overflowing */
+  justify-content: flex-end;
+  gap: var(--wrld-space-2, 8px) var(--wrld-space-4, 16px);
+  flex-shrink: 0;
+  margin-left: auto;
+}
 .ghost-link {
   font-family: var(--font-body);
   font-size: 13px;
@@ -133,7 +141,9 @@ header.top {
   padding: 0 var(--wrld-space-6, 24px) var(--wrld-space-20, 80px);
 }
 .sidenav { padding-top: var(--wrld-space-10, 40px); }
-.sidenav-inner { position: sticky; top: 84px; }
+/* --header-h is published by app.js from the sticky header's live height
+   (it wraps to more rows at narrow widths). 72px is the desktop fallback. */
+.sidenav-inner { position: sticky; top: calc(var(--header-h, 72px) + 12px); }
 .sidenav-eyebrow {
   font-family: var(--font-display);
   font-size: 11px;
@@ -184,7 +194,11 @@ header.top {
 .hero-meta code { font-family: inherit; background: var(--bg-muted); padding: 2px 6px; border-radius: var(--wrld-radius-sm, 4px); }
 
 /* ---------- sections & cards ---------- */
-.ds-section { margin-bottom: var(--wrld-space-16, 64px); scroll-margin-top: 84px; }
+.ds-section,
+.anchor-alias { scroll-margin-top: calc(var(--header-h, 72px) + 12px); }
+.ds-section { margin-bottom: var(--wrld-space-16, 64px); }
+.ds-section[hidden] { display: none; }
+.anchor-alias { display: block; }
 .ds-section h2 {
   font-family: var(--font-display);
   font-weight: 600;
@@ -216,6 +230,8 @@ header.top {
   transition: box-shadow var(--wrld-duration-default, 200ms) var(--wrld-ease-standard, ease),
               border-color var(--wrld-duration-default, 200ms) var(--wrld-ease-standard, ease);
 }
+/* display:flex above would otherwise beat the UA's [hidden] rule and undo search filtering. */
+.ds-card[hidden] { display: none; }
 .ds-card:hover, .ds-card:focus-within { box-shadow: var(--shadow-accent-primary); border-color: var(--border-strong); }
 .ds-card-preview {
   position: relative;
@@ -243,6 +259,10 @@ header.top {
               transform var(--wrld-duration-micro, 160ms) var(--wrld-ease-standard, ease);
 }
 .ds-card:hover .ds-card-use, .ds-card:focus-within .ds-card-use { opacity: 1; transform: translateY(0); }
+/* Touch-only devices have no hover, so the button has to be visible at rest. */
+@media (hover: none), (pointer: coarse) {
+  .ds-card-use { opacity: 1; transform: none; }
+}
 .ds-card-body { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 4px; }
 .ds-card-name { font-family: var(--font-display); font-weight: 600; font-size: 14px; }
 .ds-card-subtitle { font-family: var(--font-body); font-size: 12px; color: var(--fg-muted); }
@@ -405,6 +425,7 @@ ul.links a:hover { color: var(--accent-primary); }
 @media (max-width: 960px) {
   .top-inner { flex-wrap: wrap; gap: var(--wrld-space-3, 12px); }
   .top-search { order: 3; flex-basis: 100%; max-width: none; }
+  .top-actions { flex: 1 1 auto; min-width: 0; }
 }
 @media (max-width: 860px) {
   .shell { grid-template-columns: 1fr; gap: 0; }
@@ -415,6 +436,12 @@ ul.links a:hover { color: var(--accent-primary); }
 @media (max-width: 560px) {
   .card-grid { grid-template-columns: 1fr; }
   .ghost-link { font-size: 12px; }
+  .top-inner { padding-left: var(--wrld-space-4, 16px); padding-right: var(--wrld-space-4, 16px); }
+  .top-actions { gap: var(--wrld-space-2, 8px) var(--wrld-space-3, 12px); }
+  /* Three wrapped rows would pin ~140px of chrome to a phone viewport, so the
+     header scrolls with the page here and anchors only need a small breath. */
+  header.top { position: static; }
+  .ds-section, .anchor-alias { scroll-margin-top: var(--wrld-space-3, 12px); }
 }
 
 @media (prefers-reduced-motion: reduce) {
