@@ -983,7 +983,7 @@
       <div class="use-modal-actions">
         <button class="btn btn-primary" id="useModalCopyPrompt">Copy prompt</button>
         <button class="btn btn-ghost" id="useModalCopyFiles">Copy file list</button>
-        <span class="use-modal-copied" id="useModalCopied">Copied</span>
+        <span class="use-modal-copied" id="useModalCopied" role="status" aria-live="polite" aria-atomic="true"></span>
       </div>
     </div>
   </div>
@@ -1215,10 +1215,17 @@
         if (lastFocused) lastFocused.focus();
       }
 
-      function showCopied() {
+      // A live region, not just a visual toggle — set text here (never in
+      // markup) so assistive tech actually announces it, and say what
+      // really happened rather than assuming success.
+      function announceCopyResult(ok) {
+        copiedTag.textContent = ok ? 'Copied' : 'Copy failed — select and copy manually';
         copiedTag.classList.add('show');
         clearTimeout(copiedTimer);
-        copiedTimer = setTimeout(function () { copiedTag.classList.remove('show'); }, 1600);
+        copiedTimer = setTimeout(function () {
+          copiedTag.classList.remove('show');
+          copiedTag.textContent = '';
+        }, 1600);
       }
 
       function copyText(text) {
@@ -1233,15 +1240,19 @@
           ta.style.opacity = '0';
           document.body.appendChild(ta);
           ta.select();
-          try { document.execCommand('copy'); } catch (e) {}
+          var ok = false;
+          try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
           document.body.removeChild(ta);
           if (refocus && typeof refocus.focus === 'function') refocus.focus();
+          return ok;
         }
         if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(text).then(showCopied, fallback);
+          navigator.clipboard.writeText(text).then(
+            function () { announceCopyResult(true); },
+            function () { announceCopyResult(fallback()); }
+          );
         } else {
-          fallback();
-          showCopied();
+          announceCopyResult(fallback());
         }
       }
 
