@@ -519,7 +519,11 @@
       align-items: center;
       justify-content: center;
       padding: var(--wrld-space-6);
-      z-index: var(--wrld-z-modal);
+      /* Must outrank tweaks-panel.jsx's edit-mode panel (z-index:
+         2147483646) — --wrld-z-modal (1100) would sit underneath it,
+         letting the panel overlap and swallow clicks meant for the
+         dialog. This is the maximum practical z-index. */
+      z-index: 2147483647;
     }
     .use-modal-overlay[hidden] { display: none; }
     .use-modal {
@@ -1095,6 +1099,7 @@
           desc: 'Paste into a coding agent to build with the WRLD type system.',
           files: [
             'colors_and_type.css',
+            'tokens/tokens.css',
             'fonts/Montserrat-VariableFont_wght.ttf',
             'fonts/Ubuntu-Regular.ttf',
             'fonts/UbuntuMono-Regular.ttf',
@@ -1109,7 +1114,8 @@
             'are reserved for eyebrow microtype (letter-spacing 0.12em) and the WRLD wordmark-as-type ' +
             '(letter-spacing 0.28em).\n\n' +
             'Reference these files:\n' +
-            '- colors_and_type.css — @font-face declarations + the full type scale as --wrld-fs-* tokens\n' +
+            '- colors_and_type.css — @font-face declarations + the standalone type scale as --fs-* tokens\n' +
+            '- tokens/tokens.css — the canonical, prefixed --wrld-fs-* type scale (use this in new code)\n' +
             '- fonts/Montserrat-VariableFont_wght.ttf\n' +
             '- fonts/Ubuntu-Regular.ttf\n' +
             '- fonts/UbuntuMono-Regular.ttf\n' +
