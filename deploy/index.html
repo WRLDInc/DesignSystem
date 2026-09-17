@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="auto">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -8,6 +8,11 @@
 <meta property="og:title" content="WRLD.design — Design that ships.">
 <meta property="og:description" content="The design system behind every WRLD surface, open to everyone.">
 <meta name="theme-color" content="#0a0a0a">
+<script>
+// Theme, applied before first paint. Same key + cycle as the previous landing (auto → light → dark);
+// 'auto' defers to prefers-color-scheme, which the token block below already handles.
+(function(){var t;try{t=localStorage.getItem('wrld-theme')}catch(e){}if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)})();
+</script>
 <link rel="icon" href="logos/favicons/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="logos/favicons/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="logos/favicons/favicon-16x16.png">
@@ -102,6 +107,12 @@ img,svg{display:block}
 .cta:hover .disc svg{transform:rotate(-45deg)}
 .cta.small{padding:4px 4px 4px 16px;font-size:13px}.cta.small .disc{width:24px;height:24px}.cta.small .disc svg{width:14px;height:14px}
 .burger{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;border:0;background:var(--wrld-fg);color:var(--wrld-fg-inverse);cursor:pointer}
+.tools{display:flex;align-items:center;gap:6px}
+.theme{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;border:1px solid var(--wrld-border);background:transparent;color:var(--wrld-fg);cursor:pointer;transition:color var(--wrld-duration-micro) var(--wrld-ease-standard),border-color var(--wrld-duration-micro) var(--wrld-ease-standard),transform var(--wrld-duration-default) var(--wrld-ease-standard)}
+.theme:hover{color:var(--wrld-accent-primary);border-color:var(--wrld-accent-primary)}
+.theme:active{transform:scale(.94)}
+.theme svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;display:none}
+:root[data-theme="auto"] .theme .i-auto,:root[data-theme="light"] .theme .i-light,:root[data-theme="dark"] .theme .i-dark{display:block}
 .hero-body{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;justify-content:flex-end}
 .hero-body .wrap{width:100%;padding-bottom:var(--wrld-space-16)}
 .hero h1{font-weight:600;font-size:clamp(2.25rem,6vw,4.75rem);line-height:1.05;max-width:1000px;margin-top:var(--wrld-space-5)}
@@ -232,7 +243,14 @@ footer .lockup .sub{color:var(--wrld-mono-400)}
         <span class="note">Design that ships.</span>
         <a class="cta small" href="https://wrld.tech/contact"><span class="roll"><span><i>Start a conversation</i><i aria-hidden="true">Start a conversation</i></span></span><span class="disc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span></a>
       </div>
-      <button class="burger" type="button" aria-label="Open menu" id="burger"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+      <div class="tools">
+        <button class="theme" type="button" id="themeBtn" aria-label="Colour theme: auto. Activate to change." title="Theme: auto">
+          <svg class="i-auto" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor" stroke="none"/></svg>
+          <svg class="i-light" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="i-dark" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+        <button class="burger" type="button" aria-label="Open menu" id="burger"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+      </div>
     </nav>
   </header>
 
@@ -439,6 +457,7 @@ footer .lockup .sub{color:var(--wrld-mono-400)}
   window.addEventListener('pointermove', function (e) { var r = canvas.getBoundingClientRect(); tx = (e.clientX - r.left) / r.width; ty = 1 - (e.clientY - r.top) / r.height; }, { passive: true });
   window.addEventListener('resize', size); size(); theme();
   var mq = window.matchMedia('(prefers-color-scheme: dark)'); mq.addEventListener && mq.addEventListener('change', theme);
+  new MutationObserver(theme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   var rm = window.matchMedia('(prefers-reduced-motion: reduce)');
   var t0 = performance.now(); var vis = true;
   new IntersectionObserver(function (es) { vis = es[0].isIntersecting; }).observe(canvas);
@@ -453,6 +472,26 @@ footer .lockup .sub{color:var(--wrld-mono-400)}
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
+})();
+// ── Theme toggle: auto → light → dark, persisted under 'wrld-theme' (shared with the previous landing).
+(function () {
+  var KEY = 'wrld-theme', ORDER = ['auto', 'light', 'dark'], root = document.documentElement;
+  var btn = document.getElementById('themeBtn'), meta = document.querySelector('meta[name="theme-color"]');
+  var mq = window.matchMedia('(prefers-color-scheme: dark)');
+  function effective(t) { return t === 'auto' ? (mq.matches ? 'dark' : 'light') : t; }
+  function apply(t) {
+    root.setAttribute('data-theme', t);
+    btn.setAttribute('aria-label', 'Colour theme: ' + t + '. Activate to change.');
+    btn.title = 'Theme: ' + t;
+    if (meta) meta.setAttribute('content', effective(t) === 'dark' ? '#0a0a0a' : '#ffffff');
+  }
+  apply(ORDER.indexOf(root.getAttribute('data-theme')) > -1 ? root.getAttribute('data-theme') : 'auto');
+  btn.addEventListener('click', function () {
+    var next = ORDER[(ORDER.indexOf(root.getAttribute('data-theme')) + 1) % ORDER.length];
+    apply(next);
+    try { localStorage.setItem(KEY, next); } catch (e) {}
+  });
+  mq.addEventListener && mq.addEventListener('change', function () { apply(root.getAttribute('data-theme')); });
 })();
 // ── Mobile sheet + scroll reveals
 (function () {
