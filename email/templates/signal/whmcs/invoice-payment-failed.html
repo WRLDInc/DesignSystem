@@ -1,0 +1,42 @@
+<tr><td class="bg-band px" style="background-color:#0a0a0a;padding:20px 28px;border-radius:4px 4px 0 0;">
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"><tr>
+<td valign="middle" class="stack"><img src="{$company_logo_url}" width="132" alt="{$company_name}" style="display:block;width:132px;height:auto;border:0;"></td>
+<td valign="middle" align="right" class="stack stack-gap right-on-desktop" style="text-align:right;">
+<span style="font-family:'Ubuntu Mono',Menlo,Consolas,monospace;font-size:12px;line-height:16px;color:#a1a1aa;">Invoice <span style="color:#fafafa;">#{$invoice_num}</span></span>
+</td></tr></table></td></tr>
+<tr><td class="bg-card px" style="background-color:#ffffff;border:1px solid #e4e4e7;border-top:0;border-radius:0 0 4px 4px;padding:28px 28px 8px 28px;">
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr><td style="padding-bottom:6px;"><span class="fg-muted" style="font-family:Ubuntu,'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12px;line-height:16px;letter-spacing:0.12em;text-transform:uppercase;color:#71717a;">Action needed</span></td></tr>
+<tr><td class="h1 fg" style="font-family:Montserrat,'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:24px;line-height:30px;font-weight:600;letter-spacing:-0.02em;color:#0a0a0a;">Payment for #{$invoice_num} didn't go through</td></tr>
+<tr><td style="padding-top:10px;"><span class="chip" style="display:inline-block;font-family:Ubuntu,'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12px;line-height:16px;font-weight:500;padding:3px 10px;border:1px solid #e4e4e7;border-radius:9999px;color:#ef4444;"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#ef4444;margin-right:7px;vertical-align:1px;"></span>Payment failed</span></td></tr>
+<tr><td style="height:18px;line-height:18px;font-size:0;">&nbsp;</td></tr>
+
+<tr><td class="" style="background-color:transparent;padding:0;">
+
+<div class="wrld-body fg" style="font-family:Ubuntu,'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:16px;line-height:24px;color:#0a0a0a;"><p>Hi {$client_first_name},</p><p>We tried to charge your payment method for <strong>{$invoice_total}</strong> and it was declined. Update your card or pay manually before <strong>{$invoice_date_due}</strong> to avoid any interruption.</p></div>
+</td></tr>
+<tr><td style="height:20px;line-height:20px;font-size:0;">&nbsp;</td></tr>
+<tr><td><div class="wrld-body" style="font-family:Ubuntu,'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;">{$invoice_html_contents}</div></td></tr>
+<tr><td style="height:24px;line-height:24px;font-size:0;">&nbsp;</td></tr>
+<tr><td>
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"><tr>
+<td class="stack" valign="middle"><table role="presentation" cellpadding="0" cellspacing="0" border="0" class="btn-full"><tr>
+<td class="btn btn-warm btn-full" style="background-color:#EE9300;border-radius:4px;mso-padding-alt:12px 22px;">
+<a href="https://wrld.host/account/paymentmethods" class="btn-full btn-a-warm" style="display:inline-block;font-family:Ubuntu,'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:15px;line-height:20px;font-weight:500;color:#0a0a0a;text-decoration:none;padding:12px 22px;border-radius:4px;">Update payment method&nbsp;&rarr;</a>
+</td></tr></table></td>
+<td class="stack stack-gap" valign="middle" align="right" style="text-align:right;font-family:Ubuntu,'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;"><a href="{$invoice_link}" class="fg-muted" style="color:#71717a;text-decoration:underline;text-underline-offset:2px;">View invoice</a></td>
+</tr></table>
+</td></tr>
+<tr><td style="height:24px;line-height:24px;font-size:0;">&nbsp;</td></tr>
+<tr><td class="rule" style="border-top:1px solid #e4e4e7;padding:16px 0 12px 0;">
+<span class="fg-muted" style="font-family:Ubuntu,'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;color:#52525b;"> Standard line <a href="tel:+14692999598" class="fg" style="color:#0a0a0a;text-decoration:none;font-weight:500;">469.299.9598</a>.</span>
+</td></tr>
+</table></td></tr>
+<tr><td style="height:20px;line-height:20px;font-size:0;">&nbsp;</td></tr>
+<tr><td class="px" style="padding:0 8px;">
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="font-family:Ubuntu,'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12px;line-height:18px;color:#71717a;">
+<tr><td class="fg-muted" style="color:#71717a;padding-bottom:8px;"><a href="https://wrld.host" class="fg-muted" style="color:#71717a;text-decoration:none;">wrld.host</a>&nbsp;&nbsp;<span style="color:#d4d4d8;">&middot;</span>&nbsp;&nbsp;<a href="https://wrld.host/clientarea.php" class="fg-muted" style="color:#71717a;text-decoration:none;">Client area</a>&nbsp;&nbsp;<span style="color:#d4d4d8;">&middot;</span>&nbsp;&nbsp;<a href="https://wrld.tech/tos" class="fg-muted" style="color:#71717a;text-decoration:none;">Terms</a>&nbsp;&nbsp;<span style="color:#d4d4d8;">&middot;</span>&nbsp;&nbsp;<a href="https://wrld.tech/privacy" class="fg-muted" style="color:#71717a;text-decoration:none;">Privacy</a></td></tr>
+<tr><td class="fg-subtle" style="color:#71717a;">&copy; {$date|date_format:'%Y'} WRLD Inc. All rights reserved. 4707 Algiers St. Ste 101, Dallas, TX 75207. Web support 24/7 at wrld.host. Phone Mon-Fri 9am-6pm CT.</td></tr>
+
+</table></td></tr>
+<tr><td style="height:8px;line-height:8px;font-size:0;">&nbsp;</td></tr>
