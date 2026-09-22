@@ -27,11 +27,20 @@
   .wrld-body pre, .wrld-body code { font-family:'Ubuntu Mono',Menlo,Consolas,monospace; font-size:13px; }
   .wrld-body img { max-width:100%; height:auto; }
   .wrld-body blockquote { margin:0 0 12px 0; padding:0 0 0 12px; border-left:2px solid #e4e4e7; color:#52525b; }
-  /* history injected by platform tags (Syncro / Gleap / WHMCS hook) */
-  .wrld-history > div, .wrld-history .wrld-msg { border-top:1px solid #e4e4e7 !important; padding:14px 0 !important; margin:0 !important; }
-  .wrld-history > div:first-child { border-top:0 !important; padding-top:0 !important; }
-  .wrld-history p { margin:0 0 8px 0; line-height:1.5 !important; color:#52525b; }
-  .wrld-history p[style*="font-weight:600"], .wrld-history p[style*="font-weight: 600"] { line-height:1.4 !important; color:#18181b; font-size:13px; }
+  /* history injected by platform tags. Syncro's {{ticket_public_comments_for_email}} emits TWO divs per
+     comment: a header div (p.name with line-height:0 + small.date, border-top) then a body div (border-bottom).
+     Reset both, then draw one rule per comment on the header div. */
+  .wrld-history .wrld-msg { border-top:1px solid #e4e4e7 !important; padding:14px 0 !important; margin:0 !important; }
+  .wrld-history .wrld-msg:first-child { border-top:0 !important; padding-top:0 !important; }
+  .wrld-history-syncro > div { border:0 !important; padding:0 !important; margin:0 !important; }
+  .wrld-history-syncro > div:nth-child(odd) { border-top:1px solid #e4e4e7 !important; padding-top:14px !important; }
+  .wrld-history-syncro > div:nth-child(even) { padding:6px 0 14px 0 !important; }
+  .wrld-history-syncro > div:first-child { border-top:0 !important; padding-top:0 !important; }
+  .wrld-history p { margin:0 0 8px 0 !important; line-height:1.5 !important; color:#52525b; }
+  .wrld-history p[style*="font-weight:600"], .wrld-history p[style*="font-weight: 600"] { line-height:1.4 !important; color:#18181b !important; font-size:13px; margin:0 0 2px 0 !important; }
+  .wrld-history small { display:block; font-size:12px; line-height:16px; color:#71717a !important; }
+  .wrld-history blockquote { margin:0 0 8px 0; padding:0 0 0 12px; border-left:2px solid #e4e4e7; }
+  .wrld-history img { max-width:100%; height:auto; }
   .wrld-history hr { display:none; }
   @media only screen and (max-width: 620px) {
     .container { width:100% !important; max-width:100% !important; }
@@ -52,7 +61,9 @@
     .fg, .fg a, .h1, .wrld-body, .wrld-body p, .wrld-body li { color:#fafafa !important; }
     .fg-muted, .fg-muted a, .wrld-history p { color:#a1a1aa !important; }
     .fg-subtle { color:#71717a !important; }
-    .rule, .wrld-history > div, .wrld-history .wrld-msg { border-color:#27272a !important; }
+    .rule, .wrld-history > div, .wrld-history .wrld-msg, .wrld-history blockquote { border-color:#27272a !important; }
+    .wrld-history small { color:#71717a !important; }
+    .wrld-history p[style*="font-weight:600"], .wrld-history p[style*="font-weight: 600"] { color:#fafafa !important; }
     .btn { background-color:#fafafa !important; }
     .btn-a { color:#0a0a0a !important; }
     .btn-warm { background-color:#EE9300 !important; }
@@ -66,23 +77,24 @@
   [data-ogsc] .bg-card { background-color:#18181b !important; }
   [data-ogsc] .fg, [data-ogsc] .h1, [data-ogsc] .wrld-body p { color:#fafafa !important; }
   [data-ogsc] .fg-muted { color:#a1a1aa !important; }
+  [data-ogsc] .wrld-history p { color:#a1a1aa !important; }
+  [data-ogsc] .wrld-history p[style*="font-weight:600"], [data-ogsc] .wrld-history p[style*="font-weight: 600"] { color:#fafafa !important; }
 </style>
 </head>
 <body class="bg-page" style="margin:0;padding:0;width:100%;background-color:#f4f4f5;">
-<div style="display:none;font-size:1px;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;mso-hide:all;color:#f4f4f5;">Reply above this line to add to your ticket.&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;</div>
+
 <center role="article" aria-roledescription="email" lang="en" style="width:100%;background-color:#f4f4f5;" class="bg-page">
 <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" class="bg-page" style="background-color:#f4f4f5;">
 <tr><td align="center" style="padding:24px 12px;">
 <!--[if mso]><table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" align="center"><tr><td><![endif]-->
 <table role="presentation" cellpadding="0" cellspacing="0" border="0" class="container" style="width:100%;max-width:600px;margin:0 auto;">
-<tr><td class="fg-subtle" style="font-family:Ubuntu,'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;line-height:14px;color:#a1a1aa;padding:0 4px 10px 4px;">Reply above this line</td></tr>
-{{email_body}}
+<tr><td style="padding:0;">{{email_body}}</td></tr>
 <tr><td align="center" style="padding-top:12px;">{{gray_social_links}}</td></tr>
 <tr><td style="height:20px;line-height:20px;font-size:0;">&nbsp;</td></tr>
 <tr><td class="px" style="padding:0 8px;">
 <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="font-family:Ubuntu,'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12px;line-height:18px;color:#71717a;">
 <tr><td class="fg-muted" style="color:#71717a;padding-bottom:8px;"><a href="https://wrld.tech" class="fg-muted" style="color:#71717a;text-decoration:none;">wrld.tech</a>&nbsp;&nbsp;<span style="color:#d4d4d8;">&middot;</span>&nbsp;&nbsp;<a href="https://wrld.syncromsp.com/my_profile/v2/index" class="fg-muted" style="color:#71717a;text-decoration:none;">Support portal</a>&nbsp;&nbsp;<span style="color:#d4d4d8;">&middot;</span>&nbsp;&nbsp;<a href="https://wrld.tech/tos" class="fg-muted" style="color:#71717a;text-decoration:none;">Terms</a>&nbsp;&nbsp;<span style="color:#d4d4d8;">&middot;</span>&nbsp;&nbsp;<a href="https://wrld.tech/privacy" class="fg-muted" style="color:#71717a;text-decoration:none;">Privacy</a></td></tr>
-<tr><td class="fg-subtle" style="color:#71717a;">&copy; {{YEAR}} {{account_name}}. 4707 Algiers St. Ste 101, Dallas, TX 75207. Priority SLA line 24/7 for covered clients. Standard line Mon-Fri 9am-6pm CT.</td></tr>
+<tr><td class="fg-subtle" style="color:#71717a;">&copy; {{account_name}}. 4707 Algiers St. Ste 101, Dallas, TX 75207. Priority SLA line 24/7 for covered clients. Standard line Mon-Fri 9am-6pm CT.</td></tr>
 
 </table></td></tr>
 <tr><td style="height:8px;line-height:8px;font-size:0;">&nbsp;</td></tr>

@@ -27,11 +27,20 @@
   .wrld-body pre, .wrld-body code { font-family:'Ubuntu Mono',Menlo,Consolas,monospace; font-size:13px; }
   .wrld-body img { max-width:100%; height:auto; }
   .wrld-body blockquote { margin:0 0 12px 0; padding:0 0 0 12px; border-left:2px solid #e4e4e7; color:#52525b; }
-  /* history injected by platform tags (Syncro / Gleap / WHMCS hook) */
-  .wrld-history > div, .wrld-history .wrld-msg { border-top:1px solid #e4e4e7 !important; padding:14px 0 !important; margin:0 !important; }
-  .wrld-history > div:first-child { border-top:0 !important; padding-top:0 !important; }
-  .wrld-history p { margin:0 0 8px 0; line-height:1.5 !important; color:#52525b; }
-  .wrld-history p[style*="font-weight:600"], .wrld-history p[style*="font-weight: 600"] { line-height:1.4 !important; color:#18181b; font-size:13px; }
+  /* history injected by platform tags. Syncro's {{ticket_public_comments_for_email}} emits TWO divs per
+     comment: a header div (p.name with line-height:0 + small.date, border-top) then a body div (border-bottom).
+     Reset both, then draw one rule per comment on the header div. */
+  .wrld-history .wrld-msg { border-top:1px solid #e4e4e7 !important; padding:14px 0 !important; margin:0 !important; }
+  .wrld-history .wrld-msg:first-child { border-top:0 !important; padding-top:0 !important; }
+  .wrld-history-syncro > div { border:0 !important; padding:0 !important; margin:0 !important; }
+  .wrld-history-syncro > div:nth-child(odd) { border-top:1px solid #e4e4e7 !important; padding-top:14px !important; }
+  .wrld-history-syncro > div:nth-child(even) { padding:6px 0 14px 0 !important; }
+  .wrld-history-syncro > div:first-child { border-top:0 !important; padding-top:0 !important; }
+  .wrld-history p { margin:0 0 8px 0 !important; line-height:1.5 !important; color:#52525b; }
+  .wrld-history p[style*="font-weight:600"], .wrld-history p[style*="font-weight: 600"] { line-height:1.4 !important; color:#18181b !important; font-size:13px; margin:0 0 2px 0 !important; }
+  .wrld-history small { display:block; font-size:12px; line-height:16px; color:#71717a !important; }
+  .wrld-history blockquote { margin:0 0 8px 0; padding:0 0 0 12px; border-left:2px solid #e4e4e7; }
+  .wrld-history img { max-width:100%; height:auto; }
   .wrld-history hr { display:none; }
   @media only screen and (max-width: 620px) {
     .container { width:100% !important; max-width:100% !important; }
@@ -52,7 +61,9 @@
     .fg, .fg a, .h1, .wrld-body, .wrld-body p, .wrld-body li { color:#fafafa !important; }
     .fg-muted, .fg-muted a, .wrld-history p { color:#a1a1aa !important; }
     .fg-subtle { color:#71717a !important; }
-    .rule, .wrld-history > div, .wrld-history .wrld-msg { border-color:#27272a !important; }
+    .rule, .wrld-history > div, .wrld-history .wrld-msg, .wrld-history blockquote { border-color:#27272a !important; }
+    .wrld-history small { color:#71717a !important; }
+    .wrld-history p[style*="font-weight:600"], .wrld-history p[style*="font-weight: 600"] { color:#fafafa !important; }
     .btn { background-color:#fafafa !important; }
     .btn-a { color:#0a0a0a !important; }
     .btn-warm { background-color:#EE9300 !important; }
@@ -66,6 +77,8 @@
   [data-ogsc] .bg-card { background-color:#18181b !important; }
   [data-ogsc] .fg, [data-ogsc] .h1, [data-ogsc] .wrld-body p { color:#fafafa !important; }
   [data-ogsc] .fg-muted { color:#a1a1aa !important; }
+  [data-ogsc] .wrld-history p { color:#a1a1aa !important; }
+  [data-ogsc] .wrld-history p[style*="font-weight:600"], [data-ogsc] .wrld-history p[style*="font-weight: 600"] { color:#fafafa !important; }
 </style>
 </head>
 <body class="bg-page" style="margin:0;padding:0;width:100%;background-color:#f4f4f5;">

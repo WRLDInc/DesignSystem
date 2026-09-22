@@ -12,6 +12,10 @@ python3 email/index.py     # builds the spec page email/dist/index.html
 
 Directions: `ledger` (quiet), `signal` (dark header band), `thread` (conversation-first, recommended). Templates for all three are committed under `email/templates/<direction>/`.
 
+Platform tags were verified against the live Syncro editor on 2026-09-22 (see `templates/README.md` for the list, including the tags that do not exist). `{{ticket_comment_body}}`, `{{location_logo_100}}` and `{{YEAR}}` were never real Syncro tags; the real ones are `{{comment_body}}`, `{{logo_100}}` and no year at all.
+
+`shots.py` needs Playwright (`py -3 -m pip install playwright && py -3 -m playwright install chromium`).
+
 ![Thread direction, Syncro ticket comment](screenshots/thread--syncro-ticket-comment--desktop.png)
 
 # WRLD transactional email templates

@@ -11,22 +11,24 @@ def esc(s): return html.escape(s, quote=True)
 DIR_META = {
     "ledger": ("Ledger", "Quiet card on a mono ground. Logo and ticket number float above the card; everything else is hairlines and type. Closest to the current look, least risk in Outlook.", "Lowest visual change, fastest approval"),
     "signal": ("Signal", "Near-black header band carries the white lockup and ticket number. The brand shows up before the client reads a word. Best when emails sit next to vendor emails in a crowded inbox.", "Strongest brand recognition"),
-    "thread": ("Thread", "Conversation-first. The latest reply is a framed message with the technician's avatar; earlier replies render as a timeline with avatars. Designed around the complaint that clients lose context.", "Recommended"),
+    "thread": ("Thread", "Conversation-first. The latest reply is a framed message on a muted panel; the full conversation follows as a quiet, ruled list, newest first. Designed around the complaint that clients lose context.", "Recommended"),
 }
 PLATFORM_ORDER = [("syncro", "Syncro (helpdesk@wrld.tech)"), ("gleap", "Gleap (in-app and email support)"), ("whmcs", "WHMCS / wrld.host (support@wrld.host)")]
 
 VARS = {
     "syncro": [
-        ("{{email_body}}", "Wrapper only. Where each template is injected. Mandatory."),
-        ("{{location_logo_100}}", "Location logo at 100px. Set under Admin > Locations."),
-        ("{{gray_social_links}} {{account_name}} {{account_address}}", "Wrapper footer tags."),
+        ("{{email_body}}", "Wrapper only. Where each template is injected, inside a <td>. Mandatory."),
+        ("{{gray_social_links}} {{account_name}}", "Wrapper footer tags."),
+        ("{{reply_above_line}}", "Syncro's reply marker. First row of every ticket body so inbound replies are trimmed."),
+        ("{{logo_100}}", "Account logo at 100px (Admin > Account Settings). {{location_logo_100}} does not exist."),
         ("{{ticket_number}} {{ticket_subject}} {{ticket_status}}", "Header, title and status chip."),
-        ("{{tech_name}} {{ticket_date}} {{ticket_due_date}}", "Meta rows."),
-        ("{{customer_full_name}} {{customer_first_name}} {{customer_business_name}}", "Greeting."),
-        ("{{ticket_comment_body}}", "Latest public comment (the reason the email fired)."),
-        ("{{ticket_public_comments_for_email}}", "All public comments, newest first. This is the context block."),
-        ("{{initial_comment_body}} {{ticket_problem}}", "Original request, used in Created / Autoresponder."),
-        ("{{ticket_url}} {{ticket_link}}", "Deep link into the portal ticket."),
+        ("{{tech_name}} {{ticket_date}}", "Meta rows."),
+        ("{{customer_first_name}} {{customer_full_name}}", "Greeting."),
+        ("{{comment_body}} {{comment_sender_name}} {{comment_created_at}}", "The comment that fired the email. Ticket Comment, Created and Resolved only (not Autoresponder). {{ticket_comment_body}} does not exist."),
+        ("{{ticket_public_comments_for_email}}", "All public comments, newest first, each cut at 2500 chars. Two <div>s per comment; the wrapper CSS restyles them."),
+        ("{{ticket_public_fulltext_comments_for_email}}", "Same, uncut. Used by the compact comment template."),
+        ("{{initial_comment_body}}", "Original request, used in Created / Autoresponder."),
+        ("{{ticket_url}}", "Deep link into the ticket."),
     ],
     "gleap": [
         ("{{{htmlContent}}}", "The reply. Mandatory, must sit inside a <table>."),
@@ -56,9 +58,10 @@ VARS = {
 STEPS = {
     "syncro": [
         "Admin > Syncro Administration - PDF/Email Templates > Email Templates.",
-        "Bottom of the list: Advanced (caution) > Edit HTML of Email Wrapper. Replace with 00-email-wrapper.html. Keep {{email_body}}.",
-        "Edit Ticket Comment, Ticket Created, Ticket Autoresponder, Ticket Resolved. Switch to HTML source and paste the matching fragment.",
-        "Preview each, then comment on a test ticket assigned to your own contact and open it on a phone.",
+        "Bottom of the list: Advanced (caution) > Edit HTML of Email Wrapper. Replace with 00-email-wrapper.html. Keep {{email_body}} and {{gray_social_links}}. The wrapper is shared by invoices and estimates too, so nothing ticket-specific lives in it.",
+        "Edit Ticket Comment, Ticket Created, Ticket Autoresponder, Ticket Resolved. Click Source, select all, paste the matching file, Update Template. The editor is CKEditor 4 and rewrites pasted HTML, which is why each body is one complete table. Never touch the bodies in the WYSIWYG view.",
+        "Ticket Comment ships in two variants. ticket-comment.html frames the new reply, then shows the full conversation (the new reply appears again at the top of it, because Syncro has no history-minus-latest tag). ticket-comment.compact.html shows the conversation only, newest first, untruncated.",
+        "Preview each (the Preview link renders the last real ticket), then comment on a test ticket assigned to your own contact and open it in Spark, Outlook and on a phone. Search the raw message for \"{{\" to catch unresolved tags.",
     ],
     "gleap": [
         "Project > Settings > Email > Email templates > Message reply. Pick the language, click Source, paste message-reply.html.",
@@ -100,12 +103,12 @@ def code_block(direction, platform, fname):
 def build_index():
     previews = []
     keys_by_platform = {
-        "syncro": ["syncro-ticket-comment", "syncro-ticket-created", "syncro-ticket-resolved"],
+        "syncro": ["syncro-ticket-comment", "syncro-ticket-comment-compact", "syncro-ticket-created", "syncro-ticket-resolved"],
         "gleap": ["gleap-message-reply", "gleap-auto-reply"],
         "whmcs": ["whmcs-support-ticket-reply", "whmcs-support-ticket-opened", "whmcs-invoice-created", "whmcs-invoice-paid", "whmcs-invoice-failed"],
     }
     files_by_platform = {
-        "syncro": ["00-email-wrapper.html", "ticket-comment.html", "ticket-created.html", "ticket-autoresponder.html", "ticket-resolved.html"],
+        "syncro": ["00-email-wrapper.html", "ticket-comment.html", "ticket-comment.compact.html", "ticket-created.html", "ticket-autoresponder.html", "ticket-resolved.html"],
         "gleap": ["message-reply.html", "auto-reply.html"],
         "whmcs": ["00-global-email-header.html", "00-global-email-footer.html", "support-ticket-reply.html", "support-ticket-opened.html", "invoice-created.html", "invoice-payment-confirmation.html", "invoice-payment-failed.html", "support-ticket-reply.lagom-body.html", "hooks/wrld_ticket_history.php"],
     }
@@ -312,7 +315,7 @@ flowchart TB
     <div class="rule-card"><h4>Dark mode is designed, not inverted</h4><p>color-scheme meta plus prefers-color-scheme and [data-ogsc] overrides swap page, card, text and border tokens. Logos ship as two transparent PNGs and swap with CSS. Nothing relies on inversion.</p></div>
     <div class="rule-card"><h4>Logos as transparent PNG</h4><p>SVG is unsupported in Gmail and Outlook. Export the lockup at 2x (264 x 52) with a transparent background so it survives dark mode. Syncro uses its own logo tag; WHMCS uses {'{$company_logo_url}'}.</p></div>
     <div class="rule-card"><h4>Sentence case, plain words</h4><p>Titles are the ticket subject as written. Labels are sentence case. No emoji, no exclamation points, no "Dear". Greeting is "Hi first name," and sign-off is the sub-brand.</p></div>
-    <div class="rule-card"><h4>Reply-by-email stays intact</h4><p>Syncro keeps "Reply above this line" as the first row of the wrapper. WHMCS ticket subjects are never edited. Gleap keeps the unsubscribe placeholders.</p></div>
+    <div class="rule-card"><h4>Reply-by-email stays intact</h4><p>Every Syncro ticket body opens with {{reply_above_line}}, Syncro's own marker, so quoted text is trimmed from inbound replies. WHMCS ticket subjects are never edited. Gleap keeps the unsubscribe placeholders.</p></div>
     <div class="rule-card"><h4>One help strip, one footer</h4><p>Phone lines, portal link, legal line and address come from a single source per brand (wrld.tech vs wrld.host). Change it in build.py, regenerate, redeploy.</p></div>
     <div class="rule-card"><h4>Sub-brand lockups</h4><p>wrld.tech tickets carry the WRLD.TECH lockup with the blue rule. wrld.host emails carry WRLD.HOST with the sky rule, derived from the same mark and Montserrat recipe.</p></div>
   </div>
