@@ -5,7 +5,20 @@
   // agent somewhere else. location.origin is right on wrld.design and on the
   // per-branch preview hosts alike.
   const ORIGIN = location.origin;
-  const CARD_RENDER_WIDTH = 340; // px — every preview is scaled to fit this width
+  // First-paint estimate only: fitPreviews() re-measures each card once it is
+  // in the grid, so a 310px-wide phone card and a 450px-wide desktop card both
+  // show the whole preview instead of clipping its right edge.
+  const CARD_RENDER_WIDTH = 340;
+
+  // Words people type that the manifest doesn't spell out per card. Keyed by
+  // the section slug; matched alongside name, subtitle and group.
+  const GROUP_ALIASES = {
+    colors: "tokens colour color palette foundations",
+    spacing: "tokens foundations layout motion shadow radius radii",
+    type: "tokens foundations typography fonts typeface text",
+    brand: "logo mark identity voice",
+    components: "ui patterns controls",
+  };
 
   // Every WRLD surface needs these regardless of which card was picked.
   const CORE_FILES = [
@@ -145,6 +158,8 @@
       }
     }
 
+    fitPreviews();
+    observePreviewWidth();
     observeActiveSection();
     observeLazyPreviews();
 
@@ -213,9 +228,12 @@
     el.dataset.name = card.name.toLowerCase();
     el.dataset.subtitle = (card.subtitle || "").toLowerCase();
     el.dataset.group = (card.group || "").toLowerCase();
+    el.dataset.aliases = aliasesFor(card.group);
 
     const preview = document.createElement("div");
     preview.className = "ds-card-preview";
+    preview.dataset.w = w;
+    preview.dataset.h = h;
     preview.style.height = `${renderHeight}px`;
 
     const iframe = document.createElement("iframe");
@@ -229,7 +247,12 @@
     iframe.style.height = `${h}px`;
     iframe.style.transform = `scale(${scale})`;
     iframe.style.transformOrigin = "top left";
-    iframe.setAttribute("sandbox", "allow-scripts allow-same-origin");
+    // Scripts only. The previews are same-origin documents, so without an
+    // opaque origin a preview script could reach this page's DOM and storage.
+    // They don't need same-origin APIs: fonts and logos ship with
+    // Access-Control-Allow-Origin: * (see deploy/_headers), and no preview
+    // touches localStorage, cookies or window.parent.
+    iframe.setAttribute("sandbox", "allow-scripts");
     preview.appendChild(iframe);
 
     const useBtn = document.createElement("button");
@@ -267,6 +290,7 @@
     el.dataset.name = tpl.name.toLowerCase();
     el.dataset.subtitle = (tpl.description || "").toLowerCase();
     el.dataset.group = "templates";
+    el.dataset.aliases = "document paged deck";
 
     const preview = document.createElement("div");
     preview.className = "ds-card-preview";
@@ -303,6 +327,44 @@
 
   function templateAsCard(tpl) {
     return { name: tpl.name, group: "Templates", subtitle: tpl.description, path: tpl.entryPath, isTemplate: true, folder: tpl.folder };
+  }
+
+  function aliasesFor(group) {
+    const id = slug(group || "");
+    if (id.startsWith("ui-kit")) return "ui kit components react jsx screens";
+    return GROUP_ALIASES[id] || "";
+  }
+
+  // ------------------------------------------------------ preview scale
+  // Every preview is a fixed-viewport document scaled down to the card. The
+  // card's width depends on the grid column and the viewport, so measure it
+  // and derive the scale from that — not from a constant.
+  function fitPreviews() {
+    document.querySelectorAll(".ds-card-preview[data-w]").forEach((preview) => {
+      const w = Number(preview.dataset.w);
+      const h = Number(preview.dataset.h);
+      const avail = preview.clientWidth || CARD_RENDER_WIDTH;
+      if (!w || !h) return;
+      const scale = avail / w;
+      preview.style.height = `${Math.round(h * scale)}px`;
+      const iframe = preview.querySelector("iframe");
+      if (iframe) iframe.style.transform = `scale(${scale})`;
+    });
+  }
+
+  function observePreviewWidth() {
+    let queued = false;
+    const refit = () => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(() => { queued = false; fitPreviews(); });
+    };
+    const grid = document.getElementById("sections");
+    if ("ResizeObserver" in window && grid) {
+      new ResizeObserver(refit).observe(grid);
+    } else {
+      window.addEventListener("resize", refit);
+    }
   }
 
   // ------------------------------------------------------ lazy previews
@@ -342,9 +404,10 @@
     input.addEventListener("input", () => {
       const q = input.value.trim().toLowerCase();
       document.querySelectorAll(".ds-card").forEach((card) => {
-        // Name, subtitle, and the section (manifest group) the card sits in,
-        // so "brand" or "components" finds everything under that heading.
-        const haystack = `${card.dataset.name} ${card.dataset.subtitle} ${card.dataset.group || ""}`;
+        // Name, subtitle, the section (manifest group) the card sits in, and
+        // the section's aliases — so "brand", "components" or "tokens" all
+        // find what the search box promises.
+        const haystack = `${card.dataset.name} ${card.dataset.subtitle} ${card.dataset.group || ""} ${card.dataset.aliases || ""}`;
         card.hidden = !!q && !haystack.includes(q);
       });
       document.querySelectorAll("#sections .ds-section").forEach((section) => {
