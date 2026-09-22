@@ -126,10 +126,14 @@ header.top {
   transition: border-color var(--wrld-duration-micro, 120ms) var(--wrld-ease-standard, ease);
 }
 .theme-toggle:hover { border-color: var(--accent-primary); }
+/* Monochrome at rest; the accent arrives with the interaction. */
 .theme-toggle-dot {
   width: 10px; height: 10px; border-radius: 50%;
-  background: var(--accent-primary);
+  background: var(--fg-muted);
+  transition: background var(--wrld-duration-micro, 120ms) var(--wrld-ease-standard, ease);
 }
+.theme-toggle:hover .theme-toggle-dot,
+.theme-toggle:focus-visible .theme-toggle-dot { background: var(--accent-primary); }
 
 /* ---------- shell / side nav ---------- */
 .shell {
@@ -178,7 +182,7 @@ header.top {
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--accent-primary);
+  color: var(--fg-muted); /* static surface: monochrome, per README */
   margin: 0 0 12px;
 }
 .hero h1 {
@@ -316,10 +320,18 @@ ul.links a:hover { color: var(--accent-primary); }
   cursor: pointer;
   transition: background var(--wrld-duration-default, 200ms) var(--wrld-ease-standard, ease),
               border-color var(--wrld-duration-default, 200ms) var(--wrld-ease-standard, ease),
+              box-shadow var(--wrld-duration-default, 200ms) var(--wrld-ease-standard, ease),
               color var(--wrld-duration-default, 200ms) var(--wrld-ease-standard, ease);
 }
 .btn-primary { background: var(--fg); color: var(--bg); }
-.btn-primary:hover { background: var(--accent-primary); color: #fff; }
+/* Hover keeps the near-black/near-white pair (white on #007fee is 3.98:1 at
+   12px, under AA) and brings the accent in as the tinted lift + edge. */
+.btn-primary:hover {
+  background: var(--fg);
+  color: var(--bg);
+  border-color: var(--accent-primary);
+  box-shadow: var(--shadow-accent-primary);
+}
 .btn-ghost { background: var(--bg-elevated); color: var(--fg); border-color: var(--border); }
 .btn-ghost:hover { border-color: var(--accent-primary); color: var(--accent-primary); }
 .btn:active { transform: translateY(1px); }
@@ -353,7 +365,7 @@ ul.links a:hover { color: var(--accent-primary); }
 }
 .modal-eyebrow {
   font-family: var(--font-display); font-size: 11px; font-weight: 600;
-  letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent-primary);
+  letter-spacing: 0.12em; text-transform: uppercase; color: var(--fg-muted);
   margin: 0 0 6px;
 }
 .modal-head h2 { font-family: var(--font-display); font-size: 20px; margin: 0 0 4px; }
