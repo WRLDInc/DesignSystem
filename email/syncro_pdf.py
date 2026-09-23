@@ -221,8 +221,9 @@ def ticket():
         f'<div style="font-family:{FD};font-size:16px;line-height:21px;font-weight:600;margin-bottom:10px;">{{{{ticket_subject}}}}</div>',
         parties("Client", client, [("Ticket #", "{{ticket_number}}", False), ("Opened", "{{ticket_date}}", False),
                                    ("Created by", "{{ticket_creator_name}}", False), ("Status", "{{ticket_status}}", True)]),
-        '<div class="wrld-section">Latest update</div><div class="wrld-box wrld-comments">{{ticket_public_comments}}</div>',
-        '<div class="wrld-section">Comment history</div>',
+        # {{ticket_public_comments}} prints every public comment, which the table below already lists.
+        # Showing both duplicated the whole conversation, so only the table is kept (newest first).
+        '<div class="wrld-section">Conversation</div>',
         items([("Date", "item"), ("Comment", "description")], "{{ticket_public_comments_table}}"),
         '<div class="wrld-section">Technical details</div>',
         '<table width="100%" cellpadding="0" cellspacing="0" class="page-avoid"><tr>'
