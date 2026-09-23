@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8">
+	<title>WRLD Ticket</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1.0">
+	<style type="text/css">/* --- Base --- */
+body{
+  font-family: Arial,"Arial Unicode MS",Helvetica,sans-serif;
+  font-size:14px;
+  line-height:1.6;
+  color:#333;
+  background:#f9f9f9;
+  margin:0;
+}
+.wrapper{
+  max-width:800px;
+  margin:10px auto;
+  background:#fff;
+  border:1px solid #e5e5e5;
+  border-radius:6px;
+  box-shadow:0 2px 5px rgba(0,0,0,.08);
+  padding:14px;
+}
+/* --- Header --- */
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:3px solid #0073e6;
+  padding-bottom:12px;
+}
+.logo img{max-height:60px;max-width:200px;}
+.biz p{margin:0; line-height:1.4; text-align:right;}
+.biz a{color:#0073e6; text-decoration:none;}
+/* --- Section titles --- */
+.section-title{
+  background:#0073e6;
+  color:#fff;
+  padding:10px;
+  border-radius:4px;
+  font-size:16px;
+  margin:30px 0 10px;
+}
+/* --- Ticket headline box --- */
+.headline{
+  background:#f0f7ff;
+  border:1px solid #cfe2ff;
+  border-radius:4px;
+  padding:12px;
+}
+.headline p{margin:4px 0;}
+/* --- Comment table --- */
+.table{
+  width:100%;
+  border-collapse:collapse;
+}
+.table th,
+.table td{
+  border:1px solid #e5e5e5;
+  padding:8px 10px;
+}
+.table thead{
+  background:#0073e6;
+  color:#fff;
+}
+.table tbody tr:nth-child(odd){background:#f9f9f9;}
+/* --- Technical box --- */
+.tech-box{
+  background:#fff9c4;
+  border:1px solid #f1e15b;
+  border-radius:4px;
+  padding:18px;
+}
+.tech-box h4{margin-top:0;}
+/* --- Small text --- */
+.small{font-size:12px;color:#555;}
+/* --- Responsive overflow for wide data --- */
+.table-wrap{overflow-x:auto;}
+	</style>
+</head>
+<body>
+<div class="wrapper"><!-- Header -->
+<div class="header">
+<div class="logo"><img alt="WRLD Tech Logo" src="https://wrld.host/logo/logo-short.png" style="float:left; height:42px; width:168px" /><br />
+<br />
+<span style="font-size:12px"><strong><span style="font-family:lucida sans unicode,lucida grande,sans-serif">&nbsp; &nbsp; &nbsp;<span style="color:#808080"> </span></span><span style="color:#808080"><sub><span style="font-family:lucida sans unicode,lucida grande,sans-serif">[dot]</span></sub></span><span style="font-family:lucida sans unicode,lucida grande,sans-serif">&nbsp;&nbsp;</span></strong></span><span style="font-family:trebuchet ms,helvetica,sans-serif"><span style="font-size:14px"><strong><a href="https://wrld.tech/?utm=ticketpdf" target="_blank"><span style="color:#000000">Tech</span></a><span style="color:#696969"> || </span><a href="https://wrld.host/?utm=ticketpdf" target="_blank"><span style="color:#000000">Host</span></a><span style="color:#696969"> || </span><a href="https://wrld.ai/?utm=ticketpdf" target="_blank"><span style="color:#000000">AI</span></a></strong></span></span></div>
+
+<div class="logo">&nbsp;</div>
+
+<div class="biz">
+<p><span style="font-size:14px"><strong>WRLD Tech Co. || WRLD Inc.</strong></span></p>
+
+<p><span style="font-size:11px">{{account_street}}, {{account_city}}, {{account_state}} {{account_zip}}</span></p>
+
+<p><span style="font-size:11px"><a href="{{account_website}}">{{account_website}}</a></span></p>
+
+<p><span style="font-size:12px"><u>M-F</u> <u>9A-6P</u> CST: <strong>469.299.9598</strong><br />
+<u><strong>SLA Priority</strong> Line</u>: <strong>469.850.3968</strong></span></p>
+</div>
+</div>
+<!-- Ticket headline -->
+
+<div class="headline">
+<p><span style="font-size:12px"><strong>Subject:</strong></span> {{ticket_subject}}</p>
+
+<p><span style="font-size:12px"><strong>Ticket #:</strong></span> {{ticket_number}}</p>
+
+<p><span style="font-size:12px"><strong>Date:</strong> </span>{{ticket_date}}</p>
+</div>
+<!-- Comment history FIRST (end-user focus) -->
+
+<h3 class="section-title">Latest Update and/or Status:&nbsp;<span style="color:#FFFF00"><strong>{{ticket_status}}</strong></span></h3>
+
+<blockquote>
+<p>{{ticket_public_comments}}</p>
+</blockquote>
+
+<h3 class="section-title">Comment History</h3>
+
+<div class="table-wrap">
+<table class="table">
+	<thead>
+		<tr>
+			<th>Date</th>
+			<th>Comment</th>
+		</tr>
+	</thead>
+	<tbody>{{ticket_public_comments_table}}
+	</tbody>
+</table>
+</div>
+<!-- Client Info (moved lower) -->
+
+<h3 class="section-title">Client/Partner Information</h3>
+
+<div class="headline" style="background:#f8f8f8;border-color:#e5e5e5;">
+<p><strong>{{customer_business_name_or_customer_full_name}}</strong></p>
+
+<p>{{ticket_address}} {{ticket_address_2}}</p>
+
+<p>{{ticket_city}}, {{ticket_state}} {{ticket_zip}}</p>
+</div>
+<!-- Technical details box (assets + custom fields) -->
+
+<div class="tech-box">
+<h4>Technical Details (for internal reference)</h4>
+
+<div class="table-wrap">
+<table align="center" class="table">
+	<thead>
+		<tr>
+			<th>Asset Name</th>
+			<th>Serial Number</th>
+			<th>Type</th>
+			<th>Properties</th>
+		</tr>
+		<tr>
+			<th style="background-color: rgb(255, 255, 255);"><span style="color:#000000">{{asset_name}}</span></th>
+			<th style="background-color: rgb(255, 255, 255);"><span style="color:#000000">{{asset_serial_v2}}</span></th>
+			<th style="background-color: rgb(255, 255, 255);"><span style="color:#000000">{{asset_type}}</span></th>
+			<th style="background-color: rgb(255, 255, 255);"><span style="color:#000000">{{asset_properties}}</span></th>
+		</tr>
+	</thead>
+	<tbody>{{asset_table}}
+	</tbody>
+</table>
+&nbsp;
+
+<table class="table">
+	<thead>
+		<tr>
+			<th colspan="2">More Device Specs / Custom Fields</th>
+		</tr>
+		<tr>
+			<th style="background-color: rgb(255, 255, 255);"><span style="color:#000000"><u>Manufacturer:</u>&nbsp;{{asset_custom_field_manufacturer}}</span></th>
+			<th style="background-color: rgb(255, 255, 255);"><span style="color:#000000"><u>Make / Model:</u>&nbsp;{{asset_custom_field_make}} {{asset_custom_field_model}}</span></th>
+		</tr>
+		<tr>
+			<th style="background-color: rgb(255, 255, 255);"><span style="color:#000000"><u>CPU / RAM:</u>&nbsp;{{asset_custom_field_cpu_name}} /&nbsp;{{asset_custom_field_ram}}</span></th>
+			<th style="background-color: rgb(255, 255, 255);"><span style="color:#000000"><u>Operating System:</u>&nbsp;{{asset_custom_field_os}}</span></th>
+		</tr>
+	</thead>
+	<tbody>
+	</tbody>
+</table>
+
+<p><strong>Other Related Assets / Info:</strong></p>
+
+<hr />
+<blockquote>
+<p>{{assets}}</p>
+</blockquote>
+</div>
+</div>
+<!-- Terms -->
+
+<div class="small" style="margin-top:30px;">
+<h3 class="section-title" style="font-size:14px;margin-top:0;">Ticket Meta / Attachments (if applicable)</h3>
+
+<table align="center" border="1" cellpadding="1" cellspacing="1" class="table">
+	<thead>
+		<tr>
+			<th scope="col" style="text-align: left; background-color: rgb(153, 153, 153);">Metadata</th>
+			<th scope="col" style="text-align: left; vertical-align: middle; background-color: rgb(153, 153, 153);">Attachments (if applicable)</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>{{ticket_meta_details}}</td>
+			<td>{{ticket_images_rendered}}</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>Original Ticket Creator:&nbsp;<strong>{{ticket_creator_name}}&nbsp;</strong><br />
+Original Ticket Date:&nbsp;<strong>{{ticket_date}}</strong></p>
+
+<h3 class="section-title" style="font-size:14px;margin-top:0;">Terms &amp; Disclaimer</h3>
+
+<p>View the Terms of Service at <a href="https://wrld.tech/tos" target="_blank">https://wrld.tech/tos</a></p>
+
+<p>{{ticket_disclaimer_template}}</p>
+</div>
+</div>
+
+<div id="hudu-eh-root">&nbsp;</div>
+
+<div id="hudu-ch-root">&nbsp;</div>
+
+<div id="hudu-pc-root">&nbsp;</div>
+</body>
+</html>

@@ -14,6 +14,8 @@ LOGO_PAGE = """<!doctype html><html><head>
 <body>%s</body></html>"""
 
 async def raster(page, svg_path, out_png):
+    if not svg_path.exists():
+        print("skip raster (svg not in repo, keeping existing png):", out_png.name); return
     svg = svg_path.read_text()
     await page.set_content(LOGO_PAGE % svg)
     await page.wait_for_timeout(600)
