@@ -106,9 +106,9 @@ def css(direction):
   /* No child combinators anywhere in this sheet. Syncro HTML-escapes the greater-than sign inside the
      wrapper style block, which silently drops the whole rule. Syncro comment divs are matched by inline style. */
   .wrld-history-syncro div[style*="#ddd"] {{ border:0 !important; margin:0 !important; }}
-  .wrld-history-syncro div[style*="border-top: 1px #ddd"] {{ border-top:1px solid {T['mono200']} !important; padding:14px 0 0 0 !important; }}
-  .wrld-history-syncro div[style*="border-bottom: 1px #ddd"] {{ padding:6px 0 14px 0 !important; }}
-  .wrld-history-syncro div:first-child[style*="border-top: 1px #ddd"] {{ border-top:0 !important; padding-top:0 !important; }}
+  .wrld-history-syncro div[style*="border-top:1px #ddd"], .wrld-history-syncro div[style*="border-top: 1px #ddd"] {{ border-top:1px solid {T['mono200']} !important; padding:14px 0 0 0 !important; }}
+  .wrld-history-syncro div[style*="border-bottom:1px #ddd"], .wrld-history-syncro div[style*="border-bottom: 1px #ddd"] {{ padding:6px 0 14px 0 !important; }}
+  .wrld-history-syncro div:first-child[style*="border-top:1px #ddd"], .wrld-history-syncro div:first-child[style*="border-top: 1px #ddd"] {{ border-top:0 !important; padding-top:0 !important; }}
   .wrld-history p {{ margin:0 0 8px 0 !important; line-height:1.5 !important; color:{T['mono600']}; }}
   .wrld-history p[style*="font-weight:600"], .wrld-history p[style*="font-weight: 600"] {{ line-height:1.4 !important; color:{T['mono900']} !important; font-size:13px; margin:0 0 2px 0 !important; }}
   .wrld-history small {{ display:block; font-size:12px; line-height:16px; color:{T['mono500']} !important; }}
@@ -136,7 +136,7 @@ def css(direction):
     .fg, .fg a, .h1, .wrld-body, .wrld-body p, .wrld-body li {{ color:{T['mono50']} !important; }}
     .fg-muted, .fg-muted a, .wrld-history p {{ color:{T['mono400']} !important; }}
     .fg-subtle {{ color:{T['mono500']} !important; }}
-    .rule, .wrld-history .wrld-msg, .wrld-history blockquote, .wrld-history-syncro div[style*="border-top: 1px #ddd"] {{ border-color:{T['mono800']} !important; }}
+    .rule, .wrld-history .wrld-msg, .wrld-history blockquote, .wrld-history-syncro div[style*="border-top:1px #ddd"], .wrld-history-syncro div[style*="border-top: 1px #ddd"] {{ border-color:{T['mono800']} !important; }}
     .wrld-history small {{ color:{T['mono500']} !important; }}
     .wrld-items td {{ border-color:{T['mono800']} !important; color:{T['mono50']} !important; }}
     .wrld-history p[style*="font-weight:600"], .wrld-history p[style*="font-weight: 600"] {{ color:{T['mono50']} !important; }}
@@ -359,10 +359,10 @@ def sample_history(items, direction, syncro=False):
                        f'<div style="margin-top:6px;color:{T["mono600"]};">{body}</div></div>')
         return "".join(out)
     for who, when, body in items:
-        out.append(f'<div style="border-top: 1px #ddd solid; padding: 20px 0px; margin-right: 20px;">\n'
+        out.append(f'<div style="border-top:1px #ddd solid; padding: 20px 0px; margin-right: 20px;">\n'
                    f'  <p style="font-weight: 600; color: #444; line-height: 0;">{esc(who)}</p>\n'
                    f'  <small style="color: #858585; line-height: 1em;">{esc(when)}</small>\n</div>\n'
-                   f'<div style="border-bottom: 1px #ddd solid; padding: 20px 0px; margin-right: 20px;">{body}</div>\n')
+                   f'<div style="border-bottom:1px #ddd solid; padding: 20px 0px; margin-right: 20px;">{body}</div>\n')
     return "".join(out)
 
 def cta_row(primary_html, secondary_html=""):
