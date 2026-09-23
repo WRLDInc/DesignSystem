@@ -71,13 +71,15 @@
     .btn-a-warm { color:#0a0a0a !important; }
     .meta-k { border-color:#27272a !important; }
     .logo-light { display:none !important; }
-    .logo-dark { display:block !important; }
+    .logo-dark { display:block !important; max-height:none !important; }
     .chip { border-color:#3f3f46 !important; }
   }
   [data-ogsc] .bg-page { background-color:#0a0a0a !important; }
   [data-ogsc] .bg-card { background-color:#18181b !important; }
   [data-ogsc] .fg, [data-ogsc] .h1, [data-ogsc] .wrld-body p { color:#fafafa !important; }
   [data-ogsc] .fg-muted { color:#a1a1aa !important; }
+  [data-ogsc] .logo-light { display:none !important; }
+  [data-ogsc] .logo-dark { display:block !important; max-height:none !important; }
   [data-ogsc] .wrld-history p { color:#a1a1aa !important; }
   [data-ogsc] .wrld-history p[style*="font-weight:600"], [data-ogsc] .wrld-history p[style*="font-weight: 600"] { color:#fafafa !important; }
 </style>
@@ -91,7 +93,7 @@
 <table role="presentation" cellpadding="0" cellspacing="0" border="0" class="container" style="width:100%;max-width:600px;margin:0 auto;">
 <tr><td class="px" style="padding:0 4px 14px 4px;">
 <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"><tr>
-<td valign="middle" class="stack"><img class="logo-light" src="{{WRLD_LOGO_LIGHT_URL}}" width="132" alt="WRLD Tech Co." style="display:block;width:132px;height:auto;border:0;"><!--[if !mso]><!--><img class="logo-dark" src="{{WRLD_LOGO_DARK_URL}}" width="132" alt="WRLD Tech Co." style="display:none;width:132px;height:auto;border:0;mso-hide:all;"><!--<![endif]--></td>
+<td valign="middle" class="stack"><img class="logo-light" src="https://wrld.design/assets/logos/wrld-tech-black.png" width="132" height="23" alt="WRLD Tech Co." style="display:block;width:132px;height:auto;border:0;font-family:Montserrat,Arial,sans-serif;font-size:14px;font-weight:700;color:#0a0a0a;"><img class="logo-dark" src="https://wrld.design/assets/logos/wrld-tech-white.png" width="132" height="23" alt="WRLD Tech Co." style="display:none;width:132px;height:auto;border:0;mso-hide:all;max-height:0;overflow:hidden;"></td>
 <td valign="middle" align="right" class="stack stack-gap right-on-desktop" style="text-align:right;">
 <span class="fg-muted" style="font-family:'Ubuntu Mono',Menlo,Consolas,monospace;font-size:12px;line-height:16px;letter-spacing:0;text-transform:none;color:#71717a;">Request <span class="fg" style="color:#0a0a0a;">#{{feedbackId}}</span></span>
 </td></tr></table></td></tr>
@@ -131,6 +133,7 @@
 <tr><td class="px" style="padding:0 8px;">
 <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="font-family:Ubuntu,'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12px;line-height:18px;color:#71717a;">
 <tr><td class="fg-muted" style="color:#71717a;padding-bottom:8px;"><a href="https://wrld.tech" class="fg-muted" style="color:#71717a;text-decoration:none;">wrld.tech</a>&nbsp;&nbsp;<span style="color:#d4d4d8;">&middot;</span>&nbsp;&nbsp;<a href="https://wrld.syncromsp.com/my_profile/v2/index" class="fg-muted" style="color:#71717a;text-decoration:none;">Support portal</a>&nbsp;&nbsp;<span style="color:#d4d4d8;">&middot;</span>&nbsp;&nbsp;<a href="https://wrld.tech/tos" class="fg-muted" style="color:#71717a;text-decoration:none;">Terms</a>&nbsp;&nbsp;<span style="color:#d4d4d8;">&middot;</span>&nbsp;&nbsp;<a href="https://wrld.tech/privacy" class="fg-muted" style="color:#71717a;text-decoration:none;">Privacy</a></td></tr>
+<tr><td class="fg-muted" style="color:#71717a;padding-bottom:8px;">Follow us&nbsp;&nbsp;<a href="https://www.linkedin.com/company/wrldtech" class="fg-muted" style="color:#71717a;text-decoration:underline;text-underline-offset:2px;">LinkedIn</a>&nbsp;&nbsp;<span style="color:#d4d4d8;">&middot;</span>&nbsp;&nbsp;<a href="https://www.facebook.com/wrldtechco" class="fg-muted" style="color:#71717a;text-decoration:underline;text-underline-offset:2px;">Facebook</a>&nbsp;&nbsp;<span style="color:#d4d4d8;">&middot;</span>&nbsp;&nbsp;<a href="https://x.com/wrldtechco" class="fg-muted" style="color:#71717a;text-decoration:underline;text-underline-offset:2px;">X</a></td></tr>
 <tr><td class="fg-subtle" style="color:#71717a;">&copy; {{YEAR}} WRLD Inc. All rights reserved. 4707 Algiers St. Ste 101, Dallas, TX 75207. Priority SLA line 24/7 for covered clients. Standard line Mon-Fri 9am-6pm CT.</td></tr>
 <tr><td class="fg-subtle" style="color:#71717a;padding-top:8px;"><a href="{{unsubscribeLink}}" class="fg-subtle" style="color:#71717a;">{{unsubscribeText}}</a></td></tr>
 </table></td></tr>

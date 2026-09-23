@@ -32,8 +32,19 @@ FONT_MONO = "'Ubuntu Mono',Menlo,Consolas,monospace"
 GOOGLE_FONTS = "https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Ubuntu:wght@400;500;700&family=Ubuntu+Mono:wght@400;700&display=swap"
 
 # Placeholders the operator replaces once per platform (see README)
-LOGO_LIGHT = "{{WRLD_LOGO_LIGHT_URL}}"   # black lockup PNG for light backgrounds, 2x, ~320x64
-LOGO_DARK = "{{WRLD_LOGO_DARK_URL}}"     # white lockup PNG for dark bands
+# WRLD.TECH lockups, hotlinked from wrld.design (transparent 999x173 PNGs, served by Cloudflare).
+# Replace with dedicated email-sized exports when they exist; the paths are the contract.
+LOGO_LIGHT = "https://wrld.design/assets/logos/wrld-tech-black.png"   # for light backgrounds
+LOGO_DARK = "https://wrld.design/assets/logos/wrld-tech-white.png"    # for dark mode / dark bands
+LOGO_RATIO = 173 / 999
+
+# Social profiles, confirmed by Ridge 2026-09-23. Text links, not icons: they survive image
+# blocking (Spark, Outlook) and dark mode, unlike Syncro's {{gray_social_links}} icon images.
+SOCIALS = [
+    ("LinkedIn", "https://www.linkedin.com/company/wrldtech"),
+    ("Facebook", "https://www.facebook.com/wrldtechco"),
+    ("X", "https://x.com/wrldtechco"),
+]
 
 BRANDS = {
     "tech": {
@@ -44,6 +55,7 @@ BRANDS = {
         "phone_sla": "469.850.3968", "phone_sla_tel": "+14698503968",
         "phone_std": "469.299.9598", "phone_std_tel": "+14692999598",
         "hours": "Priority SLA line 24/7 for covered clients. Standard line Mon-Fri 9am-6pm CT.",
+        "socials": SOCIALS,
     },
     "host": {
         "id": "host", "entity": "WRLD Inc.", "product": "WRLD.host",
@@ -53,6 +65,7 @@ BRANDS = {
         "phone_sla": None, "phone_sla_tel": None,
         "phone_std": "469.299.9598", "phone_std_tel": "+14692999598",
         "hours": "Web support 24/7 at wrld.host. Phone Mon-Fri 9am-6pm CT.",
+        "socials": SOCIALS,
     },
 }
 ADDRESS = "4707 Algiers St. Ste 101, Dallas, TX 75207"
@@ -130,13 +143,15 @@ def css(direction):
     .btn-a-warm {{ color:{T['mono950']} !important; }}
     .meta-k {{ border-color:{T['mono800']} !important; }}
     .logo-light {{ display:none !important; }}
-    .logo-dark {{ display:block !important; }}
+    .logo-dark {{ display:block !important; max-height:none !important; }}
     .chip {{ border-color:{T['mono700']} !important; }}
   }}
   [data-ogsc] .bg-page {{ background-color:{T['mono950']} !important; }}
   [data-ogsc] .bg-card {{ background-color:{T['mono900']} !important; }}
   [data-ogsc] .fg, [data-ogsc] .h1, [data-ogsc] .wrld-body p {{ color:{T['mono50']} !important; }}
   [data-ogsc] .fg-muted {{ color:{T['mono400']} !important; }}
+  [data-ogsc] .logo-light {{ display:none !important; }}
+  [data-ogsc] .logo-dark {{ display:block !important; max-height:none !important; }}
   [data-ogsc] .wrld-history p {{ color:{T['mono400']} !important; }}
   [data-ogsc] .wrld-history p[style*="font-weight:600"], [data-ogsc] .wrld-history p[style*="font-weight: 600"] {{ color:{T['mono50']} !important; }}
 </style>"""
@@ -181,15 +196,19 @@ def logo_img(brand, variant="light", width=132):
     """Two images, CSS-swapped for dark mode. Syncro/WHMCS callers may replace with platform logo tags."""
     if isinstance(brand, dict):
         alt = brand["entity"]
-        LOGO_LIGHT = "{{WRLDHOST_LOGO_LIGHT_URL}}" if brand["id"] == "host" else "{{WRLD_LOGO_LIGHT_URL}}"
-        LOGO_DARK = "{{WRLDHOST_LOGO_DARK_URL}}" if brand["id"] == "host" else "{{WRLD_LOGO_DARK_URL}}"
+        # WRLD.HOST lockups are not on wrld.design yet, so those stay placeholders.
+        LOGO_LIGHT = "{{WRLDHOST_LOGO_LIGHT_URL}}" if brand["id"] == "host" else globals()["LOGO_LIGHT"]
+        LOGO_DARK = "{{WRLDHOST_LOGO_DARK_URL}}" if brand["id"] == "host" else globals()["LOGO_DARK"]
     else:
         alt = brand
         LOGO_LIGHT, LOGO_DARK = globals()["LOGO_LIGHT"], globals()["LOGO_DARK"]
-    light = f'<img class="logo-light" src="{LOGO_LIGHT}" width="{width}" alt="{esc(alt)}" style="display:block;width:{width}px;height:auto;border:0;">'
-    dark = f'<!--[if !mso]><!--><img class="logo-dark" src="{LOGO_DARK}" width="{width}" alt="{esc(alt)}" style="display:none;width:{width}px;height:auto;border:0;mso-hide:all;"><!--<![endif]-->'
+    hgt = round(width * LOGO_RATIO)
+    light = f'<img class="logo-light" src="{LOGO_LIGHT}" width="{width}" height="{hgt}" alt="{esc(alt)}" style="display:block;width:{width}px;height:auto;border:0;font-family:Montserrat,Arial,sans-serif;font-size:14px;font-weight:700;color:#0a0a0a;">'
+    # Hidden inline (display:none + mso-hide) so clients without dark-mode CSS (Gmail, Outlook desktop)
+    # only ever show the light-mode lockup. No conditional comments: Syncro's editor may strip them.
+    dark = f'<img class="logo-dark" src="{LOGO_DARK}" width="{width}" height="{hgt}" alt="{esc(alt)}" style="display:none;width:{width}px;height:auto;border:0;mso-hide:all;max-height:0;overflow:hidden;">'
     if variant == "dark":
-        return f'<img src="{LOGO_DARK}" width="{width}" alt="{esc(alt)}" style="display:block;width:{width}px;height:auto;border:0;">'
+        return f'<img src="{LOGO_DARK}" width="{width}" height="{round(width * LOGO_RATIO)}" alt="{esc(alt)}" style="display:block;width:{width}px;height:auto;border:0;">'
     return light + dark
 
 def eyebrow(text, mono=False):
@@ -368,10 +387,17 @@ def footer(brand, extra_links=None, unsubscribe_html="", legal_line=None):
     link_html = sep.join(
         f'<a href="{h}" class="fg-muted" style="color:{T["mono500"]};text-decoration:none;">{l}</a>' for l, h in links)
     legal = legal_line or f"&copy; {{{{YEAR}}}} WRLD Inc. All rights reserved."
+    socials = b.get("socials") or []
+    social_row = ""
+    if socials:
+        social_html = sep.join(
+            f'<a href="{h}" class="fg-muted" style="color:{T["mono500"]};text-decoration:underline;text-underline-offset:2px;">{l}</a>' for l, h in socials)
+        social_row = f'<tr><td class="fg-muted" style="color:{T["mono500"]};padding-bottom:8px;">Follow us&nbsp;&nbsp;{social_html}</td></tr>'
     return f"""{spacer(20)}
 <tr><td class="px" style="padding:0 8px;">
 <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="font-family:{FONT_BODY};font-size:12px;line-height:18px;color:{T['mono500']};">
 <tr><td class="fg-muted" style="color:{T['mono500']};padding-bottom:8px;">{link_html}</td></tr>
+{social_row}
 <tr><td class="fg-subtle" style="color:{T['mono500']};">{legal} {ADDRESS}. {b['hours']}</td></tr>
 {('<tr><td class="fg-subtle" style="color:'+T['mono500']+';padding-top:8px;">'+unsubscribe_html+'</td></tr>') if unsubscribe_html else ''}
 </table></td></tr>
@@ -432,7 +458,7 @@ def render_syncro_ticket_comment(direction, mode, compact=False):
         latest_time = "{{comment_created_at}}"
         history = "{{ticket_public_fulltext_comments_for_email}}" if compact else "{{ticket_public_comments_for_email}}"
         url = "{{ticket_url}}"
-        logo = "{{logo_100}}"
+        logo = None  # hosted WRLD.TECH lockups with dark-mode swap (logo_img)
     sender = s["tech"] if mode == "sample" else "{{comment_sender_name}}"
 
     body = [header(direction, b, "Ticket", f"#{ticket}", logo_html=logo), card_open(direction)]
@@ -460,7 +486,7 @@ def render_syncro_ticket_created(direction, mode, autoresponder=False):
         url = "https://wrld.syncromsp.com/tickets/117754091"; logo = None
     else:
         ticket, subject, customer, problem = "{{ticket_number}}", "{{ticket_subject}}", "{{customer_first_name}}", "{{initial_comment_body}}"
-        url = "{{ticket_url}}"; logo = "{{logo_100}}"
+        url = "{{ticket_url}}"; logo = None
     kicker = "We received your request" if autoresponder else "A ticket was opened for you"
     body = [header(direction, b, "Ticket", f"#{ticket}", logo_html=logo), card_open(direction)]
     body.append(title_block(esc(subject) if mode == "sample" else subject, chip("New", b["accent"]), kicker=kicker))
@@ -480,7 +506,7 @@ def render_syncro_ticket_resolved(direction, mode):
         history = sample_history(s["history"], direction, syncro=True); url = "https://wrld.syncromsp.com/tickets/117754091"; logo = None
     else:
         ticket, subject, customer, tech = "{{ticket_number}}", "{{ticket_subject}}", "{{customer_first_name}}", "{{tech_name}}"
-        history = "{{ticket_public_comments_for_email}}"; url = "{{ticket_url}}"; logo = "{{logo_100}}"
+        history = "{{ticket_public_comments_for_email}}"; url = "{{ticket_url}}"; logo = None
     body = [header(direction, b, "Ticket", f"#{ticket}", logo_html=logo), card_open(direction)]
     body.append(title_block(esc(subject) if mode == "sample" else subject, chip("Resolved", T["success"]), kicker="Marked resolved"))
     body.append(message_block(f"<p>Hi {customer},</p><p>{tech} marked this ticket resolved. If anything is still off, just reply to this email and it reopens automatically with the full history attached, no need to start over.</p>", direction="ledger"))
@@ -612,7 +638,6 @@ def syncro_wrapper(direction):
     b = BRANDS["tech"]
     doc = head("{{account_name}}", direction) + "\n" + open_shell("") + "\n"
     doc += '<tr><td style="padding:0;">{{email_body}}</td></tr>\n'
-    doc += f'<tr><td align="center" style="padding-top:12px;">{{{{gray_social_links}}}}</td></tr>\n'
     # Syncro has no year tag ({{YEAR}} rendered literally in production); the legal line is evergreen instead.
     doc += footer(b, legal_line="&copy; {{account_name}} &middot;") + "\n" + close_shell()
     return doc
@@ -785,16 +810,19 @@ Generated by build.py. Three visual directions (ledger, signal, thread) x three 
 Pick ONE direction and deploy its folder. Do not mix.
 
 ## One-time find and replace (all platforms)
-- {{WRLD_LOGO_LIGHT_URL}}  -> hosted PNG, black lockup, transparent bg, 264x52 (2x of 132x26). Suggested: https://wrld.host/brand/email/wrld-tech-black.png
-- {{WRLD_LOGO_DARK_URL}}   -> hosted PNG, white lockup, same size.
+- WRLD.TECH lockups are hotlinked from wrld.design (no replace needed):
+    https://wrld.design/assets/logos/wrld-tech-black.png  (light mode)
+    https://wrld.design/assets/logos/wrld-tech-white.png  (dark mode, swapped in by CSS)
+  Apple Mail, iOS, Outlook for Mac, Outlook.com and new Outlook swap to the white lockup in dark mode.
+  Gmail and Outlook for Windows ignore the swap and always show the black lockup.
 - {{WRLDHOST_LOGO_LIGHT_URL}} / {{WRLDHOST_LOGO_DARK_URL}} -> WRLD.HOST lockups (assets/wrld-host-*.png in this package).
-  Syncro templates use {{logo_100}} (the account logo under Admin > Account Settings). There is NO {{location_logo_100}} tag.
+  Syncro templates no longer use {{logo_100}} (a single fixed image, no dark variant). There is NO {{location_logo_100}} tag.
   WHMCS uses {$company_logo_url} (Setup > General Settings > General > Logo). Confirm the field appears under the editor's merge-field list; if not, hardcode the URL.
 - {{YEAR}} -> only the WHMCS files carry a year ({$date|date_format:'%Y'}). Syncro has no year tag, so the Syncro wrapper's legal line is evergreen.
 
 ## Syncro (helpdesk@wrld.tech)
 Admin > Syncro Administration - PDF/Email Templates > Email Templates (https://wrld.syncromsp.com/templates/email)
-1. Advanced (caution) > Edit HTML of Email Wrapper: paste syncro/00-email-wrapper.html. Keep {{email_body}} and {{gray_social_links}}.
+1. Advanced (caution) > Edit HTML of Email Wrapper: paste syncro/00-email-wrapper.html. Keep {{email_body}}. {{gray_social_links}} is intentionally removed: its icons are images with no text, so image-blocking clients (Spark, Outlook) showed stray dots. The footer carries LinkedIn / Facebook / X as text links instead.
    The wrapper is shared by every Syncro email (invoices, estimates, portal invites), so it carries nothing ticket-specific.
 2. Edit each template, click Source, select all, paste the matching body file, Update Template:
    - Ticket Comment       -> syncro/ticket-comment.html           (framed latest reply + full conversation)
@@ -806,7 +834,7 @@ Admin > Syncro Administration - PDF/Email Templates > Email Templates (https://w
 
 Tags, verified against the editor's Available Template Tags list on 2026-09-22:
   {{reply_above_line}}        Syncro's reply marker. First row of every ticket body. Keep it or inbound replies carry the whole quoted email.
-  {{logo_100}}                Account logo, 100px.
+  {{logo_100}}                Account logo, 100px. Not used (no dark-mode variant); hosted lockups instead.
   {{ticket_number}} {{ticket_subject}} {{ticket_status}} {{ticket_date}} {{ticket_url}} {{tech_name}}
   {{customer_first_name}} {{customer_full_name}}
   {{comment_body}} {{comment_sender_name}} {{comment_created_at}}
@@ -817,7 +845,7 @@ Tags, verified against the editor's Available Template Tags list on 2026-09-22:
                               Every public comment, newest first, each cut at 2500 characters. Two <div>s per comment.
   {{ticket_public_fulltext_comments_for_email}}
                               Same, uncut. Used by the compact comment template.
-  Wrapper only: {{email_body}} {{gray_social_links}} {{account_name}}
+  Wrapper only: {{email_body}} {{account_name}}  ({{gray_social_links}} exists but is not used)
 Tags that do NOT exist (they render as literal text): {{ticket_comment_body}} {{location_logo_100}} {{YEAR}}.
 
 Why the latest reply appears twice in ticket-comment.html: Syncro has no "history without the newest comment" tag, and

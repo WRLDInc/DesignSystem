@@ -18,9 +18,9 @@ PLATFORM_ORDER = [("syncro", "Syncro (helpdesk@wrld.tech)"), ("gleap", "Gleap (i
 VARS = {
     "syncro": [
         ("{{email_body}}", "Wrapper only. Where each template is injected, inside a <td>. Mandatory."),
-        ("{{gray_social_links}} {{account_name}}", "Wrapper footer tags."),
+        ("{{account_name}}", "Wrapper footer legal line. Socials are text links in the footer; {{gray_social_links}} is not used."),
         ("{{reply_above_line}}", "Syncro's reply marker. First row of every ticket body so inbound replies are trimmed."),
-        ("{{logo_100}}", "Account logo at 100px (Admin > Account Settings). {{location_logo_100}} does not exist."),
+        ("wrld.design lockups", "Black and white WRLD.TECH PNGs hotlinked from wrld.design/assets/logos/, swapped by dark-mode CSS. {{logo_100}} is not used (no dark variant); {{location_logo_100}} does not exist."),
         ("{{ticket_number}} {{ticket_subject}} {{ticket_status}}", "Header, title and status chip."),
         ("{{tech_name}} {{ticket_date}}", "Meta rows."),
         ("{{customer_first_name}} {{customer_full_name}}", "Greeting."),
