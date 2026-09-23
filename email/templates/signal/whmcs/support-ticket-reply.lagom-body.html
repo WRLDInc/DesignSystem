@@ -32,6 +32,8 @@
   .wrld-history blockquote { margin:0 0 8px 0; padding:0 0 0 12px; border-left:2px solid #e4e4e7; }
   .wrld-history img { max-width:100%; height:auto; }
   .wrld-history hr { display:none; }
+  /* Line-item rows injected by Syncro tags (purchase order email). Bare tr/td, so style by descendant. */
+  .wrld-items td { padding:8px 6px; border-bottom:1px solid #e4e4e7; font-size:13px; line-height:18px; vertical-align:top; color:#0a0a0a; }
   @media only screen and (max-width: 620px) {
     .container { width:100% !important; max-width:100% !important; }
     .px { padding-left:16px !important; padding-right:16px !important; }
@@ -53,6 +55,7 @@
     .fg-subtle { color:#71717a !important; }
     .rule, .wrld-history .wrld-msg, .wrld-history blockquote, .wrld-history-syncro div[style*="border-top: 1px #ddd"] { border-color:#27272a !important; }
     .wrld-history small { color:#71717a !important; }
+    .wrld-items td { border-color:#27272a !important; color:#fafafa !important; }
     .wrld-history p[style*="font-weight:600"], .wrld-history p[style*="font-weight: 600"] { color:#fafafa !important; }
     .btn { background-color:#fafafa !important; }
     .btn-a { color:#0a0a0a !important; }

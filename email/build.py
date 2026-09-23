@@ -115,6 +115,8 @@ def css(direction):
   .wrld-history blockquote {{ margin:0 0 8px 0; padding:0 0 0 12px; border-left:2px solid {T['mono200']}; }}
   .wrld-history img {{ max-width:100%; height:auto; }}
   .wrld-history hr {{ display:none; }}
+  /* Line-item rows injected by Syncro tags (purchase order email). Bare tr/td, so style by descendant. */
+  .wrld-items td {{ padding:8px 6px; border-bottom:1px solid {T['mono200']}; font-size:13px; line-height:18px; vertical-align:top; color:{T['mono950']}; }}
   @media only screen and (max-width: 620px) {{
     .container {{ width:100% !important; max-width:100% !important; }}
     .px {{ padding-left:16px !important; padding-right:16px !important; }}
@@ -136,6 +138,7 @@ def css(direction):
     .fg-subtle {{ color:{T['mono500']} !important; }}
     .rule, .wrld-history .wrld-msg, .wrld-history blockquote, .wrld-history-syncro div[style*="border-top: 1px #ddd"] {{ border-color:{T['mono800']} !important; }}
     .wrld-history small {{ color:{T['mono500']} !important; }}
+    .wrld-items td {{ border-color:{T['mono800']} !important; color:{T['mono50']} !important; }}
     .wrld-history p[style*="font-weight:600"], .wrld-history p[style*="font-weight: 600"] {{ color:{T['mono50']} !important; }}
     .btn {{ background-color:{T['mono50']} !important; }}
     .btn-a {{ color:{T['mono950']} !important; }}
