@@ -86,15 +86,16 @@ def css(direction):
   .wrld-body pre, .wrld-body code {{ font-family:{FONT_MONO}; font-size:13px; }}
   .wrld-body img {{ max-width:100%; height:auto; }}
   .wrld-body blockquote {{ margin:0 0 12px 0; padding:0 0 0 12px; border-left:2px solid {T['mono200']}; color:{T['mono600']}; }}
-  /* history injected by platform tags. Syncro's {{{{ticket_public_comments_for_email}}}} emits TWO divs per
-     comment: a header div (p.name with line-height:0 + small.date, border-top) then a body div (border-bottom).
-     Reset both, then draw one rule per comment on the header div. */
+  /* History injected by platform tags. Syncro emits TWO divs per comment: a header div (name p with
+     line-height 0, then a small date) and a body div. Both are reset, then one rule is drawn per comment. */
   .wrld-history .wrld-msg {{ border-top:1px solid {T['mono200']} !important; padding:14px 0 !important; margin:0 !important; }}
   .wrld-history .wrld-msg:first-child {{ border-top:0 !important; padding-top:0 !important; }}
-  .wrld-history-syncro > div {{ border:0 !important; padding:0 !important; margin:0 !important; }}
-  .wrld-history-syncro > div:nth-child(odd) {{ border-top:1px solid {T['mono200']} !important; padding-top:14px !important; }}
-  .wrld-history-syncro > div:nth-child(even) {{ padding:6px 0 14px 0 !important; }}
-  .wrld-history-syncro > div:first-child {{ border-top:0 !important; padding-top:0 !important; }}
+  /* No child combinators anywhere in this sheet. Syncro HTML-escapes the greater-than sign inside the
+     wrapper style block, which silently drops the whole rule. Syncro comment divs are matched by inline style. */
+  .wrld-history-syncro div[style*="#ddd"] {{ border:0 !important; margin:0 !important; }}
+  .wrld-history-syncro div[style*="border-top: 1px #ddd"] {{ border-top:1px solid {T['mono200']} !important; padding:14px 0 0 0 !important; }}
+  .wrld-history-syncro div[style*="border-bottom: 1px #ddd"] {{ padding:6px 0 14px 0 !important; }}
+  .wrld-history-syncro div:first-child[style*="border-top: 1px #ddd"] {{ border-top:0 !important; padding-top:0 !important; }}
   .wrld-history p {{ margin:0 0 8px 0 !important; line-height:1.5 !important; color:{T['mono600']}; }}
   .wrld-history p[style*="font-weight:600"], .wrld-history p[style*="font-weight: 600"] {{ line-height:1.4 !important; color:{T['mono900']} !important; font-size:13px; margin:0 0 2px 0 !important; }}
   .wrld-history small {{ display:block; font-size:12px; line-height:16px; color:{T['mono500']} !important; }}
@@ -120,7 +121,7 @@ def css(direction):
     .fg, .fg a, .h1, .wrld-body, .wrld-body p, .wrld-body li {{ color:{T['mono50']} !important; }}
     .fg-muted, .fg-muted a, .wrld-history p {{ color:{T['mono400']} !important; }}
     .fg-subtle {{ color:{T['mono500']} !important; }}
-    .rule, .wrld-history > div, .wrld-history .wrld-msg, .wrld-history blockquote {{ border-color:{T['mono800']} !important; }}
+    .rule, .wrld-history .wrld-msg, .wrld-history blockquote, .wrld-history-syncro div[style*="border-top: 1px #ddd"] {{ border-color:{T['mono800']} !important; }}
     .wrld-history small {{ color:{T['mono500']} !important; }}
     .wrld-history p[style*="font-weight:600"], .wrld-history p[style*="font-weight: 600"] {{ color:{T['mono50']} !important; }}
     .btn {{ background-color:{T['mono50']} !important; }}
@@ -613,7 +614,7 @@ def syncro_wrapper(direction):
     doc += '<tr><td style="padding:0;">{{email_body}}</td></tr>\n'
     doc += f'<tr><td align="center" style="padding-top:12px;">{{{{gray_social_links}}}}</td></tr>\n'
     # Syncro has no year tag ({{YEAR}} rendered literally in production); the legal line is evergreen instead.
-    doc += footer(b, legal_line="&copy; {{account_name}}.") + "\n" + close_shell()
+    doc += footer(b, legal_line="&copy; {{account_name}} &middot;") + "\n" + close_shell()
     return doc
 
 def syncro_body(parts, reply_hint=True, preheader=""):
