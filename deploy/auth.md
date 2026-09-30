@@ -68,9 +68,15 @@ same metadata; prefer `auth.wrld.tech`.
 `identity_types_supported` for WRLD: `anonymous`, `service_auth`,
 `identity_assertion`. Use this decision tree:
 
-1. **You hold a session tied to a user in a trusted enterprise identity provider and can mint an ID-JAG audience-bound to a WRLD resource** → [identity_assertion + id-jag](#identity_assertion--id-jag).
-2. **You act on behalf of a specific human who can open a browser** → [service_auth](#service_auth). Claim ceremony required (device authorization).
-3. **You have neither, or you act as yourself** → [anonymous](#anonymous). Registers a client; a human can take ownership later through `service_auth`.
+1. **You hold a WRLD-provisioned confidential client and a session tied to a user in a trusted enterprise identity provider, and can mint an ID-JAG audience-bound to a WRLD resource** → [identity_assertion + id-jag](#identity_assertion--id-jag).
+2. **You hold a WRLD-provisioned, device-enabled client and act on behalf of a specific human who can open a browser on another device** → [service_auth](#service_auth). Claim ceremony required (device authorization).
+3. **You have no WRLD-provisioned client** → [anonymous](#anonymous). Registers a public client for the browser authorization code flow with PKCE; the human signs in during that flow, so no separate claim ceremony exists.
+
+Methods 1 and 2 need a client that WRLD provisions (see
+[Pre-provisioned clients](#pre-provisioned-clients)). A dynamically registered
+client cannot use them: its grants are fixed at registration to
+`authorization_code` and `refresh_token`, and the issuer's tenant-wide
+support for the device and jwt-bearer grants does not extend to it.
 
 Before asserting a user's identity to WRLD (methods 1 and 2), surface
 `resource_name` from Step 1a and the scopes you will act under, and confirm
@@ -101,15 +107,22 @@ to tenant policy: a `403` or `access_denied` means registration is closed to
 unknown agents. Do not retry; use `service_auth` with a human, or ask through
 <https://wrld.tech/contact>.
 
-Pre-claim scopes: none of the user scopes. The client can only start Step 5
-flows that a human completes. There is no `identity_assertion` in this
-response; ownership is established in the claim ceremony.
+This client can run exactly one flow: the browser authorization code flow
+with PKCE (Step 5, first row). Send the user to the `authorization_endpoint`
+with `code_challenge_method=S256`; the sign-in page WRLD owns is where they
+consent. It cannot use the device grant or exchange an ID-JAG: those grants
+are not in its registration, and a `unauthorized_client` at the token
+endpoint is the issuer saying so, not a transient error. If your agent has
+no browser to hand the user, ask WRLD for a device-enabled client instead of
+registering one.
 
 ### service_auth
 
 WRLD's claim ceremony is standard [RFC 8628 device authorization](https://datatracker.ietf.org/doc/html/rfc8628)
-at the `device_authorization_endpoint`, using the `client_id` from `anonymous`
-or one WRLD provisioned for you:
+at the `device_authorization_endpoint`. It requires a client WRLD has
+provisioned with the device grant enabled (see
+[Pre-provisioned clients](#pre-provisioned-clients)); a dynamically registered
+`client_id` is refused with `unauthorized_client`:
 
 ```http
 POST https://auth.wrld.tech/oauth/device/code
@@ -132,23 +145,29 @@ approved.
 
 ### identity_assertion + id-jag
 
-Confirm your identity provider is on WRLD's trust list (it is configured per
-enterprise connection in the tenant; if you are not sure, it is not, and you
-should fall back to `service_auth`). Mint an ID-JAG per the
+Requires a WRLD-provisioned confidential client whose `client_id` is the one
+bound inside the ID-JAG (the assertion names the requesting client; the token
+request must be made by that client). Confirm your identity provider is on
+WRLD's trust list (it is configured per enterprise connection in the tenant;
+if you are not sure, it is not, and you should fall back to `service_auth`).
+Mint an ID-JAG per the
 [Identity Assertion Authorization Grant](https://datatracker.ietf.org/doc/draft-ietf-oauth-identity-assertion-authz-grant/)
 with `aud` set to `https://auth.wrld.tech/` and `resource` set to the WRLD
 resource you will call, then go straight to Step 5 with
-`grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer`. No claim ceremony:
-the user's session at your provider is the consent.
+`grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer`, authenticating the
+client on that request. No claim ceremony: the user's session at your
+provider is the consent.
 
-### Pre-provisioned confidential clients
+### Pre-provisioned clients
 
-For an agent that acts as itself on a schedule (a sync engine, a job), WRLD
-issues a confidential client with `client_credentials` or `private_key_jwt`
-authentication. Request one through <https://wrld.tech/contact>, naming the
-surface, the scopes and the data you will touch. Secrets are delivered out of
-band, never in chat or email. Exchange at Step 5 with
-`grant_type=client_credentials`.
+WRLD provisions clients for the flows dynamic registration cannot reach:
+
+- a **confidential client** (`client_secret_basic`, `client_secret_post` or `private_key_jwt`) for an agent that acts as itself on a schedule (`client_credentials`) or that exchanges ID-JAGs (`identity_assertion`);
+- a **device-enabled client** for `service_auth`, with the device grant switched on.
+
+Request one through <https://wrld.tech/contact>, naming the surface, the
+method, the scopes and the data you will touch. Secrets are delivered out of
+band, never in chat or email.
 
 ## Step 4 — Claim ceremony
 
@@ -169,9 +188,9 @@ Content-Type: application/x-www-form-urlencoded
 | Method | `grant_type` | Also send |
 | --- | --- | --- |
 | `anonymous` public client, browser available | `authorization_code` | `code`, `code_verifier` (PKCE `S256`), `redirect_uri`, `client_id` |
-| `service_auth` | `urn:ietf:params:oauth:grant-type:device_code` | `device_code`, `client_id` |
-| `identity_assertion` | `urn:ietf:params:oauth:grant-type:jwt-bearer` | `assertion=<ID-JAG>`, `client_id` |
-| Confidential client | `client_credentials` | client authentication, `audience` |
+| `service_auth` (provisioned, device-enabled client) | `urn:ietf:params:oauth:grant-type:device_code` | `device_code`, `client_id`, plus client authentication if the client is confidential |
+| `identity_assertion` (provisioned confidential client) | `urn:ietf:params:oauth:grant-type:jwt-bearer` | `assertion=<ID-JAG>` and client authentication (`client_id` + `client_secret`, or `private_key_jwt`) for the client the ID-JAG is bound to |
+| Confidential client acting as itself | `client_credentials` | client authentication, `audience` |
 
 Response (200): `access_token`, `token_type: Bearer`, `expires_in`, optional
 `refresh_token` and `id_token`.
@@ -203,7 +222,7 @@ Registration and device errors use standard OAuth vocabulary.
 | --- | --- | --- |
 | `access_denied` / `403` | `registration_endpoint` | Dynamic registration is closed to unknown agents. Use `service_auth` with a human, or ask through <https://wrld.tech/contact>. |
 | `invalid_redirect_uri` | `registration_endpoint` | Every `redirect_uris` entry must be `https` and exact. Fix and resend. |
-| `unauthorized_client` | `device_authorization_endpoint` | The client is not allowed the device grant. Use a browser flow, or ask for the grant to be enabled. |
+| `unauthorized_client` | `device_authorization_endpoint`, `token_endpoint` | The client is not allowed that grant (expected for a dynamically registered client on the device or jwt-bearer grant). Use the browser flow, or ask WRLD for a provisioned client. |
 | `authorization_pending` | `token_endpoint` (device grant) | The user has not finished. Wait `interval`, poll again. |
 | `slow_down` | `token_endpoint` (device grant) | Add at least 5 seconds to `interval`. |
 | `expired_token` | `token_endpoint` (device grant) | The `user_code` window closed. Restart Step 3 `service_auth`. |

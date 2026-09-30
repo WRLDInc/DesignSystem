@@ -3,7 +3,7 @@
 How a WRLD sign-in surface is built: which identity provider fronts which
 door, what the page looks like, which tokens it uses, and what an agent
 implementing it must and must not do. This is the guideline that
-[`auth.md`](../deploy/auth.md) points authorised agents at. The reference card
+[`auth.md`](https://wrld.design/auth.md) points authorised agents at. The reference card
 is [`preview/components-login.html`](../preview/components-login.html), served
 at <https://wrld.design/preview/components-login>.
 

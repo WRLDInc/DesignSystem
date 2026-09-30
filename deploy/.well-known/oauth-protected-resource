@@ -14,10 +14,6 @@
   "bearer_methods_supported": [
     "header"
   ],
-  "resource_signing_alg_values_supported": [
-    "RS256",
-    "PS256"
-  ],
   "agent_auth": {
     "skill": "https://wrld.design/auth.md",
     "identity_endpoint": "https://auth.wrld.tech/oidc/register",

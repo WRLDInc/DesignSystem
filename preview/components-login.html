@@ -29,9 +29,9 @@
         <div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--fg-subtle)">Error — inline, calm</div>
         <label style="display:flex;flex-direction:column;gap:4px">
           <span style="font-size:13px;color:var(--fg-muted);font-weight:500">Password</span>
-          <input type="password" value="••••••••" aria-invalid="true" style="padding:10px 12px;border:1px solid #d4d4d8;border-radius:4px;font-family:var(--font-body);font-size:14px;background:#fff;color:var(--fg)" />
+          <input type="password" value="••••••••" aria-invalid="true" aria-describedby="pw-error" style="padding:10px 12px;border:1px solid #d4d4d8;border-radius:4px;font-family:var(--font-body);font-size:14px;background:#fff;color:var(--fg)" />
         </label>
-        <div style="font-size:13px;color:#ef4444">That email and password don't match.</div>
+        <div id="pw-error" aria-live="polite" style="font-size:13px;color:#ef4444">That email and password don't match.</div>
         <div style="font-size:12px;color:var(--fg-subtle)">No shake, no red fill, no modal.</div>
       </div>
       <div style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:16px 18px;display:flex;flex-direction:column;gap:10px">

@@ -299,7 +299,7 @@ if (missingDiscovery.length) {
 }
 // robots.txt must carry a Content-Signal line — that is the whole point of
 // the file's preamble, and a merge that drops it would be invisible otherwise.
-if (!/^Content-Signal:\s*\S/m.test(readFileSync(join(DIST, 'robots.txt'), 'utf8'))) {
+if (!/^Content-Signal:[ \t]*\S/m.test(readFileSync(join(DIST, 'robots.txt'), 'utf8'))) {
   console.error('Build failed — deploy/robots.txt has no Content-Signal directive.');
   process.exit(1);
 }
