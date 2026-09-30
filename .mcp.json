@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "wrld-search": {
+      "type": "http",
+      "url": "https://search.wrld.ai/mcp"
+    }
+  }
+}

@@ -2,6 +2,53 @@
 
 All notable changes to the WRLD Design System are documented here. This project follows semantic versioning.
 
+## [0.6.0] — 2026-09-30
+
+Native support for Cloudflare AI Search and Cloudflare Agents, and the **API / MCP / Agents** card the wrld.design
+review asked for ([BugSmash r37kW](https://wrld.bugsmash.io/review/r37kW) #1 and #5).
+
+### Added
+
+- **The WRLD.AI search overlay on wrld.design.** A search button in the pill nav's tool cluster (the spot the review
+  pointed at) opens the same dialog wrld.tech ships: Search and Ask WRLD.AI tabs over Cloudflare's pinned v0.0.40 web
+  components, talking to the AI Search **namespace endpoint** `https://search.wrld.ai` (instances `wereallylovedesign`
+  + `wrld-search`) straight from the browser — the Worker stays assets-only. ⌘K / Ctrl K, Esc, focus return, theme
+  sync, reduced motion, the dark-mode label fix and the mobile history drawer are all ported from `AISearch.astro`.
+  Script loads on first open. Needs `wrld.design` in the endpoint's authorized hosts as an exact entry (the list's
+  wildcards do not match on the preflight, verified live).
+- **`docs/AI_SEARCH_AGENTS.md`** — the company-wide guideline: verified inventory of the WRLD Inc. account's
+  instances and endpoints, namespace and instance rules (`default` for WRLD properties, `client-<slug>` per client),
+  public vs private use (browser, same-origin proxy, Cloudflare Access on a custom domain, Workers bindings with
+  `remote: true`), request/response shapes as observed, the overlay's anatomy / tokens / behaviour / copy for every
+  state, Agents SDK patterns (McpAgent, `createMcpHandler`, `Agent` + `@callable`), MCP client registration, the web
+  rules and the five-field `<meta wrld_*>` metadata schema every property ships, and an operations checklist.
+- **`/system#agents`** — a new Agents section fed by three annotated preview cards: `preview/agents-search-overlay.html`
+  (the dialog anatomy, numbered), `preview/agents-answer.html` (streamed answer, sources first, outage notice) and
+  `preview/agents-discovery.html` (the agent surfaces per property). Registered in `_ds_manifest.json`; the landing's
+  fourth system card links here.
+- **Registry:** `WrldSearchTrigger` (`registry/ui`) and `WrldSearchDialog` (`registry/blocks`) — the React / shadcn port
+  with debounced `/search`, streamed `/chat/completions` (SSE: `event: chunks` → deltas → `[DONE]`), instance chips,
+  replaceable `search` / `ask` functions for proxies and demos. Both typecheck strict and are listed in
+  `registry/manifest.json`, unpublished until the next `npm run registry:publish`.
+- **`agents/wrld-search-agent/`** — a reference Cloudflare `McpAgent` (Durable Object + SQLite migration +
+  `ai_search_namespaces` binding) exposing `search_wrld` and `list_wrld_properties`, to copy and rename. Not part of
+  the site build.
+- **`.mcp.json`** at the repo root registering `https://search.wrld.ai/mcp`, per the guideline's rule for every WRLD repo.
+- Discovery: `llms.txt` gains a "Search, MCP and agents" section; `.well-known/api-catalog` gains an anchor for
+  `https://search.wrld.ai/`; `openapi.json` publishes the guideline path and an `x-wrld-ai-search` description; README,
+  `SKILL.md`, `CONSUMERS.md` and the deploy runbook (check 14) point at all of it.
+
+### Changed
+
+- `package.json` → 0.6.0. `deploy/system/app.js` aliases the new section for the local filter.
+
+### Not done here, on purpose
+
+- Adding `wrld.design` to the namespace endpoint's authorized hosts is an account change for @Ridgelawrence; the exact
+  read-append-write call is in the guideline (§3.3). Until then the apex overlay shows its unavailable state, and so do
+  the branch previews: the `*.wrldtech.workers.dev` wildcard is listed but does not match.
+- No AI Search instance crawls wrld.design itself yet; the guideline proposes `wrld-design-system`.
+
 ## [0.5.1] — 2026-09-30
 
 Fixes from the wrld.design review on BugSmash ([r37kW](https://wrld.bugsmash.io/review/r37kW)), reviewer Ridgeway Lawrence.

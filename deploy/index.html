@@ -18,6 +18,7 @@
 <link rel="icon" type="image/png" sizes="16x16" href="logos/favicons/favicon-16x16.png">
 <link rel="apple-touch-icon" href="logos/favicons/apple-touch-icon.png">
 <link rel="manifest" href="logos/favicons/site.webmanifest">
+<link rel="preconnect" href="https://search.wrld.ai" crossorigin>
 <!-- Fonts: self-hosted from /fonts/ (same files colors_and_type.css uses; deploy/_headers caches them immutable). -->
 <link rel="preload" href="/fonts/Montserrat-VariableFont_wght.ttf" as="font" type="font/ttf" crossorigin>
 <link rel="preload" href="/fonts/Ubuntu-Regular.ttf" as="font" type="font/ttf" crossorigin>
@@ -110,9 +111,11 @@ img,svg{display:block}
 .burger{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;border:0;background:var(--wrld-fg);color:var(--wrld-fg-inverse);cursor:pointer}
 .tools{display:flex;align-items:center;gap:6px;margin-left:auto}
 @media (min-width:768px){.tools{margin-left:var(--wrld-space-3)}}
-.theme{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;border:1px solid var(--wrld-border);background:transparent;color:var(--wrld-fg);cursor:pointer;transition:color var(--wrld-duration-micro) var(--wrld-ease-standard),border-color var(--wrld-duration-micro) var(--wrld-ease-standard),transform var(--wrld-duration-default) var(--wrld-ease-standard)}
-.theme:hover{color:var(--wrld-accent-primary);border-color:var(--wrld-accent-primary)}
-.theme:active{transform:scale(.94)}
+.theme,.search-btn{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;border:1px solid var(--wrld-border);background:transparent;color:var(--wrld-fg);cursor:pointer;transition:color var(--wrld-duration-micro) var(--wrld-ease-standard),border-color var(--wrld-duration-micro) var(--wrld-ease-standard),box-shadow var(--wrld-duration-default) var(--wrld-ease-standard),transform var(--wrld-duration-default) var(--wrld-ease-standard)}
+.theme:hover,.search-btn:hover,.search-btn[aria-expanded="true"]{color:var(--wrld-accent-primary);border-color:var(--wrld-accent-primary)}
+.search-btn:hover{box-shadow:var(--wrld-shadow-accent-primary)}
+.theme:active,.search-btn:active{transform:scale(.94)}
+.search-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
 .theme svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;display:none}
 :root[data-theme="auto"] .theme .i-auto,:root[data-theme="light"] .theme .i-light,:root[data-theme="dark"] .theme .i-dark{display:block}
 .hero-body{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;justify-content:flex-end}
@@ -173,6 +176,7 @@ section.band{padding:var(--wrld-space-20) 0;border-top:1px solid var(--wrld-bord
 @keyframes li-arrow-head{0%,100%{transform:translateX(0)}50%{transform:translateX(-3px)}}
 .card:hover .li-arrow .ln{animation:li-arrow-line .4s ease}.card:hover .li-arrow .hd{animation:li-arrow-head .4s ease}
 @keyframes li-activity{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+.card:hover .li-net path{animation:li-draw .5s ease .1s both}.card:hover .li-net rect{animation:li-check .4s ease both;transform-origin:center;transform-box:fill-box}
 .card:hover .li-activity path{animation:li-activity .6s linear .1s both}
 
 /* ── editorial about ──────────────────────────────────────────────────── */
@@ -210,6 +214,40 @@ footer .desc{font-size:13px;color:var(--wrld-mono-400);max-width:320px;line-heig
 footer .legal{display:flex;flex-wrap:wrap;justify-content:space-between;gap:var(--wrld-space-3);border-top:1px solid var(--wrld-mono-800);padding-top:var(--wrld-space-5);font-family:var(--wrld-font-mono);font-size:12px;color:var(--wrld-mono-400)}
 footer .lockup .disc{background:var(--wrld-mono-50);color:var(--wrld-mono-950)}
 footer .lockup .sub{color:var(--wrld-mono-400)}
+
+/* ── WRLD.AI search overlay — docs/AI_SEARCH_AGENTS.md §5. Same toolset as wrld.tech: the
+   Cloudflare AI Search namespace endpoint (search.wrld.ai) and its pinned v0.0.40 web components,
+   called straight from the browser (this Worker is assets-only; CORS is the control). ─────────── */
+.ai-dialog{padding:0;margin:auto;width:min(820px,calc(100vw - 1.25rem));max-width:none;max-height:calc(100dvh - 1.25rem);border:1px solid color-mix(in srgb,var(--wrld-border-strong) 82%,var(--wrld-accent-primary) 18%);border-radius:var(--wrld-radius-md);background:color-mix(in srgb,var(--wrld-bg) 92%,transparent);color:var(--wrld-fg);box-shadow:0 26px 80px -32px rgb(var(--wrld-accent-primary-rgb) / .28),var(--wrld-shadow-md);font-family:var(--wrld-font-body);overscroll-behavior:contain;backdrop-filter:blur(18px)}
+.ai-dialog[open]{display:flex;flex-direction:column}
+.ai-dialog::backdrop{background:rgb(10 10 10 / .72);backdrop-filter:blur(8px)}
+.ai-dialog[data-fullscreen="true"]{width:calc(100vw - .5rem);height:calc(100dvh - .5rem);max-height:calc(100dvh - .5rem)}
+.ai-dialog [hidden]{display:none!important}
+.ai-head{display:flex;align-items:center;justify-content:space-between;gap:var(--wrld-space-3);padding:var(--wrld-space-4) var(--wrld-space-4) var(--wrld-space-3)}
+.ai-head .eb{font-family:var(--wrld-font-mono);font-size:12px;letter-spacing:.1em;color:var(--wrld-fg-muted)}
+.ai-head h2{margin:2px 0 0;font-size:20px;font-weight:600;line-height:1.05}
+.ai-ctl{display:flex;gap:var(--wrld-space-2)}
+.ai-ib{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;padding:0;border:1px solid var(--wrld-border-strong);border-radius:var(--wrld-radius-sm);background:transparent;color:var(--wrld-fg);cursor:pointer;transition:color var(--wrld-duration-default) var(--wrld-ease-standard),border-color var(--wrld-duration-default) var(--wrld-ease-standard),box-shadow var(--wrld-duration-default) var(--wrld-ease-standard),transform var(--wrld-duration-default) var(--wrld-ease-standard)}
+.ai-ib:hover{color:var(--wrld-accent-primary);border-color:var(--wrld-accent-primary);box-shadow:var(--wrld-shadow-accent-primary)}
+.ai-ib:active{transform:translateY(1px);box-shadow:none}
+.ai-ib svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.ai-ib .min{display:none}.ai-dialog[data-fullscreen="true"] .ai-ib .max{display:none}.ai-dialog[data-fullscreen="true"] .ai-ib .min{display:block}
+.ai-tabs{display:flex;gap:var(--wrld-space-2);padding:0 var(--wrld-space-4);border-bottom:1px solid var(--wrld-border)}
+.ai-tabs button{display:inline-flex;align-items:center;gap:var(--wrld-space-2);padding:var(--wrld-space-2) var(--wrld-space-3);background:transparent;border:1px solid transparent;border-bottom:0;border-radius:var(--wrld-radius-sm) var(--wrld-radius-sm) 0 0;font:inherit;font-size:15px;line-height:1.2;color:var(--wrld-fg-muted);cursor:pointer}
+.ai-tabs button i{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border:1px solid currentColor;border-radius:var(--wrld-radius-sm)}
+.ai-tabs button i svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.ai-tabs [aria-selected="true"]{color:var(--wrld-fg);border-color:color-mix(in srgb,var(--wrld-border-strong) 78%,var(--wrld-accent-primary) 22%);background:color-mix(in srgb,var(--wrld-bg-elevated) 90%,transparent);margin-bottom:-1px;box-shadow:0 8px 24px -20px rgb(var(--wrld-accent-primary-rgb) / .4)}
+.ai-notice{padding:var(--wrld-space-3) var(--wrld-space-4);color:var(--wrld-fg-muted);font-size:13px}
+.ai-notice button,.ai-notice a{margin-left:var(--wrld-space-3);padding:0;font:inherit;color:var(--wrld-fg);background:transparent;border:0;text-decoration:underline;text-underline-offset:2px;cursor:pointer}
+.ai-panel{min-height:220px;overflow:auto;flex:1;padding:var(--wrld-space-3) var(--wrld-space-4) var(--wrld-space-4)}
+#aiChatPanel{padding:0;height:min(540px,58dvh);flex:0 1 auto}
+.ai-dialog[data-fullscreen="true"] #aiChatPanel{height:auto;flex:1 1 auto}
+.ai-foot{display:flex;justify-content:space-between;gap:var(--wrld-space-3);padding:var(--wrld-space-3) var(--wrld-space-4);border-top:1px solid var(--wrld-border);color:var(--wrld-fg-muted);font-size:12px}
+.ai-foot kbd{font-family:var(--wrld-font-mono)}
+search-bar-snippet,chat-page-snippet{display:block;--search-snippet-font-family:var(--wrld-font-body);--search-snippet-font-family-mono:var(--wrld-font-mono);--search-snippet-background:var(--wrld-bg);--search-snippet-surface:var(--wrld-bg-subtle);--search-snippet-text-color:var(--wrld-fg);--search-snippet-text-secondary:var(--wrld-fg-muted);--search-snippet-text-description:var(--wrld-fg-muted);--search-snippet-border-color:var(--wrld-border);--search-snippet-primary-color:var(--wrld-fg);--search-snippet-primary-hover:var(--wrld-accent-primary);--search-snippet-hover-background:var(--wrld-bg-muted);--search-snippet-user-message-bg:var(--wrld-bg-muted);--search-snippet-user-message-text:var(--wrld-fg);--search-snippet-assistant-message-bg:var(--wrld-bg-subtle);--search-snippet-assistant-message-text:var(--wrld-fg);--search-snippet-border-radius:var(--wrld-radius-sm);--search-snippet-max-width:100%;--search-snippet-min-width:0;--search-snippet-animation-duration:var(--wrld-duration-default);--search-snippet-modal-padding:var(--wrld-space-3)}
+chat-page-snippet{height:100%}
+@media (max-width:600px){.ai-dialog,.ai-dialog[data-fullscreen="true"]{width:calc(100vw - .5rem);height:calc(100dvh - .5rem);max-height:calc(100dvh - .5rem)}#aiChatPanel{height:auto;flex:1 1 auto}.ai-head,.ai-panel,.ai-foot{padding-inline:var(--wrld-space-3)}.ai-tabs{padding:0 var(--wrld-space-3);overflow-x:auto}.ai-foot>span:last-child{display:none}}
+@media (prefers-reduced-motion:reduce){search-bar-snippet,chat-page-snippet{--search-snippet-animation-duration:0ms;--search-snippet-transition:none;--search-snippet-transition-fast:none;--search-snippet-transition-slow:none}}
 
 /* ── mobile sheet ─────────────────────────────────────────────────────── */
 .sheet{position:fixed;inset:0;z-index:50;opacity:0;pointer-events:none;transition:opacity 500ms}
@@ -250,6 +288,9 @@ footer .lockup .sub{color:var(--wrld-mono-400)}
         <a class="cta small" href="https://wrld.tech/contact"><span class="roll"><span><i>Start a conversation</i><i aria-hidden="true">Start a conversation</i></span></span><span class="disc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span></a>
       </div>
       <div class="tools">
+        <button class="search-btn" type="button" id="searchBtn" aria-label="Search WRLD" title="Search WRLD (⌘K)" aria-haspopup="dialog" aria-controls="aiDialog" aria-expanded="false" data-ai-open>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        </button>
         <button class="theme" type="button" id="themeBtn" aria-label="Colour theme: auto. Activate to change." title="Theme: auto">
           <svg class="i-auto" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor" stroke="none"/></svg>
           <svg class="i-light" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
@@ -295,6 +336,11 @@ footer .lockup .sub{color:var(--wrld-mono-400)}
         <div class="top"><span class="brand">Brand</span><span class="icon-tile"><svg class="li li-pen" viewBox="0 0 24 24"><path d="M15.707 21.293a1 1 0 0 1-1.414 0l-1.586-1.586a1 1 0 0 1 0-1.414l5.586-5.586a1 1 0 0 1 1.414 0l1.586 1.586a1 1 0 0 1 0 1.414z"/><path d="m18 13-1.375-6.874a1 1 0 0 0-.746-.776L3.235 2.028a1 1 0 0 0-1.207 1.207L5.35 15.879a1 1 0 0 0 .776.746L13 18"/><path class="nib" pathLength="1" d="m2.3 2.3 7.286 7.286"/><circle cx="11" cy="11" r="2"/></svg></span></div>
         <p>Voice, naming, the starburst mark and its lockups, on-brand versus off-brand copy, and the rules for motion, states and imagery — the book every WRLD designer and agent works from.</p>
         <div class="url"><span>brand book · assets/logos</span><span>→</span></div>
+      </a>
+      <a class="card ai-secondary" href="/system#agents">
+        <div class="top"><span class="brand">API / MCP / Agents</span><span class="icon-tile"><svg class="li li-net" viewBox="0 0 24 24"><rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path pathLength="1" d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path pathLength="1" d="M12 12V8"/></svg></span></div>
+        <p>How every WRLD property gets search, answers and an agent tool from one Cloudflare AI Search namespace — public endpoints and private ones behind Access, the MCP route, Agents SDK patterns, and the web rules and metadata each site ships. Press ⌘K to use it.</p>
+        <div class="url"><span>docs/AI_SEARCH_AGENTS.md · search.wrld.ai</span><span>→</span></div>
       </a>
     </div>
     <details class="previews reveal">
@@ -411,6 +457,28 @@ footer .lockup .sub{color:var(--wrld-mono-400)}
   </div>
 </div>
 
+<dialog id="aiDialog" class="ai-dialog" aria-labelledby="aiTitle" data-endpoint="https://search.wrld.ai" data-script="https://search.wrld.ai/assets/v0.0.40/search-snippet.es.js">
+  <div class="ai-head">
+    <div><div class="eb">Search · Discover · Ask</div><h2 id="aiTitle">WRLD.AI</h2></div>
+    <div class="ai-ctl">
+      <button type="button" class="ai-ib" id="aiExpand" aria-label="Expand WRLD.AI" aria-pressed="false" title="Expand WRLD.AI"><svg class="max" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg><svg class="min" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3v3a2 2 0 0 1-2 2H3M21 8h-3a2 2 0 0 1-2-2V3M3 16h3a2 2 0 0 1 2 2v3M16 21v-3a2 2 0 0 1 2-2h3"/></svg></button>
+      <button type="button" class="ai-ib" id="aiClose" aria-label="Close WRLD.AI search" autofocus><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    </div>
+  </div>
+  <div class="ai-tabs" role="tablist" aria-label="WRLD.AI mode">
+    <button type="button" role="tab" id="aiSearchTab" aria-controls="aiSearchPanel" aria-selected="true"><i><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></i><span>Search</span></button>
+    <button type="button" role="tab" id="aiChatTab" aria-controls="aiChatPanel" aria-selected="false" tabindex="-1"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M12 7v6M9 10h6"/></svg></i><span>Ask WRLD.AI</span></button>
+  </div>
+  <div class="ai-notice" role="status" aria-live="polite"><span id="aiStatus">Loading WRLD.AI…</span><button type="button" id="aiRetry" hidden>Try again</button><a href="https://wrld.tech/contact" id="aiContact" hidden>Talk to WRLD</a></div>
+  <section id="aiSearchPanel" class="ai-panel" role="tabpanel" aria-labelledby="aiSearchTab">
+    <search-bar-snippet placeholder="Search WRLD services, guides and the design system…" max-results="10" max-render-results="10" debounce-ms="450" show-url="true" disable-analytics="true" hidden></search-bar-snippet>
+  </section>
+  <section id="aiChatPanel" class="ai-panel" role="tabpanel" aria-labelledby="aiChatTab" hidden>
+    <chat-page-snippet placeholder="What would you like to know?" hidden></chat-page-snippet>
+  </section>
+  <footer class="ai-foot"><span>Answers from WRLD content. Check sources before acting.</span><span><kbd>Esc</kbd> to close</span></footer>
+</dialog>
+
 <script>
 // ── Hero backdrop: the template's shader stack (Swirl → ChromaFlow → FlutedGlass → FilmGrain),
 //    re-written as one GLSL pass in WRLD colours: a monochrome ground, the three accents as the
@@ -508,6 +576,120 @@ footer .lockup .sub{color:var(--wrld-mono-400)}
   sheet.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', function () { toggle(false); }); });
   var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }); }, { rootMargin: '0px 0px -10% 0px' });
   document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+})();
+// ── WRLD.AI search overlay (docs/AI_SEARCH_AGENTS.md §5). Port of wrld.tech's AISearch.astro:
+//    the namespace public endpoint search.wrld.ai answers /search and /chat/completions for
+//    wereallylovedesign (wrld.tech) + wrld-search (help.wrld.tech); this origin must be in its
+//    authorized hosts or the widgets show the outage copy. Script loads on first open only.
+(function () {
+  var dialog = document.getElementById('aiDialog'); if (!dialog || !dialog.showModal) return;
+  var toggle = document.getElementById('searchBtn'), notice = dialog.querySelector('.ai-notice'), status = document.getElementById('aiStatus');
+  var retry = document.getElementById('aiRetry'), contact = document.getElementById('aiContact'), expand = document.getElementById('aiExpand');
+  var tabs = Array.prototype.slice.call(dialog.querySelectorAll('[role="tab"]'));
+  var widgets = Array.prototype.slice.call(dialog.querySelectorAll('search-bar-snippet, chat-page-snippet'));
+  var endpoint = dialog.getAttribute('data-endpoint'), loading = null, ready = false, prevOverflow = '', returnFocus = null;
+  var modeErrors = { search: null, chat: null };
+  var translations = JSON.stringify({
+    searchInputAriaLabel: 'Search WRLD', emptyStateTitle: 'What are you looking for?',
+    emptyStateDescription: 'Find services, guides and the design system from WRLD.', noResultsTitle: 'No matching pages',
+    chatTitle: 'WRLD.AI', chatEmptyTitle: 'Ask WRLD.AI', chatEmptyDescription: 'Ask about our services, or how to build on the design system.',
+    chatInputAriaLabel: 'Your question for WRLD.AI', newChatButton: 'New chat', clearChatButton: 'Clear chat',
+    loadingMessages: ['Searching WRLD…', 'Finding relevant pages…']
+  });
+  widgets.forEach(function (w) { w.setAttribute('api-url', endpoint); w.setAttribute('translations', translations); });
+  function adopt(root, css) { try { var sh = new CSSStyleSheet(); sh.replaceSync(css); root.adoptedStyleSheets = root.adoptedStyleSheets.concat([sh]); } catch (e) { var st = document.createElement('style'); st.textContent = css; root.appendChild(st); } }
+  // v0.0.40 hard-codes white labels on primary buttons; primary is --wrld-fg here (near-white in dark).
+  var inkCss = '.button:not(.button-secondary),.new-chat-button,.chat-message-avatar{color:var(--wrld-fg-inverse)}.button:not(.button-secondary):hover:not(:disabled){color:var(--wrld-mono-0)}';
+  var narrow = window.matchMedia('(max-width: 600px)');
+  function drawer(root) {
+    if (!root) return;
+    adopt(root, '@media (max-width:600px){.chat-page-container{position:relative}.chat-sidebar{position:absolute;top:0;bottom:0;left:0;z-index:2;width:min(280px,84%);min-width:0;box-shadow:var(--search-snippet-shadow-lg)}.chat-sidebar.collapsed{width:0;min-width:0;box-shadow:none}.chat-main{width:100%;min-width:0}}');
+    function expanded() { var s = root.querySelector('.chat-sidebar'); return !!s && !s.classList.contains('collapsed'); }
+    function collapse() { if (narrow.matches && expanded()) { var b = root.querySelector('.toggle-sidebar-button'); if (b) b.click(); } }
+    collapse(); narrow.addEventListener && narrow.addEventListener('change', collapse);
+    root.addEventListener('click', function (e) { var t = e.target; if (t && t.closest && t.closest('.chat-list-item, .new-chat-button')) setTimeout(collapse, 0); });
+    root.addEventListener('pointerdown', function (e) { var t = e.target; if (t && t.closest && t.closest('.chat-main') && !t.closest('.toggle-sidebar-button')) collapse(); });
+  }
+  function syncTheme() { var t = document.documentElement.getAttribute('data-theme') || 'auto'; widgets.forEach(function (w) { w.setAttribute('theme', t); }); }
+  syncTheme(); new MutationObserver(syncTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  function renderNotice() {
+    if (!ready) return;
+    var mode = tabs[1].getAttribute('aria-selected') === 'true' ? 'chat' : 'search', msg = modeErrors[mode];
+    notice.hidden = !msg; contact.hidden = !msg; retry.hidden = true; status.textContent = msg || '';
+  }
+  function focusInput() {
+    var panel = dialog.querySelector('[role="tabpanel"]:not([hidden])'), w = panel && panel.querySelector('search-bar-snippet, chat-page-snippet');
+    var el = w && w.shadowRoot && w.shadowRoot.querySelector('input, textarea'); if (el) el.focus();
+  }
+  function setFull(on) { dialog.setAttribute('data-fullscreen', String(on)); expand.setAttribute('aria-pressed', String(on)); expand.setAttribute('aria-label', on ? 'Exit fullscreen WRLD.AI' : 'Expand WRLD.AI'); expand.title = on ? 'Exit fullscreen WRLD.AI' : 'Expand WRLD.AI'; }
+  setFull(false);
+  function load() {
+    if (ready) return Promise.resolve();
+    if (loading) return loading;
+    notice.hidden = false; retry.hidden = true; contact.hidden = true; status.textContent = 'Loading WRLD.AI…';
+    loading = new Promise(function (resolve, reject) {
+      var s = document.createElement('script'), timer = setTimeout(function () { s.remove(); reject(new Error('timeout')); }, 15000);
+      s.type = 'module'; s.src = dialog.getAttribute('data-script');
+      s.onload = function () { clearTimeout(timer); if (widgets.every(function (w) { return customElements.get(w.localName); })) resolve(); else reject(new Error('registration')); };
+      s.onerror = function () { clearTimeout(timer); s.remove(); reject(new Error('load')); };
+      document.head.appendChild(s);
+    }).then(function () {
+      ready = true; notice.hidden = true;
+      widgets.forEach(function (w) { w.hidden = false; if (w.shadowRoot) adopt(w.shadowRoot, inkCss); });
+      var sr = widgets[0].shadowRoot;
+      if (sr) new MutationObserver(function () {
+        var f = sr.querySelector('.error'), m = 'Search is temporarily unavailable. Please try again later or contact WRLD.';
+        if (f && f.textContent !== m) { f.textContent = m; modeErrors.search = 'WRLD.AI could not complete your search.'; renderNotice(); }
+        else if (modeErrors.search && !f && sr.querySelector('.search-results, .search-empty')) { modeErrors.search = null; renderNotice(); }
+      }).observe(sr, { childList: true, subtree: true });
+      drawer(widgets[1].shadowRoot);
+      if (dialog.open) focusInput();
+    }).catch(function () {
+      loading = null; notice.hidden = false; status.textContent = 'WRLD.AI could not load. Try again or talk to our team.'; retry.hidden = false; contact.hidden = false;
+    });
+    return loading;
+  }
+  function open() {
+    if (dialog.open) return;
+    returnFocus = document.activeElement instanceof HTMLElement ? document.activeElement : toggle;
+    prevOverflow = document.documentElement.style.overflow; document.documentElement.style.overflow = 'hidden';
+    dialog.showModal(); toggle.setAttribute('aria-expanded', 'true');
+    load().then(function () { if (dialog.open && ready) focusInput(); });
+  }
+  toggle.setAttribute('aria-keyshortcuts', 'Meta+K Control+K');
+  toggle.addEventListener('click', function () { dialog.open ? dialog.close() : open(); });
+  expand.addEventListener('click', function () { setFull(dialog.getAttribute('data-fullscreen') !== 'true'); });
+  document.getElementById('aiClose').addEventListener('click', function () { dialog.close(); });
+  retry.addEventListener('click', function () { load(); });
+  dialog.addEventListener('close', function () {
+    setFull(false); toggle.setAttribute('aria-expanded', 'false'); document.documentElement.style.overflow = prevOverflow;
+    var shown = function (el) { return el.checkVisibility ? el.checkVisibility() : el.getClientRects().length > 0; };
+    (returnFocus && returnFocus.isConnected && shown(returnFocus) ? returnFocus : toggle).focus();
+  });
+  dialog.addEventListener('click', function (e) {
+    if (e.target !== dialog) return; var r = dialog.getBoundingClientRect();
+    if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) dialog.close();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (!(e.metaKey || e.ctrlKey) || e.altKey || (e.key || '').toLowerCase() !== 'k') return;
+    e.preventDefault(); dialog.open ? dialog.close() : open();
+  });
+  function selectTab(tab) {
+    tabs.forEach(function (t) { var on = t === tab; t.setAttribute('aria-selected', String(on)); t.tabIndex = on ? 0 : -1; document.getElementById(t.getAttribute('aria-controls')).hidden = !on; });
+    renderNotice(); if (dialog.open && ready) focusInput();
+  }
+  tabs.forEach(function (tab, i) {
+    tab.addEventListener('click', function () { selectTab(tab); });
+    tab.addEventListener('keydown', function (e) {
+      if (['ArrowLeft', 'ArrowRight', 'Home', 'End'].indexOf(e.key) < 0) return; e.preventDefault();
+      var next = e.key === 'Home' ? tabs[0] : e.key === 'End' ? tabs[tabs.length - 1] : tabs[1 - i]; selectTab(next); next.focus();
+    });
+  });
+  dialog.addEventListener('error', function () { modeErrors.chat = 'WRLD.AI is temporarily unavailable. Please try again later or talk to our team.'; renderNotice(); });
+  dialog.addEventListener('message', function (e) {
+    if (!ready || !modeErrors.chat) return; var m = e && e.detail && e.detail.message;
+    if (!m || m.role !== 'assistant' || !(m.content || '').trim()) return; modeErrors.chat = null; renderNotice();
+  });
 })();
 </script>
 </body>

@@ -35,6 +35,13 @@ Non-negotiables when you build with it: surfaces stay monochrome and accents are
 - [OAuth protected resource metadata](https://wrld.design/.well-known/oauth-protected-resource): the authorization servers WRLD surfaces trust.
 - [Agent skills index](https://wrld.design/.well-known/agent-skills/index.json): discoverable skills with digests.
 
+## Search, MCP and agents
+
+- [AI Search, MCP and agents guideline](https://wrld.design/docs/AI_SEARCH_AGENTS.md): how every WRLD property gets search, answers and an agent tool from one Cloudflare AI Search namespace — inventory, namespace rules, public vs private endpoints, the overlay spec, Agents SDK patterns, and the web rules and metadata each site ships.
+- WRLD search endpoint: `https://search.wrld.ai/search`, `https://search.wrld.ai/chat/completions` (OpenAI-compatible, streams) and `https://search.wrld.ai/mcp` (Streamable HTTP, tool `search`). Namespace endpoint over wrld.tech and help.wrld.tech; browser calls need an authorized WRLD origin, MCP clients do not.
+- [Search overlay reference card](https://wrld.design/preview/agents-search-overlay), [Ask WRLD.AI answer](https://wrld.design/preview/agents-answer), [Agent surfaces per property](https://wrld.design/preview/agents-discovery) — the annotated cards on the `/system#agents` section.
+- [Reference McpAgent](https://github.com/WRLDInc/DesignSystem/tree/main/agents/wrld-search-agent): copy-and-rename Cloudflare Agent exposing WRLD search as MCP tools.
+
 ## Optional
 
 - [Changelog](https://wrld.design/docs/CHANGELOG.md)

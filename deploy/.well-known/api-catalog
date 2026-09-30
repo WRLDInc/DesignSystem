@@ -36,6 +36,15 @@
       "describedby": [
         { "href": "https://wrld.design/.well-known/oauth-protected-resource", "type": "application/json" }
       ]
+    },
+    {
+      "anchor": "https://search.wrld.ai/",
+      "service-doc": [
+        { "href": "https://wrld.design/docs/AI_SEARCH_AGENTS.md", "type": "text/plain" }
+      ],
+      "describedby": [
+        { "href": "https://wrld.design/docs/AI_SEARCH_AGENTS.md", "type": "text/plain" }
+      ]
     }
   ]
 }
