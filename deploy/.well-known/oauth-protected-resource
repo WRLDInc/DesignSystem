@@ -20,10 +20,15 @@
   ],
   "agent_auth": {
     "skill": "https://wrld.design/auth.md",
+    "identity_endpoint": "https://auth.wrld.tech/oidc/register",
+    "claim_endpoint": "https://auth.wrld.tech/oauth/device/code",
     "register_uri": "https://auth.wrld.tech/oidc/register",
+    "claim_uri": "https://auth.wrld.tech/oauth/device/code",
+    "revocation_uri": "https://auth.wrld.tech/oauth/revoke",
     "identity_types_supported": [
-      "identity_assertion",
-      "anonymous"
+      "anonymous",
+      "service_auth",
+      "identity_assertion"
     ],
     "identity_assertion": {
       "assertion_types_supported": [
@@ -34,15 +39,22 @@
       ],
       "claim_uri": "https://auth.wrld.tech/oauth/token"
     },
+    "service_auth": {
+      "credential_types_supported": [
+        "oauth2_access_token",
+        "oauth2_refresh_token"
+      ],
+      "claim_uri": "https://auth.wrld.tech/oauth/device/code"
+    },
     "anonymous": {
       "credential_types_supported": [
         "oauth2_public_client"
       ],
       "claim_uri": "https://auth.wrld.tech/oidc/register"
     },
-    "revocation_uri": "https://auth.wrld.tech/oauth/revoke",
     "events_supported": [
       "credential.revoked"
-    ]
+    ],
+    "profile_note": "The authorization server is a standard OAuth 2.0 / OIDC issuer and does not implement the /agent/identity profile; identity_endpoint and claim_endpoint map to its RFC 7591 registration and RFC 8628 device authorization endpoints. auth.md documents the mapping."
   }
 }

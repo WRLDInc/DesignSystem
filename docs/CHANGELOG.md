@@ -22,10 +22,11 @@ All notable changes to the WRLD Design System are documented here. This project 
   - `deploy/.well-known/agent-skills/index.json`, **generated at build** by `scripts/build_site.mjs` with a SHA-256
     digest of the `SKILL.md` that ships, so the digest can never go stale. `SKILL.md` is now published at
     `/SKILL.md`.
-- **Auth.md and OAuth protected resource metadata.** `deploy/auth.md` identifies the agent audience, the
-  authorization server WRLD surfaces trust (`https://auth.wrld.tech/`), the registration methods (dynamic public
-  client, pre-provisioned confidential client, ID-JAG identity assertion) and how credentials are used; served as
-  `text/markdown`. `deploy/.well-known/oauth-protected-resource` is the RFC 9728 document with `resource`,
+- **Auth.md and OAuth protected resource metadata.** `deploy/auth.md` follows the Auth.md protocol's step
+  structure (discover → pick a method → register → exchange → use → errors → revocation) as a self-contained flow,
+  mapping `anonymous`, `service_auth` and `identity_assertion` onto the standard endpoints the authorization server
+  (`https://auth.wrld.tech/`) actually publishes: RFC 7591 dynamic registration, RFC 8628 device authorization and
+  the ID-JAG grant profile. Served as `text/markdown`. `deploy/.well-known/oauth-protected-resource` is the RFC 9728 document with `resource`,
   `authorization_servers`, `scopes_supported`, `bearer_methods_supported: ["header"]` and an `agent_auth` block.
 - **Login design guidelines** — `docs/LOGIN_DESIGN.md`: which identity provider fronts which door (end-user
   portals, staff tools, automation), the anatomy of a WRLD sign-in page, the tokens it uses, every state and its

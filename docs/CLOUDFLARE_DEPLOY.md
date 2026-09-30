@@ -340,14 +340,31 @@ curl -s -X POST https://isitagentready.com/api/scan -H 'content-type: applicatio
   [print(g, k, v["status"]) for g in d for k, v in d[g].items() if isinstance(v, dict) and "status" in v]'
 ```
 
-Expected after 0.5.0: `botAccessControl.contentSignals`, `discoverability.linkHeaders`,
-`discovery.apiCatalog`, `discovery.authMd`, `discovery.oauthProtectedResource`,
-`discovery.oauthDiscovery` and `discovery.agentSkills` all `pass`. Still
-failing by design, and out of this Worker's hands: `discoverability.dnsAid`
-(a DNS record on the zone), `contentAccessibility.markdownNegotiation`
-(Cloudflare's "Markdown for Agents" zone setting), `discovery.mcpServerCard`
-and `discovery.a2aAgentCard` (the design system is not an MCP server or an
-agent).
+Expected after 0.5.0, verified on the branch preview: `botAccessControl.contentSignals`,
+`discoverability.linkHeaders`, `discovery.apiCatalog` and `discovery.agentSkills`
+`pass`. `discovery.oauthProtectedResource` passes only on the apex — the
+scanner requires `resource` to equal the scanned origin, and the document
+says `https://wrld.design`, so it reports "resource mismatch" on a
+`workers.dev` preview. That is correct behaviour, not a bug.
+
+Still failing, and out of this Worker's hands:
+
+- `discovery.authMd` — the scanner follows PRM → authorization server and
+  requires an `agent_auth` block **in the authorization server's metadata**
+  (`auth.wrld.tech`). That tenant does not publish one, and an assets-only
+  Worker cannot add it. `auth.md` is written as a self-contained flow and the
+  PRM carries the block, which is the most this origin can do. It flips when
+  a WRLD-controlled authorization server (CentralizeWRLD's planned
+  `id.wrld.tech`) publishes `agent_auth`.
+- `discovery.oauthDiscovery` — expects `/.well-known/openid-configuration`
+  on the scanned origin. The design system is not an authorization server;
+  mirroring another issuer's metadata here would violate RFC 8414's issuer
+  rule, so it stays 404 deliberately.
+- `discoverability.dnsAid` (DNSSEC on the zone's DNS-AID records),
+  `contentAccessibility.markdownNegotiation` (Cloudflare's "Markdown for
+  Agents" zone setting), `discovery.mcpServerCard` and
+  `discovery.a2aAgentCard` (the design system is not an MCP server or an
+  agent).
 
 ### Five things that were wrong until they were tested
 
