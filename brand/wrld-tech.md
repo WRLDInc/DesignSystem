@@ -27,7 +27,7 @@ Lead with partnership and outcomes, not product features. Speak to the business,
 
 - The primary tagline: "Your Strategic Partner in Technology and Business Growth."
 - A path to the service branches (wrld.host, wrld.design, wrld.one, WRLD.AI, WRLD.Services, WRLD.Support).
-- Contact: `ridge@wrld.tech` · HQ Dallas.
+- Contact: `helpdesk@wrld.tech` | `469.299.9598` · HQ Dallas. (Public-facing contact line as of 2026-09-30; `ridge@wrld.tech` is the maintainer address, not the public one.)
 - Values referenced in copy, not just listed — show them in action.
 
 ## Avoid

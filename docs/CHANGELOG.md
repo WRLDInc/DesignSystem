@@ -2,6 +2,25 @@
 
 All notable changes to the WRLD Design System are documented here. This project follows semantic versioning.
 
+## [0.5.1] — 2026-09-30
+
+Fixes from the wrld.design review on BugSmash ([r37kW](https://wrld.bugsmash.io/review/r37kW)), reviewer Ridgeway Lawrence.
+
+### Changed
+
+- **Landing nav.** The pill nav no longer strands its tagline and CTA in the middle of the bar: `.right` and `.tools`
+  now sit together at the trailing edge (the nav was `space-between` across three children, so the free space split
+  evenly on both sides of the CTA). Two links added, desktop and mobile sheet: **Directory** → `https://wrld.one`,
+  **About** → `https://wrld.tech`.
+- **Footer contact line** is now `helpdesk@wrld.tech | 469.299.9598` (mailto/tel links) instead of the maintainer's
+  address. Mirrored in `registry/blocks/wrld-cta.tsx` (+ demo), both styleguide footers and `brand/wrld-tech.md`.
+- **Property links.** WRLD.Services → `https://wrld.tech/services`; WRLD.Support → `https://wrld.support`; the
+  footer's WRLD.Press link is replaced by **WRLD.help** → `https://wrld.help`. The property cards on the landing and
+  the registry's `WrldFooter` / `WrldServicesGrid` defaults follow the same destinations.
+- `brand/wrld-one.md` records that wrld.design links to wrld.one as **Directory** (scope of the product itself is
+  still unconfirmed).
+- `package.json` → 0.5.1.
+
 ## [0.5.0] — 2026-09-30
 
 ### Added
