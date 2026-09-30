@@ -241,6 +241,13 @@ writeFileSync(join(DIST, 'sitemap.xml'), sitemap);
 // silently 404ing a path other tooling has learned to fetch.
 // ---------------------------------------------------------------------------
 const skillPath = join(DIST, 'SKILL.md');
+// SKILL.md reaches dist/ only through PUBLISH above. If it is ever dropped
+// from that list, fail here with a message rather than an ENOENT from the
+// digest read below — the index would otherwise silently point at a 404.
+if (!isFile(skillPath)) {
+  console.error('Build failed — dist/SKILL.md is missing. Keep SKILL.md in PUBLISH; the agent-skills index digests it.');
+  process.exit(1);
+}
 const skillDigest = createHash('sha256').update(readFileSync(skillPath)).digest('hex');
 const skillFront = readFileSync(skillPath, 'utf8').match(/^---\n([\s\S]*?)\n---/)?.[1] ?? '';
 const skillName = skillFront.match(/^name:\s*(.+)$/m)?.[1]?.trim() ?? 'wrld-design';
