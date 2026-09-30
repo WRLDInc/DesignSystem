@@ -340,22 +340,27 @@ curl -s -X POST https://isitagentready.com/api/scan -H 'content-type: applicatio
   [print(g, k, v["status"]) for g in d for k, v in d[g].items() if isinstance(v, dict) and "status" in v]'
 ```
 
-Expected after 0.5.0, verified on the branch preview: `botAccessControl.contentSignals`,
-`discoverability.linkHeaders`, `discovery.apiCatalog` and `discovery.agentSkills`
-`pass`. `discovery.oauthProtectedResource` passes only on the apex — the
-scanner requires `resource` to equal the scanned origin, and the document
-says `https://wrld.design`, so it reports "resource mismatch" on a
-`workers.dev` preview. That is correct behaviour, not a bug.
+Expected after 0.5.0, verified on the branch preview
+(`ridgeclcode-quirky-volta-449zlt-wrlddesign.wrldtech.workers.dev`):
+`botAccessControl.contentSignals`, `discoverability.linkHeaders`,
+`discovery.apiCatalog`, `discovery.agentSkills` and `discovery.authMd` all
+`pass`. `authMd` passes on the strength of the self-contained flow in
+`auth.md` ("Auth.md support detected (anonymous)"); the scanner also
+follows PRM → authorization server looking for an `agent_auth` block in the
+**authorization server's** metadata, which the `auth.wrld.tech` tenant does
+not publish and an assets-only Worker cannot add. If a WRLD-controlled
+authorization server (CentralizeWRLD's planned `id.wrld.tech`) ever
+publishes that block, point `authorization_servers` at it and the check
+upgrades from the self-contained path to the metadata path.
+
+`discovery.oauthProtectedResource` passes only on the apex: the scanner
+requires `resource` to equal the scanned origin, and the document says
+`https://wrld.design`, so it reports "resource mismatch" on a `workers.dev`
+preview. That is correct behaviour, not a bug — re-check on the apex after
+merge.
 
 Still failing, and out of this Worker's hands:
 
-- `discovery.authMd` — the scanner follows PRM → authorization server and
-  requires an `agent_auth` block **in the authorization server's metadata**
-  (`auth.wrld.tech`). That tenant does not publish one, and an assets-only
-  Worker cannot add it. `auth.md` is written as a self-contained flow and the
-  PRM carries the block, which is the most this origin can do. It flips when
-  a WRLD-controlled authorization server (CentralizeWRLD's planned
-  `id.wrld.tech`) publishes `agent_auth`.
 - `discovery.oauthDiscovery` — expects `/.well-known/openid-configuration`
   on the scanned origin. The design system is not an authorization server;
   mirroring another issuer's metadata here would violate RFC 8414's issuer
