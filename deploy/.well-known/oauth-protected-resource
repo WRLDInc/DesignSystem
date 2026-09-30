@@ -1,0 +1,48 @@
+{
+  "resource": "https://wrld.design",
+  "resource_name": "WRLD.design — the WRLD design system",
+  "resource_documentation": "https://wrld.design/auth.md",
+  "authorization_servers": [
+    "https://auth.wrld.tech/"
+  ],
+  "scopes_supported": [
+    "openid",
+    "profile",
+    "email",
+    "offline_access"
+  ],
+  "bearer_methods_supported": [
+    "header"
+  ],
+  "resource_signing_alg_values_supported": [
+    "RS256",
+    "PS256"
+  ],
+  "agent_auth": {
+    "skill": "https://wrld.design/auth.md",
+    "register_uri": "https://auth.wrld.tech/oidc/register",
+    "identity_types_supported": [
+      "identity_assertion",
+      "anonymous"
+    ],
+    "identity_assertion": {
+      "assertion_types_supported": [
+        "urn:ietf:params:oauth:token-type:id-jag"
+      ],
+      "credential_types_supported": [
+        "oauth2_access_token"
+      ],
+      "claim_uri": "https://auth.wrld.tech/oauth/token"
+    },
+    "anonymous": {
+      "credential_types_supported": [
+        "oauth2_public_client"
+      ],
+      "claim_uri": "https://auth.wrld.tech/oidc/register"
+    },
+    "revocation_uri": "https://auth.wrld.tech/oauth/revoke",
+    "events_supported": [
+      "credential.revoked"
+    ]
+  }
+}

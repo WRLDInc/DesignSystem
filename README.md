@@ -296,6 +296,25 @@ any published file references an asset that didn't make it. `npm run serve`
 previews the result. Full setup, the exact dashboard build settings, and the
 runbook are in [`docs/CLOUDFLARE_DEPLOY.md`](docs/CLOUDFLARE_DEPLOY.md).
 
+### Agent-readable surfaces
+
+The origin is meant to be read by agents as well as people, and says so:
+
+| Surface | Path | Standard |
+| --- | --- | --- |
+| Content signals (`search=yes, ai-input=yes, ai-train=yes`) | [`/robots.txt`](https://wrld.design/robots.txt) | [contentsignals.org](https://contentsignals.org/) |
+| LLM overview | [`/llms.txt`](https://wrld.design/llms.txt) | [llmstxt.org](https://llmstxt.org/) |
+| API catalog + `Link` headers on `/` | [`/.well-known/api-catalog`](https://wrld.design/.well-known/api-catalog) | RFC 9727, RFC 8288 |
+| OpenAPI description of the static surface | [`/openapi.json`](https://wrld.design/openapi.json) | OpenAPI 3.1 |
+| Agent skill + discovery index (digest generated at build) | [`/SKILL.md`](https://wrld.design/SKILL.md), [`/.well-known/agent-skills/index.json`](https://wrld.design/.well-known/agent-skills/index.json) | Agent Skills Discovery v0.2.0 |
+| Agent registration and credential guidance | [`/auth.md`](https://wrld.design/auth.md) | Auth.md |
+| Protected resource metadata (authorization servers, `agent_auth`) | [`/.well-known/oauth-protected-resource`](https://wrld.design/.well-known/oauth-protected-resource) | RFC 9728 |
+| Login design guidelines for agents building a WRLD surface | [`docs/LOGIN_DESIGN.md`](docs/LOGIN_DESIGN.md) | — |
+
+Re-run the readiness scan after any change to these (`POST https://isitagentready.com/api/scan` with
+`{"url": "https://wrld.design"}`); the expected results are listed in
+[`docs/CLOUDFLARE_DEPLOY.md`](docs/CLOUDFLARE_DEPLOY.md).
+
 ## Component registry (21st.dev)
 
 Every UI-kit component also ships as a **self-contained TypeScript port** under

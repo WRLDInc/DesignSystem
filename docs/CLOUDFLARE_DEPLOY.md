@@ -304,6 +304,51 @@ that matters — previews suppressed, apex indexable. If a future edit ever
 makes that rule stop firing, the fallback is setting `preview_urls` to
 `false` and giving up per-branch review URLs.
 
+### Agent discovery checks
+
+Added in 0.5.0. These verify the surfaces that isitagentready.com and similar
+scanners look for; all were run against `wrangler dev` before the first deploy
+and must be re-run live after any `_headers` or `deploy/` change.
+
+```bash
+# 8. Content signals present, and ONLY under the wildcard group.
+curl -s https://wrld.design/robots.txt | grep -i '^Content-Signal'
+
+# 9. Link headers on the root document only.
+curl -sI https://wrld.design/            | grep -i '^link'        # four rel values
+curl -sI https://wrld.design/styleguide/ | grep -ic '^link'       # expect 0
+
+# 10. Extensionless well-known files carry the right Content-Type.
+curl -sI https://wrld.design/.well-known/api-catalog              | grep -i content-type   # application/linkset+json
+curl -sI https://wrld.design/.well-known/oauth-protected-resource | grep -i content-type   # application/json
+
+# 11. auth.md is Markdown, not the /*.md text/plain fallback, and has its H1.
+curl -sI https://wrld.design/auth.md | grep -i content-type       # text/markdown
+curl -s  https://wrld.design/auth.md | head -1                    # "# wrld.design auth.md"
+
+# 12. The generated skills index digest matches the served SKILL.md.
+curl -s https://wrld.design/.well-known/agent-skills/index.json | grep digest
+curl -s https://wrld.design/SKILL.md | sha256sum
+
+# 13. The authorization server the PRM advertises still publishes metadata
+#     with the SAME issuer string (trailing slash included).
+curl -s https://auth.wrld.tech/.well-known/oauth-authorization-server | grep -o '"issuer":"[^"]*"'
+
+# 14. End to end.
+curl -s -X POST https://isitagentready.com/api/scan -H 'content-type: application/json' \
+  -d '{"url":"https://wrld.design"}' | python3 -c 'import json,sys; d=json.load(sys.stdin)["checks"]; \
+  [print(g, k, v["status"]) for g in d for k, v in d[g].items() if isinstance(v, dict) and "status" in v]'
+```
+
+Expected after 0.5.0: `botAccessControl.contentSignals`, `discoverability.linkHeaders`,
+`discovery.apiCatalog`, `discovery.authMd`, `discovery.oauthProtectedResource`,
+`discovery.oauthDiscovery` and `discovery.agentSkills` all `pass`. Still
+failing by design, and out of this Worker's hands: `discoverability.dnsAid`
+(a DNS record on the zone), `contentAccessibility.markdownNegotiation`
+(Cloudflare's "Markdown for Agents" zone setting), `discovery.mcpServerCard`
+and `discovery.a2aAgentCard` (the design system is not an MCP server or an
+agent).
+
 ### Five things that were wrong until they were tested
 
 Every one of these passed a reading of the docs and failed a real request.

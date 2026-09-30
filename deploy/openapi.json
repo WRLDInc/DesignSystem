@@ -1,0 +1,167 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "WRLD.design — design system asset API",
+    "version": "0.5.0",
+    "summary": "Read-only, CORS-open files that make up the WRLD design system.",
+    "description": "wrld.design is an assets-only Cloudflare Worker. Every path below is a static GET with no authentication, no rate plan and no state. This description exists so that agents can discover the machine-readable surfaces (tokens, theme, manifests, discovery documents) without scraping HTML. Human documentation: https://wrld.design/README.md. Agent overview: https://wrld.design/llms.txt.",
+    "termsOfService": "https://wrld.design/LICENSE",
+    "contact": { "name": "WRLD Tech Co.", "url": "https://wrld.tech/contact" },
+    "license": { "name": "See LICENSE", "url": "https://wrld.design/LICENSE" }
+  },
+  "servers": [
+    { "url": "https://wrld.design", "description": "Production, the only canonical origin" }
+  ],
+  "tags": [
+    { "name": "tokens", "description": "The design-token contract other WRLD sites link directly." },
+    { "name": "components", "description": "Component manifests, bundles and the 21st.dev registry." },
+    { "name": "brand", "description": "Written brand guidance and the agent skill." },
+    { "name": "discovery", "description": "Well-known documents for agents and crawlers." }
+  ],
+  "paths": {
+    "/styles.css": {
+      "get": {
+        "tags": ["tokens"],
+        "summary": "One-line consumer entry point (tokens, type, self-hosted fonts)",
+        "operationId": "getStyles",
+        "responses": { "200": { "description": "Stylesheet", "content": { "text/css": {} } } }
+      }
+    },
+    "/tokens/tokens.css": {
+      "get": {
+        "tags": ["tokens"],
+        "summary": "Canonical CSS custom properties, light and dark",
+        "operationId": "getTokensCss",
+        "responses": { "200": { "description": "Stylesheet", "content": { "text/css": {} } } }
+      }
+    },
+    "/tokens/tokens.json": {
+      "get": {
+        "tags": ["tokens"],
+        "summary": "The same tokens as data",
+        "operationId": "getTokensJson",
+        "responses": { "200": { "description": "Token dictionary", "content": { "application/json": { "schema": { "type": "object", "additionalProperties": true } } } } }
+      }
+    },
+    "/tokens/tokens.ts": {
+      "get": {
+        "tags": ["tokens"],
+        "summary": "Typed token export for TypeScript consumers (served as text/plain)",
+        "operationId": "getTokensTs",
+        "responses": { "200": { "description": "TypeScript source", "content": { "text/plain": {} } } }
+      }
+    },
+    "/registry/theme/wrld.css": {
+      "get": {
+        "tags": ["tokens", "components"],
+        "summary": "Generated shadcn / Tailwind v4 theme",
+        "operationId": "getShadcnTheme",
+        "responses": { "200": { "description": "Stylesheet", "content": { "text/css": {} } } }
+      }
+    },
+    "/registry/manifest.json": {
+      "get": {
+        "tags": ["components"],
+        "summary": "Every 21st.dev component: slug, description, tags, registry kind, stable refs",
+        "operationId": "getRegistryManifest",
+        "responses": { "200": { "description": "Registry manifest", "content": { "application/json": { "schema": { "type": "object", "additionalProperties": true } } } } }
+      }
+    },
+    "/_ds_manifest.json": {
+      "get": {
+        "tags": ["components"],
+        "summary": "UI-kit bundle manifest and the preview-card index",
+        "operationId": "getDsManifest",
+        "responses": { "200": { "description": "Manifest", "content": { "application/json": { "schema": { "type": "object", "additionalProperties": true } } } } }
+      }
+    },
+    "/_ds_bundle.js": {
+      "get": {
+        "tags": ["components"],
+        "summary": "Browser bundle of the UI-kit components",
+        "operationId": "getDsBundle",
+        "responses": { "200": { "description": "JavaScript", "content": { "text/javascript": {} } } }
+      }
+    },
+    "/README.md": {
+      "get": {
+        "tags": ["brand"],
+        "summary": "The brand book and index",
+        "operationId": "getReadme",
+        "responses": { "200": { "description": "Markdown (served as text/plain)", "content": { "text/plain": {} } } }
+      }
+    },
+    "/SKILL.md": {
+      "get": {
+        "tags": ["brand", "discovery"],
+        "summary": "The wrld-design agent skill",
+        "operationId": "getSkill",
+        "responses": { "200": { "description": "Markdown (served as text/plain)", "content": { "text/plain": {} } } }
+      }
+    },
+    "/brand/CLAUDE.md": {
+      "get": {
+        "tags": ["brand"],
+        "summary": "Master brand brief for assisted design and content work",
+        "operationId": "getMasterBrief",
+        "responses": { "200": { "description": "Markdown (served as text/plain)", "content": { "text/plain": {} } } }
+      }
+    },
+    "/docs/LOGIN_DESIGN.md": {
+      "get": {
+        "tags": ["brand"],
+        "summary": "Login design guidelines: how a WRLD sign-in surface is built",
+        "operationId": "getLoginDesign",
+        "responses": { "200": { "description": "Markdown (served as text/plain)", "content": { "text/plain": {} } } }
+      }
+    },
+    "/llms.txt": {
+      "get": {
+        "tags": ["discovery"],
+        "summary": "LLM-friendly overview of the site",
+        "operationId": "getLlmsTxt",
+        "responses": { "200": { "description": "Plain text", "content": { "text/plain": {} } } }
+      }
+    },
+    "/auth.md": {
+      "get": {
+        "tags": ["discovery"],
+        "summary": "Agent registration and credential guidance for WRLD identity",
+        "operationId": "getAuthMd",
+        "responses": { "200": { "description": "Markdown", "content": { "text/markdown": {} } } }
+      }
+    },
+    "/.well-known/api-catalog": {
+      "get": {
+        "tags": ["discovery"],
+        "summary": "RFC 9727 API catalog",
+        "operationId": "getApiCatalog",
+        "responses": { "200": { "description": "Linkset", "content": { "application/linkset+json": {} } } }
+      }
+    },
+    "/.well-known/oauth-protected-resource": {
+      "get": {
+        "tags": ["discovery"],
+        "summary": "RFC 9728 protected resource metadata, plus the agent_auth block",
+        "operationId": "getProtectedResourceMetadata",
+        "responses": { "200": { "description": "Metadata", "content": { "application/json": {} } } }
+      }
+    },
+    "/.well-known/agent-skills/index.json": {
+      "get": {
+        "tags": ["discovery"],
+        "summary": "Agent Skills discovery index (v0.2.0) with SHA-256 digests",
+        "operationId": "getAgentSkillsIndex",
+        "responses": { "200": { "description": "Skills index", "content": { "application/json": {} } } }
+      }
+    },
+    "/sitemap.xml": {
+      "get": {
+        "tags": ["discovery"],
+        "summary": "Canonical URL of every HTML page",
+        "operationId": "getSitemap",
+        "responses": { "200": { "description": "Sitemap", "content": { "application/xml": {} } } }
+      }
+    }
+  }
+}
