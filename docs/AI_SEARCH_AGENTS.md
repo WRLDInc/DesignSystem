@@ -38,7 +38,7 @@ All instances live in the account's `default` namespace today. The namespace exp
 | --- | --- | --- |
 | Namespace public endpoint | `https://search.wrld.ai` (custom domain) · fallback `https://ns-5ad016c9-354a-41a1-86c0-4b5625fb4e37.search.ai.cloudflare.com` | Paths `/search`, `/chat/completions`, `/mcp`. Default hostname enabled. |
 | `instances_allowed` | `wereallylovedesign`, `wrld-search` | One request searches both and merges the chunks; each chunk carries `instance_id`. |
-| Authorized hosts (CORS) | `wrld.ai`, `*.wrld.ai`, `wrld.tech`, `*.wrld.tech`, `wrld.help`, `wrld.host`, `*.wrld.host`, `*.wrldtech.workers.dev`, `*.wrld.dev`, `wrld.dev` | **`wrld.design` is missing** — see §3.3. Browser-only control; `curl` ignores it. |
+| Authorized hosts (CORS) | `wrld.ai`, `*.wrld.ai`, `wrld.tech`, `*.wrld.tech`, `wrld.help`, `wrld.host`, `*.wrld.host`, `*.wrldtech.workers.dev`, `*.wrld.dev`, `wrld.dev` | **`wrld.design` is missing** — see §3.3. **Wildcard entries do not match on the preflight** (verified 2026-09-30: `foo.wrld.tech`, `www.wrld.host` and a `*.wrldtech.workers.dev` preview get no `access-control-allow-origin`; exact `wrld.tech`, `wrld.help`, `wrld.dev` do). Treat the list as exact hostnames. Browser-only control; `curl` ignores it. |
 | Rate limit | not set on the namespace endpoint | Set one before wide promotion (§8). |
 | Instance `wereallylovedesign` | web crawler · source `wrld.tech` · parse `sitemap` · vector only · `@cf/qwen/qwen3-embedding-0.6b` · answers with `@cf/zai-org/glm-5.3` · cache 3 days (`close_enough`) · sync every 6 h | Own public endpoint `74a319b2-7688-483d-aaf8-ccbf087c98dd` with custom domain `search.wrld.tech` (that hostname still answers `400` from another product — DNS was never moved; either move it or remove the custom domain). Authorized hosts on this instance already include `wrld.design` and `wrld.help`. |
 | Instance `wrld-search` | web crawler · source `help.wrld.tech` · parse `sitemap` + discover (depth 1000, subdomains) · **hybrid** vector + keyword · reranking · query rewrite · `@cf/zai-org/glm-4.7-flash` · sync every 6 h | Own public endpoint `dfd00a62-cb04-4bb0-9253-8c95b3c04a89`. NLWeb worker `wrld-search-nlweb.wrldtech.workers.dev`. |
@@ -79,7 +79,7 @@ Why: the namespace endpoint's `instances_allowed` is a merge list. Anything in t
 
 ### 3.3 Enabling a new WRLD host on the namespace endpoint
 
-Authorized hosts are CORS. Add the apex (and a preview wildcard if the site has previews) to the namespace endpoint **without dropping any other field**:
+Authorized hosts are CORS. Add **every exact hostname** that will call the endpoint from a browser — the wildcards in the list are stored but not honoured on the preflight (verified 2026-09-30), so a branch preview needs its own exact entry while it is under review, removed afterwards. Write it **without dropping any other field**:
 
 ```bash
 # 1. read
@@ -95,7 +95,7 @@ curl -si -X OPTIONS https://search.wrld.ai/search -H "Origin: https://wrld.desig
   -H "Access-Control-Request-Method: POST" | grep -i access-control-allow-origin
 ```
 
-**Open item (2026-09-30):** `wrld.design` is not yet in the namespace list, so the overlay on the apex will show its "temporarily unavailable" state until step 3 runs. Step 3 is an account change and is left to @Ridgelawrence. Previews on `*.wrldtech.workers.dev` are already listed.
+**Open item (2026-09-30):** `wrld.design` is not yet in the namespace list, so the overlay on the apex shows its "temporarily unavailable" state until step 3 runs. Step 3 is an account change and is left to @Ridgelawrence. The `*.wrldtech.workers.dev` wildcard is listed but does not match, so branch previews show the same state until their exact hostname is added. wrld.tech never hits this because its proxy sends `Origin: https://wrld.tech` server-side.
 
 ## 4. Public vs private use
 
@@ -304,7 +304,7 @@ Define this schema on every WRLD instance (Settings → Indexing → Metadata) a
 1. Decide the row in §4.1. Public site → namespace endpoint; internal → Access; backend → binding.
 2. Instance: name per §3.2, right profile (docs vs marketing), tool description written, metadata schema from §7.2 defined, sync 6 h.
 3. Namespace: correct one (§3.1). Add the instance to `instances_allowed` only if its content belongs in the merged public search.
-4. Authorized hosts: apex + preview wildcard, added with the read-append-write flow in §3.3. Verify the preflight.
+4. Authorized hosts: every exact browser hostname (wildcards do not match), added with the read-append-write flow in §3.3. Verify the preflight echoes each origin.
 5. Rate limit set (120 requests / minute / fixed is the sane start).
 6. Overlay per §5, tokens from `styles.css`, snippet pinned to `v0.0.40` (bump deliberately, re-check the §5.2 gaps).
 7. Web rules per §7.1, metadata per §7.2, `.mcp.json` committed.

@@ -20,8 +20,8 @@ write flow and the overlay spec are in [`AI_SEARCH_AGENTS.md`](AI_SEARCH_AGENTS.
 
 | Consumer | Calls the endpoint | Origin in authorized hosts (2026-09-30) |
 | --- | --- | --- |
-| wrld.tech | via its same-origin proxy `/api/ai-search` | `wrld.tech`, `*.wrld.tech`, `*.wrldtech.workers.dev` |
-| wrld.design | directly (assets-only Worker), `#aiDialog` | previews yes (`*.wrldtech.workers.dev`); **apex `wrld.design` pending** |
+| wrld.tech | via its same-origin proxy `/api/ai-search`, which sends `Origin: https://wrld.tech` | `wrld.tech` (exact; the wildcards in the list do not match on preflight) |
+| wrld.design | directly (assets-only Worker), `#aiDialog` | **pending** — `wrld.design` not listed, and the `*.wrldtech.workers.dev` wildcard does not match, so previews show the unavailable state too |
 | WRLD.one, WRLD.AI dashboard | `WrldSearchDialog` from the registry | `*.wrld.ai` yes; add the portal host when it adopts the dialog |
 
 ## Requested atoms

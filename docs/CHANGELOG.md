@@ -14,7 +14,8 @@ review asked for ([BugSmash r37kW](https://wrld.bugsmash.io/review/r37kW) #1 and
   components, talking to the AI Search **namespace endpoint** `https://search.wrld.ai` (instances `wereallylovedesign`
   + `wrld-search`) straight from the browser — the Worker stays assets-only. ⌘K / Ctrl K, Esc, focus return, theme
   sync, reduced motion, the dark-mode label fix and the mobile history drawer are all ported from `AISearch.astro`.
-  Script loads on first open. Needs `wrld.design` in the endpoint's authorized hosts (previews already are).
+  Script loads on first open. Needs `wrld.design` in the endpoint's authorized hosts as an exact entry (the list's
+  wildcards do not match on the preflight, verified live).
 - **`docs/AI_SEARCH_AGENTS.md`** — the company-wide guideline: verified inventory of the WRLD Inc. account's
   instances and endpoints, namespace and instance rules (`default` for WRLD properties, `client-<slug>` per client),
   public vs private use (browser, same-origin proxy, Cloudflare Access on a custom domain, Workers bindings with
@@ -44,8 +45,8 @@ review asked for ([BugSmash r37kW](https://wrld.bugsmash.io/review/r37kW) #1 and
 ### Not done here, on purpose
 
 - Adding `wrld.design` to the namespace endpoint's authorized hosts is an account change for @Ridgelawrence; the exact
-  read-append-write call is in the guideline (§3.3). Until then the apex overlay shows its unavailable state and the
-  branch previews work.
+  read-append-write call is in the guideline (§3.3). Until then the apex overlay shows its unavailable state, and so do
+  the branch previews: the `*.wrldtech.workers.dev` wildcard is listed but does not match.
 - No AI Search instance crawls wrld.design itself yet; the guideline proposes `wrld-design-system`.
 
 ## [0.5.1] — 2026-09-30
