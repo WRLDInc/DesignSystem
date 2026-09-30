@@ -1,0 +1,50 @@
+<div class="print-container" style="page-break-inside: avoid !important; border-top: 1px #666 dotted;">
+  <div style="clear: both;">
+    <div class="invheader-invoicedetails">
+      <table cellspacing="0">
+        <tbody>
+        <tr>
+          <th style="width: 0px;">Ticket Date</th>
+          <td style="width: 100%;">{{ticket_date}}</td>
+        </tr>
+        <tr>
+          <th style="width: 0px;">Ticket #</th>
+          <td style="width: 100%;">{{ticket_number}}</td>
+        </tr>
+        <tr class="invheader-invoicedetails-balance">
+          <th style="width: 0px;">
+            <div>Subject</div>
+          </th>
+          <td style="width: 100%;">
+            <div>{{ticket_subject}}</div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>Invoice Ticket</h3>
+  </div>
+  <div style="clear: both;">
+    <div>
+      <p>Ticket Issue</p>
+      <table cellspacing="0" style="width: 100%; border: solid 1px #c7c7c7;">
+        <tbody>{{ticket_problem_table}}</tbody>
+      </table>
+    </div>
+
+    <div>
+      <p>Ticket Comments</p>
+      <table class="invbody-items" cellspacing="0">
+        <thead>
+        <tr>
+          <th><div>Date</div></th>
+          <th><div>Comment</div></th>
+        </tr>
+        </thead>
+        <tbody>
+        {{ticket_public_comments_table}}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

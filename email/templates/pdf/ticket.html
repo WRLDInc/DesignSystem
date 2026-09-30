@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+<title>Ticket {{ticket_number}}</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Ubuntu:wght@400;500;700&family=Ubuntu+Mono:wght@400;700&display=swap" rel="stylesheet" type="text/css"/>
+<style type="text/css">
+html, body { margin:0; padding:0; font-family:Ubuntu,'Helvetica Neue',Helvetica,Arial,sans-serif; font-size:11px; line-height:16px; color:#0a0a0a; word-wrap:break-word; }
+.wrld-doc { padding:0 36px; }
+table { border-collapse:collapse; }
+td, th { vertical-align:top; }
+a { color:#0a0a0a; }
+.wrld-org { color:#52525b; font-size:10px; line-height:14px; padding-top:8px; }
+.wrld-doctype { font-family:Montserrat,'Helvetica Neue',Helvetica,Arial,sans-serif; font-size:24px; line-height:28px; font-weight:600; letter-spacing:-0.01em; text-align:right; }
+.wrld-docno { font-family:'Ubuntu Mono',Menlo,Consolas,monospace; font-size:12px; line-height:16px; color:#52525b; text-align:right; padding-top:2px; }
+.wrld-stamp { text-align:right; padding-top:6px; }
+.wrld-rule { border-top:2px solid #0a0a0a; height:0; line-height:0; font-size:0; margin:14px 0 16px 0; }
+.wrld-label { font-size:8.5px; line-height:12px; letter-spacing:0.14em; text-transform:uppercase; color:#71717a; padding-bottom:4px; }
+.wrld-addr { font-size:11px; line-height:16px; }
+.wrld-meta { width:100%; }
+.wrld-meta th { text-align:left; font-weight:400; color:#52525b; padding:3px 10px 3px 0; white-space:nowrap; }
+.wrld-meta td { text-align:right; padding:3px 0; }
+.wrld-meta tr.wrld-due th, .wrld-meta tr.wrld-due td { border-top:1px solid #0a0a0a; padding-top:6px; font-weight:700; font-size:13px; color:#0a0a0a; }
+.wrld-section { font-family:Montserrat,'Helvetica Neue',Helvetica,Arial,sans-serif; font-size:12px; line-height:16px; font-weight:600; margin:18px 0 6px 0; }
+.invbody-items { width:100%; margin:16px 0 4px 0; }
+.invbody-items th { background-color:#f4f4f5; border-top:1px solid #e4e4e7; border-bottom:1px solid #e4e4e7;
+  text-align:left; font-weight:600; font-size:8.5px; line-height:12px; letter-spacing:0.1em; text-transform:uppercase; color:#52525b; padding:7px 6px; }
+.invbody-items td { border-bottom:1px solid #e4e4e7; padding:7px 6px; }
+.invbody-items .unitcost, .invbody-items .quantity, .invbody-items .linetotal, .invbody-items .num { text-align:right; }
+.invbody-items .center { text-align:center; }
+.wrld-totals { width:100%; }
+.wrld-totals th { text-align:left; font-weight:400; color:#52525b; padding:3px 10px 3px 0; }
+.wrld-totals td { text-align:right; padding:3px 0; white-space:nowrap; }
+.wrld-totals tr.wrld-grand th, .wrld-totals tr.wrld-grand td { border-top:1px solid #0a0a0a; padding-top:7px; font-weight:700; font-size:13px; color:#0a0a0a; }
+.wrld-pay { border:1px solid #e4e4e7; border-left:3px solid #EE9300; padding:9px 12px; margin-top:4px; }
+.wrld-pay-title { font-weight:700; font-size:11px; }
+.wrld-note { color:#52525b; font-size:10.5px; line-height:15px; }
+.wrld-banner { border:1px solid #d4d4d8; padding:6px 10px; font-size:9px; letter-spacing:0.14em; text-transform:uppercase; color:#52525b; }
+.wrld-box { border:1px solid #e4e4e7; background-color:#fafafa; padding:10px 12px; }
+.wrld-foot { border-top:1px solid #e4e4e7; margin-top:26px; padding-top:8px; color:#71717a; font-size:9.5px; line-height:13px; }
+.wrld-barcode { text-align:center; padding-top:14px; }
+.wrld-small { font-size:9.5px; line-height:13px; color:#52525b; }
+.wrld-comments blockquote { margin:0; padding:0 0 0 10px; border-left:2px solid #e4e4e7; }
+ul.wrld-list { margin:4px 0 0 16px; padding:0; }
+ul.wrld-list li { margin:0 0 3px 0; }
+.page-avoid { page-break-inside:avoid; }
+.invbody-items thead { display:table-header-group; }
+</style>
+</head>
+<body>
+<div class="wrld-doc">
+<table width="100%" cellpadding="0" cellspacing="0"><tr><td width="55%"><img src="https://wrld.design/assets/logos/wrld-tech-black.png" width="176" height="30" alt="WRLD Tech Co." style="display:block;width:176px;height:auto;border:0;"/><div class="wrld-org"><strong style="color:#0a0a0a;">WRLD Tech Co.</strong> &middot; WRLD Inc.<br/>{{account_street}}, {{account_city}}, {{account_state}} {{account_zip}}<br/>{{account_website}}<br/>Mon-Fri 9am-6pm CT: <strong style="color:#0a0a0a;">469.299.9598</strong> &middot; Priority SLA line: <strong style="color:#0a0a0a;">469.850.3968</strong></div></td><td width="45%" align="right"><div class="wrld-doctype">Service ticket</div><div class="wrld-docno">#{{ticket_number}}</div></td></tr></table>
+<div class="wrld-rule">&nbsp;</div>
+<div style="font-family:Montserrat,'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:16px;line-height:21px;font-weight:600;margin-bottom:10px;">{{ticket_subject}}</div>
+<table width="100%" cellpadding="0" cellspacing="0"><tr><td width="55%" style="padding-right:24px;"><div class="wrld-label">Client</div><div class="wrld-addr"><strong>{{customer_business_name_or_customer_full_name}}</strong><br/>{{ticket_address}} {{ticket_address_2}}<br/>{{ticket_city}}, {{ticket_state}} {{ticket_zip}}</div></td><td width="45%"><table class="wrld-meta" cellpadding="0" cellspacing="0"><tr><th>Ticket #</th><td>{{ticket_number}}</td></tr><tr><th>Opened</th><td>{{ticket_date}}</td></tr><tr><th>Created by</th><td>{{ticket_creator_name}}</td></tr><tr class=wrld-due><th>Status</th><td>{{ticket_status}}</td></tr></table></td></tr></table>
+<div class="wrld-section">Conversation</div>
+<table class="invbody-items" cellpadding="0" cellspacing="0"><thead><tr><th class="item">Date</th><th class="description">Comment</th></tr></thead><tbody>{{ticket_public_comments_table}}</tbody></table>
+<div class="wrld-section">Technical details</div>
+<table width="100%" cellpadding="0" cellspacing="0" class="page-avoid"><tr><td width="50%" style="padding-right:12px;"><div class="wrld-label">Primary device</div><table class="wrld-meta" cellpadding="0" cellspacing="0" style="width:100%;margin-top:8px;"><tr><th>Asset</th><td>{{asset_name}}</td></tr><tr><th>Serial</th><td>{{asset_serial_v2}}</td></tr><tr><th>Type</th><td>{{asset_type}}</td></tr><tr><th>Properties</th><td>{{asset_properties}}</td></tr></table></td><td width="50%" style="padding-left:12px;"><div class="wrld-label">Specs</div><table class="wrld-meta" cellpadding="0" cellspacing="0" style="width:100%;margin-top:8px;"><tr><th>Manufacturer</th><td>{{asset_custom_field_manufacturer}}</td></tr><tr><th>Make / model</th><td>{{asset_custom_field_make}} {{asset_custom_field_model}}</td></tr><tr><th>CPU / RAM</th><td>{{asset_custom_field_cpu_name}} / {{asset_custom_field_ram}}</td></tr><tr><th>Operating system</th><td>{{asset_custom_field_os}}</td></tr></table></td></tr></table>
+<table class="invbody-items" cellpadding="0" cellspacing="0"><thead><tr><th class="item">Asset name</th><th class="description">Serial number</th><th class="description">Type</th><th class="description">Properties</th></tr></thead><tbody>{{asset_table}}</tbody></table>
+<div class="wrld-label" style="margin-top:10px;">Other related assets</div><div class="wrld-note">{{assets}}</div>
+<div class="wrld-section">Metadata and attachments</div>
+<table width="100%" cellpadding="0" cellspacing="0"><tr><td width="50%" class="wrld-small" style="padding-right:12px;">{{ticket_meta_details}}</td><td width="50%" style="padding-left:12px;">{{ticket_images_rendered}}</td></tr></table>
+<div class="wrld-section">Terms and disclaimer</div><div class="wrld-small">View the Terms of Service at <a href="https://wrld.tech/tos">wrld.tech/tos</a>.<br/>{{ticket_disclaimer_template}}</div>
+<div class="wrld-foot">Questions? helpdesk@wrld.tech &middot; 469.299.9598 &middot; Priority SLA line 469.850.3968 &middot; wrld.tech. Terms at wrld.tech/tos.</div>
+</div>
+</body>
+</html>

@@ -32,8 +32,19 @@ FONT_MONO = "'Ubuntu Mono',Menlo,Consolas,monospace"
 GOOGLE_FONTS = "https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Ubuntu:wght@400;500;700&family=Ubuntu+Mono:wght@400;700&display=swap"
 
 # Placeholders the operator replaces once per platform (see README)
-LOGO_LIGHT = "{{WRLD_LOGO_LIGHT_URL}}"   # black lockup PNG for light backgrounds, 2x, ~320x64
-LOGO_DARK = "{{WRLD_LOGO_DARK_URL}}"     # white lockup PNG for dark bands
+# WRLD.TECH lockups, hotlinked from wrld.design (transparent 999x173 PNGs, served by Cloudflare).
+# Replace with dedicated email-sized exports when they exist; the paths are the contract.
+LOGO_LIGHT = "https://wrld.design/assets/logos/wrld-tech-black.png"   # for light backgrounds
+LOGO_DARK = "https://wrld.design/assets/logos/wrld-tech-white.png"    # for dark mode / dark bands
+LOGO_RATIO = 173 / 999
+
+# Social profiles, confirmed by Ridge 2026-09-23. Text links, not icons: they survive image
+# blocking (Spark, Outlook) and dark mode, unlike Syncro's {{gray_social_links}} icon images.
+SOCIALS = [
+    ("LinkedIn", "https://www.linkedin.com/company/wrldtech"),
+    ("Facebook", "https://www.facebook.com/wrldtechco"),
+    ("X", "https://x.com/wrldtechco"),
+]
 
 BRANDS = {
     "tech": {
@@ -44,6 +55,7 @@ BRANDS = {
         "phone_sla": "469.850.3968", "phone_sla_tel": "+14698503968",
         "phone_std": "469.299.9598", "phone_std_tel": "+14692999598",
         "hours": "Priority SLA line 24/7 for covered clients. Standard line Mon-Fri 9am-6pm CT.",
+        "socials": SOCIALS,
     },
     "host": {
         "id": "host", "entity": "WRLD Inc.", "product": "WRLD.host",
@@ -53,6 +65,7 @@ BRANDS = {
         "phone_sla": None, "phone_sla_tel": None,
         "phone_std": "469.299.9598", "phone_std_tel": "+14692999598",
         "hours": "Web support 24/7 at wrld.host. Phone Mon-Fri 9am-6pm CT.",
+        "socials": SOCIALS,
     },
 }
 ADDRESS = "4707 Algiers St. Ste 101, Dallas, TX 75207"
@@ -86,12 +99,24 @@ def css(direction):
   .wrld-body pre, .wrld-body code {{ font-family:{FONT_MONO}; font-size:13px; }}
   .wrld-body img {{ max-width:100%; height:auto; }}
   .wrld-body blockquote {{ margin:0 0 12px 0; padding:0 0 0 12px; border-left:2px solid {T['mono200']}; color:{T['mono600']}; }}
-  /* history injected by platform tags (Syncro / Gleap / WHMCS hook) */
-  .wrld-history > div, .wrld-history .wrld-msg {{ border-top:1px solid {T['mono200']} !important; padding:14px 0 !important; margin:0 !important; }}
-  .wrld-history > div:first-child {{ border-top:0 !important; padding-top:0 !important; }}
-  .wrld-history p {{ margin:0 0 8px 0; line-height:1.5 !important; color:{T['mono600']}; }}
-  .wrld-history p[style*="font-weight:600"], .wrld-history p[style*="font-weight: 600"] {{ line-height:1.4 !important; color:{T['mono900']}; font-size:13px; }}
+  /* History injected by platform tags. Syncro emits TWO divs per comment: a header div (name p with
+     line-height 0, then a small date) and a body div. Both are reset, then one rule is drawn per comment. */
+  .wrld-history .wrld-msg {{ border-top:1px solid {T['mono200']} !important; padding:14px 0 !important; margin:0 !important; }}
+  .wrld-history .wrld-msg:first-child {{ border-top:0 !important; padding-top:0 !important; }}
+  /* No child combinators anywhere in this sheet. Syncro HTML-escapes the greater-than sign inside the
+     wrapper style block, which silently drops the whole rule. Syncro comment divs are matched by inline style. */
+  .wrld-history-syncro div[style*="#ddd"] {{ border:0 !important; margin:0 !important; }}
+  .wrld-history-syncro div[style*="border-top:1px #ddd"], .wrld-history-syncro div[style*="border-top: 1px #ddd"] {{ border-top:1px solid {T['mono200']} !important; padding:14px 0 0 0 !important; }}
+  .wrld-history-syncro div[style*="border-bottom:1px #ddd"], .wrld-history-syncro div[style*="border-bottom: 1px #ddd"] {{ padding:6px 0 14px 0 !important; }}
+  .wrld-history-syncro div:first-child[style*="border-top:1px #ddd"], .wrld-history-syncro div:first-child[style*="border-top: 1px #ddd"] {{ border-top:0 !important; padding-top:0 !important; }}
+  .wrld-history p {{ margin:0 0 8px 0 !important; line-height:1.5 !important; color:{T['mono600']}; }}
+  .wrld-history p[style*="font-weight:600"], .wrld-history p[style*="font-weight: 600"] {{ line-height:1.4 !important; color:{T['mono900']} !important; font-size:13px; margin:0 0 2px 0 !important; }}
+  .wrld-history small {{ display:block; font-size:12px; line-height:16px; color:{T['mono500']} !important; }}
+  .wrld-history blockquote {{ margin:0 0 8px 0; padding:0 0 0 12px; border-left:2px solid {T['mono200']}; }}
+  .wrld-history img {{ max-width:100%; height:auto; }}
   .wrld-history hr {{ display:none; }}
+  /* Line-item rows injected by Syncro tags (purchase order email). Bare tr/td, so style by descendant. */
+  .wrld-items td {{ padding:8px 6px; border-bottom:1px solid {T['mono200']}; font-size:13px; line-height:18px; vertical-align:top; color:{T['mono950']}; }}
   @media only screen and (max-width: 620px) {{
     .container {{ width:100% !important; max-width:100% !important; }}
     .px {{ padding-left:16px !important; padding-right:16px !important; }}
@@ -111,20 +136,27 @@ def css(direction):
     .fg, .fg a, .h1, .wrld-body, .wrld-body p, .wrld-body li {{ color:{T['mono50']} !important; }}
     .fg-muted, .fg-muted a, .wrld-history p {{ color:{T['mono400']} !important; }}
     .fg-subtle {{ color:{T['mono500']} !important; }}
-    .rule, .wrld-history > div, .wrld-history .wrld-msg {{ border-color:{T['mono800']} !important; }}
+    .rule, .wrld-history .wrld-msg, .wrld-history blockquote, .wrld-history-syncro div[style*="border-top:1px #ddd"], .wrld-history-syncro div[style*="border-top: 1px #ddd"] {{ border-color:{T['mono800']} !important; }}
+    .wrld-history small {{ color:{T['mono500']} !important; }}
+    .wrld-items td {{ border-color:{T['mono800']} !important; color:{T['mono50']} !important; }}
+    .wrld-history p[style*="font-weight:600"], .wrld-history p[style*="font-weight: 600"] {{ color:{T['mono50']} !important; }}
     .btn {{ background-color:{T['mono50']} !important; }}
     .btn-a {{ color:{T['mono950']} !important; }}
     .btn-warm {{ background-color:{T['accentWarm']} !important; }}
     .btn-a-warm {{ color:{T['mono950']} !important; }}
     .meta-k {{ border-color:{T['mono800']} !important; }}
     .logo-light {{ display:none !important; }}
-    .logo-dark {{ display:block !important; }}
+    .logo-dark {{ display:block !important; max-height:none !important; }}
     .chip {{ border-color:{T['mono700']} !important; }}
   }}
   [data-ogsc] .bg-page {{ background-color:{T['mono950']} !important; }}
   [data-ogsc] .bg-card {{ background-color:{T['mono900']} !important; }}
   [data-ogsc] .fg, [data-ogsc] .h1, [data-ogsc] .wrld-body p {{ color:{T['mono50']} !important; }}
   [data-ogsc] .fg-muted {{ color:{T['mono400']} !important; }}
+  [data-ogsc] .logo-light {{ display:none !important; }}
+  [data-ogsc] .logo-dark {{ display:block !important; max-height:none !important; }}
+  [data-ogsc] .wrld-history p {{ color:{T['mono400']} !important; }}
+  [data-ogsc] .wrld-history p[style*="font-weight:600"], [data-ogsc] .wrld-history p[style*="font-weight: 600"] {{ color:{T['mono50']} !important; }}
 </style>"""
 
 def head(title, direction, preheader=""):
@@ -167,15 +199,19 @@ def logo_img(brand, variant="light", width=132):
     """Two images, CSS-swapped for dark mode. Syncro/WHMCS callers may replace with platform logo tags."""
     if isinstance(brand, dict):
         alt = brand["entity"]
-        LOGO_LIGHT = "{{WRLDHOST_LOGO_LIGHT_URL}}" if brand["id"] == "host" else "{{WRLD_LOGO_LIGHT_URL}}"
-        LOGO_DARK = "{{WRLDHOST_LOGO_DARK_URL}}" if brand["id"] == "host" else "{{WRLD_LOGO_DARK_URL}}"
+        # WRLD.HOST lockups are not on wrld.design yet, so those stay placeholders.
+        LOGO_LIGHT = "{{WRLDHOST_LOGO_LIGHT_URL}}" if brand["id"] == "host" else globals()["LOGO_LIGHT"]
+        LOGO_DARK = "{{WRLDHOST_LOGO_DARK_URL}}" if brand["id"] == "host" else globals()["LOGO_DARK"]
     else:
         alt = brand
         LOGO_LIGHT, LOGO_DARK = globals()["LOGO_LIGHT"], globals()["LOGO_DARK"]
-    light = f'<img class="logo-light" src="{LOGO_LIGHT}" width="{width}" alt="{esc(alt)}" style="display:block;width:{width}px;height:auto;border:0;">'
-    dark = f'<!--[if !mso]><!--><img class="logo-dark" src="{LOGO_DARK}" width="{width}" alt="{esc(alt)}" style="display:none;width:{width}px;height:auto;border:0;mso-hide:all;"><!--<![endif]-->'
+    hgt = round(width * LOGO_RATIO)
+    light = f'<img class="logo-light" src="{LOGO_LIGHT}" width="{width}" height="{hgt}" alt="{esc(alt)}" style="display:block;width:{width}px;height:auto;border:0;font-family:Montserrat,Arial,sans-serif;font-size:14px;font-weight:700;color:#0a0a0a;">'
+    # Hidden inline (display:none + mso-hide) so clients without dark-mode CSS (Gmail, Outlook desktop)
+    # only ever show the light-mode lockup. No conditional comments: Syncro's editor may strip them.
+    dark = f'<img class="logo-dark" src="{LOGO_DARK}" width="{width}" height="{hgt}" alt="{esc(alt)}" style="display:none;width:{width}px;height:auto;border:0;mso-hide:all;max-height:0;overflow:hidden;">'
     if variant == "dark":
-        return f'<img src="{LOGO_DARK}" width="{width}" alt="{esc(alt)}" style="display:block;width:{width}px;height:auto;border:0;">'
+        return f'<img src="{LOGO_DARK}" width="{width}" height="{round(width * LOGO_RATIO)}" alt="{esc(alt)}" style="display:block;width:{width}px;height:auto;border:0;">'
     return light + dark
 
 def eyebrow(text, mono=False):
@@ -185,9 +221,12 @@ def eyebrow(text, mono=False):
     return f'<span class="fg-muted" style="font-family:{fam};font-size:12px;line-height:16px;letter-spacing:{ls};text-transform:{tt};color:{T["mono500"]};">{text}</span>'
 
 def chip(text, color):
-    return (f'<span class="chip" style="display:inline-block;font-family:{FONT_BODY};font-size:12px;line-height:16px;font-weight:500;'
-            f'padding:3px 10px;border:1px solid {T["mono200"]};border-radius:9999px;color:{color};">'
-            f'<span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:{color};margin-right:7px;vertical-align:1px;"></span>{text}</span>')
+    """Status chip as a one-cell table so Outlook (Word engine) honours the padding and border.
+    The dot is a glyph, not a sized span, for the same reason."""
+    return (f'<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>'
+            f'<td class="chip" style="font-family:{FONT_BODY};font-size:12px;line-height:16px;font-weight:500;'
+            f'padding:3px 10px;border:1px solid {T["mono200"]};border-radius:9999px;color:{color};white-space:nowrap;">'
+            f'<span style="color:{color};font-size:10px;line-height:16px;">&#9679;</span>&nbsp;{text}</td></tr></table>')
 
 def button(label, href, warm=False):
     bg = T["accentWarm"] if warm else T["mono950"]
@@ -263,13 +302,18 @@ def message_block(body_html, sender=None, time=None, label=None, latest=True, di
     """The message the email is about. In 'thread' direction it renders as a timeline item."""
     name_row = ""
     if sender:
+        # Avatars only when we know the real name (mockups). Platform tags ({{...}} / {$...}) resolve after
+        # build time, so initials() would emit a literal "{" - never draw an avatar for a tag.
+        is_tag = "{{" in sender or "{$" in sender
+        show_avatar = direction == "thread" and not is_tag
+        sender_html = sender if is_tag else esc(sender)
+        time_html = time if (time and ("{{" in time or "{$" in time)) else (esc(time) if time else "")
         name_row = f"""<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"><tr>
-{avatar(initials(sender), T['mono950']) if direction == 'thread' else ''}
-<td valign="middle" style="padding-left:{'10px' if direction == 'thread' else '0'};">
-<span class="fg" style="font-family:{FONT_BODY};font-size:14px;line-height:18px;font-weight:500;color:{T['mono950']};">{esc(sender)}</span>
-{('&nbsp;&nbsp;<span class="fg-subtle" style="font-family:'+FONT_BODY+';font-size:12px;color:'+T['mono500']+';">'+esc(time)+'</span>') if time else ''}
-</td></tr></table>
-<div style="height:10px;line-height:10px;font-size:0;">&nbsp;</div>"""
+{avatar(initials(sender), T['mono950']) if show_avatar else ''}
+<td valign="middle" style="padding-left:{'10px' if show_avatar else '0'};padding-bottom:10px;">
+<span class="fg" style="font-family:{FONT_BODY};font-size:14px;line-height:18px;font-weight:500;color:{T['mono950']};">{sender_html}</span>
+{('&nbsp;&nbsp;<span class="fg-subtle" style="font-family:'+FONT_BODY+';font-size:12px;color:'+T['mono500']+';">'+time_html+'</span>') if time_html else ''}
+</td></tr></table>"""
     lab = f'<tr><td style="padding-bottom:10px;">{eyebrow(label)}</td></tr>' if label else ""
     bg = T["mono50"] if direction == "thread" else "transparent"
     pad = "16px 18px" if direction == "thread" else "0"
@@ -281,8 +325,10 @@ def message_block(body_html, sender=None, time=None, label=None, latest=True, di
 <div class="wrld-body fg" style="font-family:{FONT_BODY};font-size:16px;line-height:24px;color:{T['mono950']};">{body_html}</div>
 </td></tr>"""
 
-def history_block(inner_html, count_label="Earlier in this ticket", direction="ledger", note=None):
-    """Wraps platform-provided history. Always below the latest message, visually quieter."""
+def history_block(inner_html, count_label="Earlier in this ticket", direction="ledger", note=None, syncro=False):
+    """Wraps platform-provided history. Always below the latest message, visually quieter.
+    syncro=True adds the class that targets Syncro's two-divs-per-comment markup."""
+    hist_cls = "wrld-history wrld-history-syncro" if syncro else "wrld-history"
     n = f'<tr><td style="padding-bottom:12px;"><span class="fg-subtle" style="font-family:{FONT_BODY};font-size:13px;line-height:18px;color:{T["mono500"]};">{note}</span></td></tr>' if note else ""
     return f"""{spacer(24)}
 <tr><td class="rule" style="border-top:1px solid {T['mono200']};padding-top:18px;">
@@ -291,15 +337,32 @@ def history_block(inner_html, count_label="Earlier in this ticket", direction="l
 </td></tr>
 {spacer(8)}
 {n}
-<tr><td class="wrld-history fg-muted" style="font-family:{FONT_BODY};font-size:14px;line-height:21px;color:{T['mono600']};">{inner_html}</td></tr>"""
+<tr><td class="{hist_cls} fg-muted" style="font-family:{FONT_BODY};font-size:14px;line-height:21px;color:{T['mono600']};">{inner_html}</td></tr>"""
 
-def sample_history(items, direction):
-    """Sample rendering of history for mockups (mirrors the structure Syncro emits: div > p(name) + date + body)."""
+def sample_history(items, direction, syncro=False):
+    """Sample rendering of history for mockups.
+
+    syncro=False (Gleap, WHMCS hook): one .wrld-msg div per message, the markup our own hook emits.
+    syncro=True: mirrors, byte for byte in structure, what Syncro's
+    {{ticket_public_comments_for_email}} emits (captured from a live preview on 2026-09-22):
+      <div style="border-top:1px #ddd solid; padding:20px 0; margin-right:20px;">
+        <p style="font-weight:600; color:#444; line-height:0;">Name</p><small style="color:#858585;">date</small>
+      </div>
+      <div style="border-bottom:1px #ddd solid; padding:20px 0; margin-right:20px;"><p>body</p></div>
+    so the wrapper CSS is exercised against the real markup, not an idealised one."""
     out = []
-    for i, (who, when, body) in enumerate(items):
-        first = "border-top:0;padding-top:0;" if i == 0 else ""
-        av = f'<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>{avatar(initials(who), T["mono400"])}<td style="padding-left:10px;"><p style="font-weight:600;margin:0;color:{T["mono900"]};font-size:13px;" class="fg">{esc(who)}</p><span class="fg-subtle" style="font-size:12px;color:{T["mono500"]};">{esc(when)}</span></td></tr></table>' if direction == "thread" else f'<p style="font-weight:600;margin:0 0 2px 0;color:{T["mono900"]};font-size:13px;" class="fg">{esc(who)} <span class="fg-subtle" style="font-weight:400;color:{T["mono500"]};">&nbsp;{esc(when)}</span></p>'
-        out.append(f'<div class="wrld-msg" style="border-top:1px solid {T["mono200"]};padding:14px 0;{first}">{av}<div style="margin-top:6px;">{body}</div></div>')
+    if not syncro:
+        for who, when, body in items:
+            out.append(f'<div class="wrld-msg" style="border-top:1px solid {T["mono200"]};padding:14px 0;">'
+                       f'<p style="font-weight:600;margin:0 0 2px 0;color:{T["mono900"]};font-size:13px;">{esc(who)} '
+                       f'<span style="font-weight:400;color:{T["mono500"]};">&nbsp;{esc(when)}</span></p>'
+                       f'<div style="margin-top:6px;color:{T["mono600"]};">{body}</div></div>')
+        return "".join(out)
+    for who, when, body in items:
+        out.append(f'<div style="border-top:1px #ddd solid; padding: 20px 0px; margin-right: 20px;">\n'
+                   f'  <p style="font-weight: 600; color: #444; line-height: 0;">{esc(who)}</p>\n'
+                   f'  <small style="color: #858585; line-height: 1em;">{esc(when)}</small>\n</div>\n'
+                   f'<div style="border-bottom:1px #ddd solid; padding: 20px 0px; margin-right: 20px;">{body}</div>\n')
     return "".join(out)
 
 def cta_row(primary_html, secondary_html=""):
@@ -327,10 +390,17 @@ def footer(brand, extra_links=None, unsubscribe_html="", legal_line=None):
     link_html = sep.join(
         f'<a href="{h}" class="fg-muted" style="color:{T["mono500"]};text-decoration:none;">{l}</a>' for l, h in links)
     legal = legal_line or f"&copy; {{{{YEAR}}}} WRLD Inc. All rights reserved."
+    socials = b.get("socials") or []
+    social_row = ""
+    if socials:
+        social_html = sep.join(
+            f'<a href="{h}" class="fg-muted" style="color:{T["mono500"]};text-decoration:underline;text-underline-offset:2px;">{l}</a>' for l, h in socials)
+        social_row = f'<tr><td class="fg-muted" style="color:{T["mono500"]};padding-bottom:8px;">Follow us&nbsp;&nbsp;{social_html}</td></tr>'
     return f"""{spacer(20)}
 <tr><td class="px" style="padding:0 8px;">
 <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="font-family:{FONT_BODY};font-size:12px;line-height:18px;color:{T['mono500']};">
 <tr><td class="fg-muted" style="color:{T['mono500']};padding-bottom:8px;">{link_html}</td></tr>
+{social_row}
 <tr><td class="fg-subtle" style="color:{T['mono500']};">{legal} {ADDRESS}. {b['hours']}</td></tr>
 {('<tr><td class="fg-subtle" style="color:'+T['mono500']+';padding-top:8px;">'+unsubscribe_html+'</td></tr>') if unsubscribe_html else ''}
 </table></td></tr>
@@ -362,33 +432,51 @@ SAMPLE = {
 # ---------------------------------------------------------------------------
 # Renderers. mode = "sample" (mockup) or "template" (platform variables)
 # ---------------------------------------------------------------------------
-def render_syncro_ticket_comment(direction, mode):
+def render_syncro_ticket_comment(direction, mode, compact=False):
+    """Ticket Comment email.
+
+    Syncro tags (verified against the live tag list in wrld.syncromsp.com on 2026-09-22):
+      {{comment_body}} {{comment_sender_name}} {{comment_created_at}}  -> the comment that fired this email
+      {{ticket_public_comments_for_email}}                              -> ALL public comments, newest first,
+                                                                          each truncated at 2500 chars
+      {{ticket_public_fulltext_comments_for_email}}                     -> same, untruncated
+    There is no "history minus the latest" tag, so the newest comment is always inside the history block.
+    Default: show it once as a framed "Latest reply", then the full conversation (labelled as such).
+    compact=True: no framed block; the history alone carries the conversation, newest first, untruncated."""
     b = BRANDS["tech"]
     s = SAMPLE
     if mode == "sample":
         ticket, subject, status, tech, opened = s["ticket"], s["subject"], s["status"], s["tech"], s["opened"]
         customer, latest, latest_time = s["customer"], s["latest"], s["latest_time"]
-        history = sample_history(s["history"], direction)
+        # Syncro's history tag always includes the newest comment, so the mockup does too.
+        hist_items = [(s["tech"], s["latest_time"], s["latest"])] + s["history"]
+        history = sample_history(hist_items, direction, syncro=True)
         url = "https://wrld.syncromsp.com/tickets/117754091"
         logo = None
     else:
         ticket, subject, status, tech = "{{ticket_number}}", "{{ticket_subject}}", "{{ticket_status}}", "{{tech_name}}"
         opened = "{{ticket_date}}"
         customer = "{{customer_full_name}}"
-        latest = "{{ticket_comment_body}}"
-        latest_time = ""
-        history = "{{ticket_public_comments_for_email}}"
+        latest = "{{comment_body}}"
+        latest_time = "{{comment_created_at}}"
+        history = "{{ticket_public_fulltext_comments_for_email}}" if compact else "{{ticket_public_comments_for_email}}"
         url = "{{ticket_url}}"
-        logo = "{{location_logo_100}}"
+        logo = None  # hosted WRLD.TECH lockups with dark-mode swap (logo_img)
+    sender = s["tech"] if mode == "sample" else "{{comment_sender_name}}"
 
     body = [header(direction, b, "Ticket", f"#{ticket}", logo_html=logo), card_open(direction)]
     body.append(title_block(esc(subject) if mode == "sample" else subject, chip(status, b["accent"]), kicker="Update on your ticket"))
-    body.append(message_block(latest, sender=tech, time=latest_time, label="Latest reply", direction=direction))
-    body.append(spacer(20))
+    if not compact:
+        body.append(message_block(latest, sender=sender, time=latest_time, label="Latest reply", direction=direction))
+        body.append(spacer(20))
     body.append(f"<tr><td>{meta_rows([('Ticket', f'#{ticket}'), ('Status', status), ('Assigned to', tech), ('Opened', opened)])}</td></tr>")
     body.append(cta_row(button("View and reply online", url), text_link("Open the support portal", b["portal"], muted=True)))
-    body.append(history_block(history, "Earlier in this ticket", direction,
-                              note="Everything below is the conversation so far, newest first, so you never have to dig for context."))
+    if compact:
+        body.append(history_block(history, "Conversation", direction, syncro=True,
+                                  note="Newest reply first. Everything said on this ticket so far is below, so you never have to dig for context."))
+    else:
+        body.append(history_block(history, "Full conversation", direction, syncro=True,
+                                  note="The whole ticket, newest first. The reply above appears here again, followed by everything before it."))
     body.append(help_strip(b))
     body.append(card_close())
     body.append(footer(b))
@@ -401,7 +489,7 @@ def render_syncro_ticket_created(direction, mode, autoresponder=False):
         url = "https://wrld.syncromsp.com/tickets/117754091"; logo = None
     else:
         ticket, subject, customer, problem = "{{ticket_number}}", "{{ticket_subject}}", "{{customer_first_name}}", "{{initial_comment_body}}"
-        url = "{{ticket_url}}"; logo = "{{location_logo_100}}"
+        url = "{{ticket_url}}"; logo = None
     kicker = "We received your request" if autoresponder else "A ticket was opened for you"
     body = [header(direction, b, "Ticket", f"#{ticket}", logo_html=logo), card_open(direction)]
     body.append(title_block(esc(subject) if mode == "sample" else subject, chip("New", b["accent"]), kicker=kicker))
@@ -418,15 +506,15 @@ def render_syncro_ticket_resolved(direction, mode):
     b = BRANDS["tech"]; s = SAMPLE
     if mode == "sample":
         ticket, subject, customer, tech = s["ticket"], s["subject"], s["customer"].split()[0], s["tech"]
-        history = sample_history(s["history"], direction); url = "https://wrld.syncromsp.com/tickets/117754091"; logo = None
+        history = sample_history(s["history"], direction, syncro=True); url = "https://wrld.syncromsp.com/tickets/117754091"; logo = None
     else:
         ticket, subject, customer, tech = "{{ticket_number}}", "{{ticket_subject}}", "{{customer_first_name}}", "{{tech_name}}"
-        history = "{{ticket_public_comments_for_email}}"; url = "{{ticket_url}}"; logo = "{{location_logo_100}}"
+        history = "{{ticket_public_comments_for_email}}"; url = "{{ticket_url}}"; logo = None
     body = [header(direction, b, "Ticket", f"#{ticket}", logo_html=logo), card_open(direction)]
     body.append(title_block(esc(subject) if mode == "sample" else subject, chip("Resolved", T["success"]), kicker="Marked resolved"))
     body.append(message_block(f"<p>Hi {customer},</p><p>{tech} marked this ticket resolved. If anything is still off, just reply to this email and it reopens automatically with the full history attached, no need to start over.</p>", direction="ledger"))
     body.append(cta_row(button("Review the ticket", url), text_link("Reopen by replying", "mailto:" + b["email"], muted=True)))
-    body.append(history_block(history, "What we did", direction))
+    body.append(history_block(history, "What we did", direction, syncro=True))
     body.append(help_strip(b, reply_hint=False))
     body.append(card_close()); body.append(footer(b))
     return body
@@ -544,26 +632,40 @@ def full_email(parts, title, direction, preheader=""):
     return head(title, direction, preheader) + "\n" + open_shell(preheader) + "\n" + "\n".join(parts) + "\n" + close_shell()
 
 def syncro_wrapper(direction):
-    """Wrapper = everything except the body. Syncro injects each template into {{email_body}}."""
+    """Wrapper = everything except the body. Syncro injects each template into {{email_body}}.
+
+    The wrapper is shared by EVERY Syncro email (invoices, estimates, portal invites), so nothing
+    ticket-specific lives here: no preheader, no "Reply above this line". Those sit in the ticket bodies.
+    {{email_body}} must be inside a <td>: the body templates are full <table> blocks and a <table> dropped
+    straight between <tr>s is invalid HTML that clients foster-parent out of the container."""
     b = BRANDS["tech"]
-    pre = "Reply above this line to add to your ticket."
-    doc = head("{{account_name}}", direction, pre) + "\n" + open_shell(pre) + "\n"
-    doc += f'<tr><td class="fg-subtle" style="font-family:{FONT_BODY};font-size:11px;line-height:14px;color:{T["mono400"]};padding:0 4px 10px 4px;">Reply above this line</td></tr>\n'
-    doc += "{{email_body}}\n"
-    doc += f'<tr><td align="center" style="padding-top:12px;">{{{{gray_social_links}}}}</td></tr>\n'
-    doc += footer(b, legal_line="&copy; {{YEAR}} {{account_name}}.") + "\n" + close_shell()
-    # Syncro wrapper is body-level; keep head for clients that honor it.
+    doc = head("{{account_name}}", direction) + "\n" + open_shell("") + "\n"
+    doc += '<tr><td style="padding:0;">{{email_body}}</td></tr>\n'
+    # Syncro has no year tag ({{YEAR}} rendered literally in production); the legal line is evergreen instead.
+    doc += footer(b, legal_line="&copy; {{account_name}} &middot;") + "\n" + close_shell()
     return doc
 
-def syncro_body(parts):
-    """Ticket templates go INSIDE the wrapper: rows only (header + card). Footer comes from wrapper."""
-    # Drop the footer (last part) because the wrapper supplies it.
-    return "\n".join(parts[:-1])
+def syncro_body(parts, reply_hint=True, preheader=""):
+    """Ticket templates go INSIDE the wrapper's {{email_body}} cell as ONE self-contained table.
+
+    Syncro's Simple Editor is CKEditor 4. It re-serialises whatever is pasted into Source: orphan <tr> rows
+    get wrapped in their own <table>, width attributes move into style, font names are lower-cased and
+    conditional comments are not guaranteed to survive. Handing it a single well-formed table keeps the
+    result deterministic. Footer comes from the wrapper, so the last part is dropped."""
+    rows = "\n".join(parts[:-1])
+    pre = preheader_block(preheader) + "\n" if preheader else ""
+    reply = ""
+    if reply_hint:
+        # {{reply_above_line}} is Syncro's own marker; its inbound parser strips quoted text below it.
+        reply = f'<tr><td class="fg-subtle" style="font-family:{FONT_BODY};font-size:11px;line-height:14px;color:{T["mono400"]};padding:0 4px 10px 4px;">{{{{reply_above_line}}}}</td></tr>\n'
+    return (f'{pre}<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="width:100%;">\n'
+            f'{reply}{rows}\n</table>')
 
 DIRECTIONS = ["ledger", "signal", "thread"]
 
 MOCKUPS = {
     "syncro-ticket-comment": lambda d, m: render_syncro_ticket_comment(d, m),
+    "syncro-ticket-comment-compact": lambda d, m: render_syncro_ticket_comment(d, m, compact=True),
     "syncro-ticket-created": lambda d, m: render_syncro_ticket_created(d, m),
     "syncro-ticket-resolved": lambda d, m: render_syncro_ticket_resolved(d, m),
     "gleap-message-reply": lambda d, m: render_gleap_reply(d, m),
@@ -576,6 +678,7 @@ MOCKUPS = {
 }
 TITLES = {
     "syncro-ticket-comment": "Syncro: Ticket comment",
+    "syncro-ticket-comment-compact": "Syncro: Ticket comment (compact)",
     "syncro-ticket-created": "Syncro: Ticket created / autoresponder",
     "syncro-ticket-resolved": "Syncro: Ticket resolved",
     "gleap-message-reply": "Gleap: Message reply",
@@ -606,10 +709,16 @@ def build():
             (tdir / p).mkdir(parents=True, exist_ok=True)
         # Syncro: wrapper + body fragments
         (tdir / "syncro" / "00-email-wrapper.html").write_text(syncro_wrapper(d))
-        (tdir / "syncro" / "ticket-comment.html").write_text(syncro_body(render_syncro_ticket_comment(d, "template")))
-        (tdir / "syncro" / "ticket-created.html").write_text(syncro_body(render_syncro_ticket_created(d, "template")))
-        (tdir / "syncro" / "ticket-autoresponder.html").write_text(syncro_body(render_syncro_ticket_created(d, "template", autoresponder=True)))
-        (tdir / "syncro" / "ticket-resolved.html").write_text(syncro_body(render_syncro_ticket_resolved(d, "template")))
+        (tdir / "syncro" / "ticket-comment.html").write_text(syncro_body(render_syncro_ticket_comment(d, "template"),
+            preheader="{{comment_sender_name}} replied on ticket #{{ticket_number}}: {{ticket_subject}}"))
+        (tdir / "syncro" / "ticket-comment.compact.html").write_text(syncro_body(render_syncro_ticket_comment(d, "template", compact=True),
+            preheader="New reply on ticket #{{ticket_number}}: {{ticket_subject}}"))
+        (tdir / "syncro" / "ticket-created.html").write_text(syncro_body(render_syncro_ticket_created(d, "template"),
+            preheader="Ticket #{{ticket_number}} opened: {{ticket_subject}}"))
+        (tdir / "syncro" / "ticket-autoresponder.html").write_text(syncro_body(render_syncro_ticket_created(d, "template", autoresponder=True),
+            preheader="We received your request. Ticket #{{ticket_number}}: {{ticket_subject}}"))
+        (tdir / "syncro" / "ticket-resolved.html").write_text(syncro_body(render_syncro_ticket_resolved(d, "template"),
+            preheader="Ticket #{{ticket_number}} resolved: {{ticket_subject}}"))
         # Gleap: full documents
         (tdir / "gleap" / "message-reply.html").write_text(full_email(render_gleap_reply(d, "template"), "{{companyName}}", d, "New reply on {{bugRef}}"))
         (tdir / "gleap" / "auto-reply.html").write_text(full_email(render_gleap_autoreply(d, "template"), "{{companyName}}", d, "We received your request"))
@@ -704,24 +813,52 @@ Generated by build.py. Three visual directions (ledger, signal, thread) x three 
 Pick ONE direction and deploy its folder. Do not mix.
 
 ## One-time find and replace (all platforms)
-- {{WRLD_LOGO_LIGHT_URL}}  -> hosted PNG, black lockup, transparent bg, 264x52 (2x of 132x26). Suggested: https://wrld.host/brand/email/wrld-tech-black.png
-- {{WRLD_LOGO_DARK_URL}}   -> hosted PNG, white lockup, same size.
+- WRLD.TECH lockups are hotlinked from wrld.design (no replace needed):
+    https://wrld.design/assets/logos/wrld-tech-black.png  (light mode)
+    https://wrld.design/assets/logos/wrld-tech-white.png  (dark mode, swapped in by CSS)
+  Apple Mail, iOS, Outlook for Mac, Outlook.com and new Outlook swap to the white lockup in dark mode.
+  Gmail and Outlook for Windows ignore the swap and always show the black lockup.
 - {{WRLDHOST_LOGO_LIGHT_URL}} / {{WRLDHOST_LOGO_DARK_URL}} -> WRLD.HOST lockups (assets/wrld-host-*.png in this package).
-  Syncro templates use {{location_logo_100}} instead (set the logo under Admin > Locations).
+  Syncro templates no longer use {{logo_100}} (a single fixed image, no dark variant). There is NO {{location_logo_100}} tag.
   WHMCS uses {$company_logo_url} (Setup > General Settings > General > Logo). Confirm the field appears under the editor's merge-field list; if not, hardcode the URL.
-- {{YEAR}} -> Syncro has no year tag; hardcode or leave the copyright line without a year. WHMCS files already use {$date|date_format:'%Y'}.
+- {{YEAR}} -> only the WHMCS files carry a year ({$date|date_format:'%Y'}). Syncro has no year tag, so the Syncro wrapper's legal line is evergreen.
 
 ## Syncro (helpdesk@wrld.tech)
-Admin > Syncro Administration - PDF/Email Templates > Email Templates
-1. Advanced (caution) > Edit HTML of Email Wrapper: paste syncro/00-email-wrapper.html. Keep {{email_body}}, {{gray_social_links}}, {{account_name}}, {{account_address}} present.
-2. Edit each template, switch to HTML source, paste the matching body fragment:
-   - Ticket Comment       -> syncro/ticket-comment.html   (uses {{ticket_comment_body}} + {{ticket_public_comments_for_email}})
+Admin > Syncro Administration - PDF/Email Templates > Email Templates (https://wrld.syncromsp.com/templates/email)
+1. Advanced (caution) > Edit HTML of Email Wrapper: paste syncro/00-email-wrapper.html. Keep {{email_body}}. {{gray_social_links}} is intentionally removed: its icons are images with no text, so image-blocking clients (Spark, Outlook) showed stray dots. The footer carries LinkedIn / Facebook / X as text links instead.
+   The wrapper is shared by every Syncro email (invoices, estimates, portal invites), so it carries nothing ticket-specific.
+2. Edit each template, click Source, select all, paste the matching body file, Update Template:
+   - Ticket Comment       -> syncro/ticket-comment.html           (framed latest reply + full conversation)
+                             or syncro/ticket-comment.compact.html (conversation only, newest first, untruncated)
    - Ticket Created       -> syncro/ticket-created.html
    - Ticket Autoresponder -> syncro/ticket-autoresponder.html
    - Ticket Resolved      -> syncro/ticket-resolved.html
-3. Preview each template, then send a test ticket comment to yourself.
-Tags used: {{ticket_number}} {{ticket_subject}} {{ticket_status}} {{tech_name}} {{ticket_date}} {{ticket_url}} {{customer_full_name}} {{customer_first_name}} {{initial_comment_body}} {{ticket_comment_body}} {{ticket_public_comments_for_email}} {{location_logo_100}} {{account_name}} {{account_address}} {{gray_social_links}} {{email_body}}.
-If {{ticket_comment_body}} does not resolve in your account, the latest comment is already the first item of {{ticket_public_comments_for_email}}: remove the "Latest reply" block and rename the history label to "Conversation".
+3. Preview each template (Preview link on the list page renders the last real ticket), then comment on a test ticket.
+
+Tags, verified against the editor's Available Template Tags list on 2026-09-22:
+  {{reply_above_line}}        Syncro's reply marker. First row of every ticket body. Keep it or inbound replies carry the whole quoted email.
+  {{logo_100}}                Account logo, 100px. Not used (no dark-mode variant); hosted lockups instead.
+  {{ticket_number}} {{ticket_subject}} {{ticket_status}} {{ticket_date}} {{ticket_url}} {{tech_name}}
+  {{customer_first_name}} {{customer_full_name}}
+  {{comment_body}} {{comment_sender_name}} {{comment_created_at}}
+                              The comment that fired the email. Available in Ticket Comment, Ticket Created and Ticket Resolved;
+                              NOT in Ticket Autoresponder.
+  {{initial_comment_body}}    The original request. Used in Created / Autoresponder.
+  {{ticket_public_comments_for_email}}
+                              Every public comment, newest first, each cut at 2500 characters. Two <div>s per comment.
+  {{ticket_public_fulltext_comments_for_email}}
+                              Same, uncut. Used by the compact comment template.
+  Wrapper only: {{email_body}} {{account_name}}  ({{gray_social_links}} exists but is not used)
+Tags that do NOT exist (they render as literal text): {{ticket_comment_body}} {{location_logo_100}} {{YEAR}}.
+
+Why the latest reply appears twice in ticket-comment.html: Syncro has no "history without the newest comment" tag, and
+its history markup cannot be trimmed reliably with CSS across clients. The default template frames the new reply once
+and labels the block below "Full conversation" so the repeat reads as intended. If the repeat bothers you, deploy the
+compact variant instead.
+
+Editor behaviour to know about: the Simple Editor is CKEditor 4. It rewrites pasted HTML (orphan <tr>s get their own
+<table>, width attributes move into style, font names are lower-cased). The body files are therefore single, complete
+tables, and the wrapper injects {{email_body}} inside a <td>. Do not hand-edit the bodies in the WYSIWYG view.
 
 ## Gleap (feedback / chat -> email)
 Project > Settings > Email > Email templates
@@ -759,7 +896,8 @@ Note: WHMCS does not allow changing sender or subject on support ticket template
 - Send one of each template to a Gmail, Outlook desktop (Windows), Outlook.com, Apple Mail (dark mode on) and iOS Mail.
 - Confirm the logo swaps correctly in dark mode (transparent PNGs only).
 - Confirm reply-by-email still threads into the ticket (Syncro "Reply above this line", WHMCS piping subject untouched).
-- Check that history renders newest-first and the latest message is not duplicated.
+- Check that history renders newest-first with one rule per comment and that sender names are not collapsed onto the date (Syncro emits line-height:0 on the name; the wrapper CSS overrides it).
+- Syncro: confirm no literal {{...}} text survives in a sent email (open the raw message and search for "{{").
 """
 
 if __name__ == "__main__":

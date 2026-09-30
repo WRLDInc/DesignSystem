@@ -12,6 +12,10 @@ python3 email/index.py     # builds the spec page email/dist/index.html
 
 Directions: `ledger` (quiet), `signal` (dark header band), `thread` (conversation-first, recommended). Templates for all three are committed under `email/templates/<direction>/`.
 
+Platform tags were verified against the live Syncro editor on 2026-09-22 (see `templates/README.md` for the list, including the tags that do not exist). `{{ticket_comment_body}}`, `{{location_logo_100}}` and `{{YEAR}}` were never real Syncro tags; the real ones are `{{comment_body}}`, `{{logo_100}}` and no year at all.
+
+`shots.py` needs Playwright (`py -3 -m pip install playwright && py -3 -m playwright install chromium`).
+
 ![Thread direction, Syncro ticket comment](screenshots/thread--syncro-ticket-comment--desktop.png)
 
 # WRLD transactional email templates
@@ -76,3 +80,18 @@ Note: WHMCS does not allow changing sender or subject on support ticket template
 - Confirm the logo swaps correctly in dark mode (transparent PNGs only).
 - Confirm reply-by-email still threads into the ticket (Syncro "Reply above this line", WHMCS piping subject untouched).
 - Check that history renders newest-first and the latest message is not duplicated.
+
+## Syncro: every customer-facing template (v1.2, 2026-09-23)
+
+```
+py -3 email/build.py            # wrapper, ticket emails, Gleap, WHMCS
+py -3 email/syncro_extra.py     # the 17 other Syncro email bodies (portal, billing, appointments, PO, lead)
+py -3 email/syncro_pdf.py       # Syncro PDF templates: invoice, estimate, statement, ticket, PO, purchase receipt
+py -3 email/syncro_preview.py   # optional: wrapper + body with sample data, dist/preview/syncro/
+py -3 email/syncro_pdf_preview.py  # optional: PDF templates with sample data + PNGs, dist/preview/pdf/
+```
+
+- `syncro_extra.py` and `syncro_pdf.py` refuse to write a template that uses a tag Syncro doesn't offer for it. Allowed = the editor's tag list for that template plus tags the live template already used.
+- `syncro-live-backup/2026-09-23/` is a snapshot of every live Syncro email and PDF template taken before the v1.2 deploy, with each template's edit URL and tag list in `index.json`. PDF templates also keep Syncro's own Version History.
+- Only the default PDF templates are restyled. The alternate invoice and ticket templates (possibly assigned to specific customers) and the disclaimer, packing slip and label templates are untouched.
+- Executive Summary reports are built from blocks in Syncro's report builder, not HTML, so there is nothing to restyle there.
