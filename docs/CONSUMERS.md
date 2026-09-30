@@ -11,6 +11,19 @@ change is a contract change for every row below.
 | WRLD.AI dashboard | `WRLDInc/CentralizeWRLD` | `registry/theme/wrld.css` | `WrldSidebar`, `WrldTopBar`, `WrldStatCard`, `WrldAgentList`, `WrldAgentDetail`, `WrldRunHistory`, `WrldHelpButton` | shadcn host |
 | **PulseWRLD** — public services status | `WRLDInc/publicServicesStatus-web` | `styles.css`, favicons, `wrld-mark-white.png` | `WrldTopBar`, `WrldEyebrow`, `WrldStatCard`; local stand-ins for a status pill and an uptime bar | Cloudflare Worker at a `*.wrld.tech` subdomain (name pending). Needs two new atoms — see below. |
 
+## Shared search endpoint
+
+Every row above may also call the WRLD AI Search namespace endpoint
+(`https://search.wrld.ai`) from the browser, which means its apex and preview
+hosts must be in the endpoint's **authorized hosts**. Rules, the read-append-
+write flow and the overlay spec are in [`AI_SEARCH_AGENTS.md`](AI_SEARCH_AGENTS.md).
+
+| Consumer | Calls the endpoint | Origin in authorized hosts (2026-09-30) |
+| --- | --- | --- |
+| wrld.tech | via its same-origin proxy `/api/ai-search` | `wrld.tech`, `*.wrld.tech`, `*.wrldtech.workers.dev` |
+| wrld.design | directly (assets-only Worker), `#aiDialog` | previews yes (`*.wrldtech.workers.dev`); **apex `wrld.design` pending** |
+| WRLD.one, WRLD.AI dashboard | `WrldSearchDialog` from the registry | `*.wrld.ai` yes; add the portal host when it adopts the dialog |
+
 ## Requested atoms
 
 PulseWRLD needs two atoms that do not exist in the kit or the registry. They

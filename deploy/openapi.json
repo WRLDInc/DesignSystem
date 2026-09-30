@@ -2,12 +2,18 @@
   "openapi": "3.1.0",
   "info": {
     "title": "WRLD.design — design system asset API",
-    "version": "0.5.1",
+    "version": "0.6.0",
     "summary": "Read-only, CORS-open files that make up the WRLD design system.",
     "description": "wrld.design is an assets-only Cloudflare Worker. Every path below is a static GET with no authentication, no rate plan and no state. This description exists so that agents can discover the machine-readable surfaces (tokens, theme, manifests, discovery documents) without scraping HTML. Human documentation: https://wrld.design/README.md. Agent overview: https://wrld.design/llms.txt.",
     "termsOfService": "https://wrld.design/LICENSE",
     "contact": { "name": "WRLD Tech Co.", "url": "https://wrld.tech/contact" },
-    "license": { "name": "See LICENSE", "url": "https://wrld.design/LICENSE" }
+    "license": { "name": "See LICENSE", "url": "https://wrld.design/LICENSE" },
+    "x-wrld-ai-search": {
+      "description": "WRLD content search for browsers, proxies, MCP clients and agents. Not served by this origin; documented here so agents that read this description find it. Guideline: https://wrld.design/docs/AI_SEARCH_AGENTS.md",
+      "endpoint": "https://search.wrld.ai",
+      "paths": { "/search": "POST, returns chunks with instance_id", "/chat/completions": "POST, OpenAI-compatible, stream:true supported", "/mcp": "POST, Streamable HTTP MCP, tool search" },
+      "instances": ["wereallylovedesign", "wrld-search"]
+    }
   },
   "servers": [
     { "url": "https://wrld.design", "description": "Production, the only canonical origin" }
@@ -112,6 +118,14 @@
         "tags": ["brand"],
         "summary": "Login design guidelines: how a WRLD sign-in surface is built",
         "operationId": "getLoginDesign",
+        "responses": { "200": { "description": "Markdown (served as text/plain)", "content": { "text/plain": {} } } }
+      }
+    },
+    "/docs/AI_SEARCH_AGENTS.md": {
+      "get": {
+        "tags": ["brand"],
+        "summary": "AI Search, MCP and agents guideline for WRLD properties",
+        "operationId": "getAiSearchAgentsGuideline",
         "responses": { "200": { "description": "Markdown (served as text/plain)", "content": { "text/plain": {} } } }
       }
     },

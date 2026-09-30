@@ -18,6 +18,7 @@
     type: "tokens foundations typography fonts typeface text",
     brand: "logo mark identity voice",
     components: "ui patterns controls",
+    agents: "api mcp search ai cloudflare agent overlay namespace endpoint discovery metadata",
   };
 
   // Every WRLD surface needs these regardless of which card was picked.

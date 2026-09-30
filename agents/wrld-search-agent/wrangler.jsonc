@@ -1,0 +1,29 @@
+{
+  // Reference configuration for a WRLD McpAgent. See ./README.md and
+  // docs/AI_SEARCH_AGENTS.md §6. Rename `name` and the class before deploying.
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "wrld-search-agent",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-09-01",
+  "compatibility_flags": ["nodejs_compat"],
+
+  // McpAgent is a Durable Object; one instance per MCP session. The SQLite
+  // migration is required for the Agents SDK's state storage.
+  "durable_objects": {
+    "bindings": [{ "name": "WrldSearchMcp", "class_name": "WrldSearchMcp" }]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["WrldSearchMcp"] }],
+
+  // The whole WRLD namespace, resolved by instance name at runtime with
+  // env.AI_SEARCH.get("<instance>"). Remote-only: `wrangler dev` and any
+  // build that evaluates the Worker need CLOUDFLARE_API_TOKEN in the
+  // environment, or they fail with "In a non-interactive environment, it's
+  // necessary to set a CLOUDFLARE_API_TOKEN" (verified on wrld.tech).
+  "ai_search_namespaces": [
+    { "binding": "AI_SEARCH", "namespace": "default", "remote": true }
+  ],
+
+  // Declare bindings HERE, never only in the dashboard: a binding that exists
+  // remotely but not in this file is a destructive diff on the next deploy.
+  "observability": { "enabled": true, "head_sampling_rate": 1 }
+}

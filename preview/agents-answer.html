@@ -1,0 +1,49 @@
+<!doctype html>
+<!-- @dsCard group="Agents" name="Ask WRLD.AI answer" subtitle="streamed answer · sources first · user/assistant surfaces · outage notice" viewport="700x590" -->
+<html data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="_shared.css">
+<style>
+  .pane{background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+  .src{display:flex;gap:6px;flex-wrap:wrap;padding:12px 14px 0}
+  .src a{font:11px var(--font-mono);color:var(--fg-muted);border:1px solid var(--border);border-radius:3px;padding:3px 7px;text-decoration:none;display:inline-flex;gap:6px;align-items:center}
+  .src a b{font:10px var(--font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--fg-subtle);font-weight:400}
+  .msg{margin:12px 14px;padding:10px 12px;border-radius:4px;font:14px/1.55 var(--font-body);color:var(--fg);max-width:88%}
+  .me{background:var(--bg-muted);margin-left:auto}
+  .ai{background:var(--bg);border:1px solid var(--border)}
+  .ai p{margin:0 0 8px}.ai p:last-child{margin:0}
+  .cur{display:inline-block;width:7px;height:15px;background:var(--fg);vertical-align:-2px;margin-left:2px;animation:b 1s steps(2) infinite}
+  @keyframes b{to{opacity:0}}
+  .cite{font:11px var(--font-mono);color:#007fee;text-decoration:none;border-bottom:1px solid rgb(0 127 238 / .35)}
+  .comp{display:flex;gap:8px;padding:10px 14px;border-top:1px solid var(--border);align-items:center}
+  .comp .in{flex:1;padding:9px 12px;border:1px solid var(--border);border-radius:4px;font:14px var(--font-body);color:var(--fg-subtle);background:#fff}
+  .comp .send{padding:9px 14px;background:var(--fg);color:var(--bg);border-radius:4px;font:500 14px var(--font-body)}
+  .notice{display:flex;align-items:center;gap:12px;padding:10px 14px;font:13px var(--font-body);color:var(--fg-muted);border-top:1px solid var(--border);background:var(--bg-subtle)}
+  .notice u{color:var(--fg);text-underline-offset:2px}
+  .rule{font:12px/1.5 var(--font-body);color:var(--fg-muted)}
+  .rule b{color:var(--fg);font-weight:500}
+</style></head>
+<body><div class="card">
+  <div class="label-row"><div class="eyebrow">Ask WRLD.AI</div><div class="meta">/chat/completions · stream:true · event: chunks → deltas → [DONE] · the instance picks the model</div></div>
+  <div class="row" style="gap:18px;align-items:flex-start">
+    <div class="pane" style="flex:1;min-width:400px">
+      <div class="src">
+        <a href="#"><b>wrld.tech</b>wrld.tech/services</a>
+        <a href="#"><b>help</b>help.wrld.tech/articles/priority</a>
+        <a href="#"><b>help</b>help.wrld.tech/articles/onboarding</a>
+      </div>
+      <div class="msg me">What does managed IT include, and how fast do you respond?</div>
+      <div class="msg ai">
+        <p>WRLD.Services covers 24/7 monitoring, patching and proactive infrastructure care for every managed endpoint, network and cloud account — it is explicitly not break-fix <a class="cite" href="#">[1]</a>.</p>
+        <p>Response targets depend on severity. Covered clients have a priority SLA line around the clock, and tickets are triaged by impact rather than by arrival order <a class="cite" href="#">[2]</a>.<span class="cur"></span></p>
+      </div>
+      <div class="comp"><span class="in">What would you like to know?</span><span class="send">Send</span></div>
+      <div class="notice"><span>WRLD.AI is temporarily unavailable. Please try again later or talk to our team.</span><u>Try again</u><u>Talk to WRLD</u></div>
+    </div>
+    <div class="rule" style="flex:0 0 200px;display:flex;flex-direction:column;gap:10px">
+      <div><b>Sources first.</b> The <code style="font:11px var(--font-mono)">event: chunks</code> frame arrives before any token; render the source chips from it, tagged by <code style="font:11px var(--font-mono)">instance_id</code>.</div>
+      <div><b>Two surfaces.</b> User turns on <code style="font:11px var(--font-mono)">--wrld-bg-muted</code>, assistant turns on <code style="font:11px var(--font-mono)">--wrld-bg</code> with a hairline. No avatars, no bubbles with tails.</div>
+      <div><b>Accent = interaction.</b> Citations and the Send hover use <code style="font:11px var(--font-mono)">#007fee</code>; nothing else is coloured.</div>
+      <div><b>Outage is a notice row</b>, never a toast. Chat outage copy clears only after the next successful assistant reply.</div>
+      <div><b>History</b> is the widget's localStorage; its own controls clear it. Analytics off. Log status codes, never prompts.</div>
+    </div>
+  </div>
+</div></body></html>

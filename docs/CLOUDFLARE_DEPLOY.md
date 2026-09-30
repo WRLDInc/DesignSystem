@@ -334,7 +334,15 @@ curl -s https://wrld.design/SKILL.md | sha256sum
 #     with the SAME issuer string (trailing slash included).
 curl -s https://auth.wrld.tech/.well-known/oauth-authorization-server | grep -o '"issuer":"[^"]*"'
 
-# 14. End to end.
+# 14. WRLD.AI overlay (0.6.0): the namespace endpoint must accept this origin
+#     (browser CORS) and the pinned snippet must load. A missing
+#     access-control-allow-origin here is the "temporarily unavailable" state.
+curl -si -X OPTIONS https://search.wrld.ai/search -H 'Origin: https://wrld.design' \
+  -H 'Access-Control-Request-Method: POST' | grep -i access-control-allow-origin
+curl -sI https://search.wrld.ai/assets/v0.0.40/search-snippet.es.js | grep -i -E '^HTTP|content-type'
+curl -s https://wrld.design/ | grep -c 'id="aiDialog"'                # expect 1
+
+# 15. End to end.
 curl -s -X POST https://isitagentready.com/api/scan -H 'content-type: application/json' \
   -d '{"url":"https://wrld.design"}' | python3 -c 'import json,sys; d=json.load(sys.stdin)["checks"]; \
   [print(g, k, v["status"]) for g in d for k, v in d[g].items() if isinstance(v, dict) and "status" in v]'
