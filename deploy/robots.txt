@@ -32,6 +32,10 @@
 #           content for generative AI search answers).
 # ai-train: training or fine-tuning AI models.
 
+# Screpy, the SEO monitor for WRLD properties. Audit everything.
+User-agent: ScrepyBot
+Allow: /
+
 User-agent: *
 Content-Signal: search=yes, ai-input=yes, ai-train=yes
 Allow: /
