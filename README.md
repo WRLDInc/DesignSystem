@@ -252,6 +252,8 @@ WRLD does **not** ship a custom icon font. Iconography is sparse — the brand f
 WRLD.Tech Design System/
 ├── README.md                         ← you are here
 ├── SKILL.md                          ← Claude Code skill manifest
+├── CLAUDE.md                         ← how Claude works in this repo: TypeSafe review and triage
+├── .claude/settings.json             ← project-scope Claude Code config: TypeSafe plugin + marketplace
 ├── colors_and_type.css               ← drop-in tokens + semantic styles + @font-face
 ├── fonts/                            ← Montserrat + Ubuntu (Light/Regular/Medium/Bold) + Ubuntu Mono
 ├── tokens/

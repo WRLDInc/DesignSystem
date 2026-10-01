@@ -34,6 +34,10 @@ This repo is the canonical source of truth for WRLD brand design. Changes that l
 6. **Include screenshots** for any visual change.
 7. **Conventional commit prefix**: `feat:`, `fix:`, `docs:`, `refactor:`, `chore:`.
 
+## Claude-assisted review
+
+The checkout enables the TypeSafe plugin for Claude Code (`.claude/settings.json`), and the root `CLAUDE.md` says when to use it: design review against the brand rules, copy and tone checks, adherence-lint triage, consumer and issue triage, PR routing. Its output is a typed judgment that informs a reviewer. It never replaces the approvals in the table above, and nothing it produces lands in `brand/`, `tokens/` or `assets/logos/` without Ridgeway.
+
 ## Token naming rules
 
 - Every CSS variable is prefixed `--wrld-`.

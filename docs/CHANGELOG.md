@@ -2,6 +2,17 @@
 
 All notable changes to the WRLD Design System are documented here. This project follows semantic versioning.
 
+## [Unreleased]
+
+### Added
+
+- **TypeSafe is enabled project-wide for Claude Code.** `.claude/settings.json` registers the `typesafe-ai`
+  marketplace and enables `typesafe@typesafe-ai`, so every checkout gets the `typesafe:typesafe-ai` skill on first
+  launch. A root `CLAUDE.md` says when to use it in this repo — design review against the brand rules, copy and tone
+  checks, adherence-lint triage, consumer and issue triage, PR routing, registry curation — and the guardrails: judgments
+  inform, people decide; brand content still needs Ridgeway; credentials stay in the environment; nothing TypeSafe
+  touches the published site, the registry ports or the UI kits. `docs/CONTRIBUTING.md` gains a matching section.
+
 ## [0.4.0] — 2026-09-03
 
 ### Added
