@@ -56,3 +56,11 @@ flowchart LR
   green theme.
 - Button labels ("Add New", "Save Changes") come from PanelAlpha's
   translations, so they stay Title Case. CSS cannot sentence-case them.
+
+## Screenshots
+
+Captured on the live panel on 2026-09-30 after the save (`screenshots/`).
+
+| Light | Dark |
+| --- | --- |
+| ![Client area, light mode](screenshots/client-area-light.jpg) | ![Client area, dark mode](screenshots/client-area-dark.jpg) |
