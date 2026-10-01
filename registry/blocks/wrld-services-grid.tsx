@@ -64,8 +64,8 @@ export const WRLD_SERVICES: WrldService[] = [
   { sub: "HOST", body: "Clustered, ethically-operated hosting. Reserved for clients and approved partners.", href: "https://wrld.host" },
   { sub: "DESIGN", body: "Design that ships. We build the sites we design, and we build them to work.", href: "https://wrld.design" },
   { sub: "AI", body: "Tailored agents tuned by humans who know your operations.", href: "https://wrld.ai" },
-  { sub: "SERVICES", body: "24/7 monitoring, patching, and proactive infrastructure care.", href: "https://services.wrld.tech" },
-  { sub: "SUPPORT", body: "Real humans on the other end of every ticket. SLA-backed.", href: "https://support.wrld.tech" },
+  { sub: "SERVICES", body: "24/7 monitoring, patching, and proactive infrastructure care.", href: "https://wrld.tech/services" },
+  { sub: "SUPPORT", body: "Real humans on the other end of every ticket. SLA-backed.", href: "https://wrld.support" },
   { sub: "PRESS", body: "Premium WordPress hosting with WRLD-tuned plugins.", href: "https://wrld.press" },
 ];
 

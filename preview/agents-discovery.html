@@ -1,0 +1,34 @@
+<!doctype html>
+<!-- @dsCard group="Agents" name="Agent surfaces" subtitle="what a WRLD property ships for crawlers, the overlay and MCP clients · robots · llms.txt · api-catalog · metadata · /mcp" viewport="700x580" -->
+<html data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="_shared.css">
+<style>
+  table{width:100%;border-collapse:collapse;font:13px/1.4 var(--font-body);color:var(--fg)}
+  th{font:11px var(--font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--fg-subtle);text-align:left;padding:0 10px 8px;border-bottom:1px solid var(--border);font-weight:400}
+  td{padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:top}
+  td.k{font:12px var(--font-mono);color:var(--fg);white-space:nowrap}
+  td.w{color:var(--fg-muted);font-size:12px}
+  .dot{display:inline-block;width:8px;height:8px;border-radius:50%;vertical-align:middle;margin-right:6px;border:1px solid var(--fg-subtle)}
+  .dot.ok{background:#10b981;border-color:#10b981}
+  .dot.no{background:transparent}
+  .dot.warn{background:#f59e0b;border-color:#f59e0b}
+  .flow{display:flex;align-items:center;gap:6px;font:11px var(--font-mono);color:var(--fg-muted);flex-wrap:wrap;margin-top:6px}
+  .flow span{border:1px solid var(--border);border-radius:3px;padding:3px 7px;color:var(--fg)}
+  .flow i{font-style:normal;color:var(--fg-subtle)}
+</style></head>
+<body><div class="card">
+  <div class="label-row"><div class="eyebrow">Agent surfaces per property</div><div class="meta">docs/AI_SEARCH_AGENTS.md §7 · build fails when one goes missing · isitagentready.com scan on the apex</div></div>
+  <table>
+    <thead><tr><th>Surface</th><th>Rule</th><th>wrld.design</th><th>wrld.tech</th></tr></thead>
+    <tbody>
+      <tr><td class="k">robots.txt</td><td class="w">Content-Signal line; docs sites all <em>yes</em>, marketing decides and says why; previews noindex</td><td><span class="dot ok"></span>search · ai-input · ai-train</td><td><span class="dot ok"></span>opt-out, reasoned</td></tr>
+      <tr><td class="k">sitemap.xml</td><td class="w">Canonical 200 URLs only — the crawler indexes what the sitemap lists</td><td><span class="dot ok"></span>generated at build</td><td><span class="dot ok"></span>Astro</td></tr>
+      <tr><td class="k">llms.txt</td><td class="w">Overview + every machine-readable surface + the MCP URL</td><td><span class="dot ok"></span></td><td><span class="dot warn"></span>add MCP</td></tr>
+      <tr><td class="k">&lt;meta wrld_*&gt;</td><td class="w">property · section · audience · updated · kind (5 custom fields max)</td><td><span class="dot warn"></span>schema defined, tags next</td><td><span class="dot no"></span>pending</td></tr>
+      <tr><td class="k">.well-known/api-catalog</td><td class="w">RFC 9727 linkset, anchor for search.wrld.ai → this guideline</td><td><span class="dot ok"></span></td><td><span class="dot no"></span></td></tr>
+      <tr><td class="k">agent-skills/index.json</td><td class="w">Digest generated at build</td><td><span class="dot ok"></span>SKILL.md</td><td><span class="dot no"></span></td></tr>
+      <tr><td class="k">/mcp · .mcp.json</td><td class="w">search.wrld.ai/mcp registered in every repo</td><td><span class="dot ok"></span></td><td><span class="dot ok"></span></td></tr>
+      <tr><td class="k">auth.md · PRM</td><td class="w">Only where there is an authenticated door</td><td><span class="dot ok"></span>auth.wrld.tech</td><td><span class="dot no"></span>n/a</td></tr>
+    </tbody>
+  </table>
+  <div class="flow"><span>page + meta</span><i>→</i><span>sitemap</span><i>→</i><span>AI Search crawl · 6 h</span><i>→</i><span>namespace default</span><i>→</i><span>search.wrld.ai</span><i>→</i><span>overlay · proxy · /mcp · agents</span></div>
+</div></body></html>

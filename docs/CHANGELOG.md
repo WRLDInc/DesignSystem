@@ -12,6 +12,116 @@ All notable changes to the WRLD Design System are documented here. This project 
   checks, adherence-lint triage, consumer and issue triage, PR routing, registry curation — and the guardrails: judgments
   inform, people decide; brand content still needs Ridgeway; credentials stay in the environment; nothing TypeSafe
   touches the published site, the registry ports or the UI kits. `docs/CONTRIBUTING.md` gains a matching section.
+=======
+## [0.6.0] — 2026-09-30
+
+Native support for Cloudflare AI Search and Cloudflare Agents, and the **API / MCP / Agents** card the wrld.design
+review asked for ([BugSmash r37kW](https://wrld.bugsmash.io/review/r37kW) #1 and #5).
+
+### Added
+
+- **The WRLD.AI search overlay on wrld.design.** A search button in the pill nav's tool cluster (the spot the review
+  pointed at) opens the same dialog wrld.tech ships: Search and Ask WRLD.AI tabs over Cloudflare's pinned v0.0.40 web
+  components, talking to the AI Search **namespace endpoint** `https://search.wrld.ai` (instances `wereallylovedesign`
+  + `wrld-search`) straight from the browser — the Worker stays assets-only. ⌘K / Ctrl K, Esc, focus return, theme
+  sync, reduced motion, the dark-mode label fix and the mobile history drawer are all ported from `AISearch.astro`.
+  Script loads on first open. Needs `wrld.design` in the endpoint's authorized hosts as an exact entry (the list's
+  wildcards do not match on the preflight, verified live).
+- **`docs/AI_SEARCH_AGENTS.md`** — the company-wide guideline: verified inventory of the WRLD Inc. account's
+  instances and endpoints, namespace and instance rules (`default` for WRLD properties, `client-<slug>` per client),
+  public vs private use (browser, same-origin proxy, Cloudflare Access on a custom domain, Workers bindings with
+  `remote: true`), request/response shapes as observed, the overlay's anatomy / tokens / behaviour / copy for every
+  state, Agents SDK patterns (McpAgent, `createMcpHandler`, `Agent` + `@callable`), MCP client registration, the web
+  rules and the five-field `<meta wrld_*>` metadata schema every property ships, and an operations checklist.
+- **`/system#agents`** — a new Agents section fed by three annotated preview cards: `preview/agents-search-overlay.html`
+  (the dialog anatomy, numbered), `preview/agents-answer.html` (streamed answer, sources first, outage notice) and
+  `preview/agents-discovery.html` (the agent surfaces per property). Registered in `_ds_manifest.json`; the landing's
+  fourth system card links here.
+- **Registry:** `WrldSearchTrigger` (`registry/ui`) and `WrldSearchDialog` (`registry/blocks`) — the React / shadcn port
+  with debounced `/search`, streamed `/chat/completions` (SSE: `event: chunks` → deltas → `[DONE]`), instance chips,
+  replaceable `search` / `ask` functions for proxies and demos. Both typecheck strict and are listed in
+  `registry/manifest.json`, unpublished until the next `npm run registry:publish`.
+- **`agents/wrld-search-agent/`** — a reference Cloudflare `McpAgent` (Durable Object + SQLite migration +
+  `ai_search_namespaces` binding) exposing `search_wrld` and `list_wrld_properties`, to copy and rename. Not part of
+  the site build.
+- **`.mcp.json`** at the repo root registering `https://search.wrld.ai/mcp`, per the guideline's rule for every WRLD repo.
+- Discovery: `llms.txt` gains a "Search, MCP and agents" section; `.well-known/api-catalog` gains an anchor for
+  `https://search.wrld.ai/`; `openapi.json` publishes the guideline path and an `x-wrld-ai-search` description; README,
+  `SKILL.md`, `CONSUMERS.md` and the deploy runbook (check 14) point at all of it.
+
+### Changed
+
+- `package.json` → 0.6.0. `deploy/system/app.js` aliases the new section for the local filter.
+
+### Not done here, on purpose
+
+- Adding `wrld.design` to the namespace endpoint's authorized hosts is an account change for @Ridgelawrence; the exact
+  read-append-write call is in the guideline (§3.3). Until then the apex overlay shows its unavailable state, and so do
+  the branch previews: the `*.wrldtech.workers.dev` wildcard is listed but does not match.
+- No AI Search instance crawls wrld.design itself yet; the guideline proposes `wrld-design-system`.
+
+## [0.5.1] — 2026-09-30
+
+Fixes from the wrld.design review on BugSmash ([r37kW](https://wrld.bugsmash.io/review/r37kW)), reviewer Ridgeway Lawrence.
+
+### Changed
+
+- **Landing nav.** The pill nav no longer strands its tagline and CTA in the middle of the bar: `.right` and `.tools`
+  now sit together at the trailing edge (the nav was `space-between` across three children, so the free space split
+  evenly on both sides of the CTA). Two links added, desktop and mobile sheet: **Directory** → `https://wrld.one`,
+  **About** → `https://wrld.tech`.
+- **Footer contact line** is now `helpdesk@wrld.tech | 469.299.9598` (mailto/tel links) instead of the maintainer's
+  address. Mirrored in `registry/blocks/wrld-cta.tsx` (+ demo), both styleguide footers and `brand/wrld-tech.md`.
+- **Property links.** WRLD.Services → `https://wrld.tech/services`; WRLD.Support → `https://wrld.support`; the
+  footer's WRLD.Press link is replaced by **WRLD.help** → `https://wrld.help`. The property cards on the landing and
+  the registry's `WrldFooter` / `WrldServicesGrid` defaults follow the same destinations.
+- `brand/wrld-one.md` records that wrld.design links to wrld.one as **Directory** (scope of the product itself is
+  still unconfirmed).
+- `package.json` → 0.5.1.
+
+## [0.5.0] — 2026-09-30
+
+### Added
+
+- **Agent discovery on wrld.design.** The site now declares itself to AI agents and crawlers instead of leaving
+  them to scrape HTML:
+  - `deploy/robots.txt` carries a `Content-Signal: search=yes, ai-input=yes, ai-train=yes` directive with the
+    contentsignals.org preamble. Every signal is deliberately *yes* — the system is published so that agents build
+    WRLD surfaces correctly — which is the opposite of wrld.tech's marketing opt-out, and the file says why.
+  - `deploy/llms.txt` — the llmstxt.org overview: what the system is, the non-negotiables, and links to every
+    machine-readable surface.
+  - `deploy/.well-known/api-catalog` — an RFC 9727 linkset served as `application/linkset+json`, pointing at the
+    OpenAPI description, the human docs and the identity documents.
+  - `deploy/openapi.json` — an OpenAPI 3.1 description of the static GET surface (tokens, theme, manifests, brand
+    docs, discovery documents), so the catalog has a real `service-desc`.
+  - `Link` response headers on `/` (`api-catalog`, `service-desc`, `service-doc`, `describedby`) via
+    `deploy/_headers`, scoped to the root document only.
+  - `deploy/.well-known/agent-skills/index.json`, **generated at build** by `scripts/build_site.mjs` with a SHA-256
+    digest of the `SKILL.md` that ships, so the digest can never go stale. `SKILL.md` is now published at
+    `/SKILL.md`.
+- **Auth.md and OAuth protected resource metadata.** `deploy/auth.md` follows the Auth.md protocol's step
+  structure (discover → pick a method → register → exchange → use → errors → revocation) as a self-contained flow,
+  mapping `anonymous`, `service_auth` and `identity_assertion` onto the standard endpoints the authorization server
+  (`https://auth.wrld.tech/`) actually publishes: RFC 7591 dynamic registration, RFC 8628 device authorization and
+  the ID-JAG grant profile. Served as `text/markdown`. `deploy/.well-known/oauth-protected-resource` is the RFC 9728 document with `resource`,
+  `authorization_servers`, `scopes_supported`, `bearer_methods_supported: ["header"]` and an `agent_auth` block.
+- **Login design guidelines** — `docs/LOGIN_DESIGN.md`: which identity provider fronts which door (end-user
+  portals, staff tools, automation), the anatomy of a WRLD sign-in page, the tokens it uses, every state and its
+  copy, accessibility requirements, and a do / do-not list for agents implementing it. `auth.md` points authorised
+  agents at it.
+- `preview/components-login.html` — the reference card for the sign-in pattern (default, inline error and
+  second-factor states), registered in `_ds_manifest.json` so `/system` and the landing page list it.
+
+### Changed
+
+- `package.json` → 0.5.0.
+- `scripts/build_site.mjs` publishes `SKILL.md`, generates the agent-skills index, and fails the build if any
+  discovery document is missing, if `robots.txt` loses its `Content-Signal` line, or if a JSON discovery document
+  does not parse.
+- `deploy/_headers` adds the `/` Link rule, `Content-Type` for the two extensionless well-known files, and a
+  `text/markdown` override for `/auth.md` (unset-then-set, because `/*.md` also matches it).
+- `docs/CLOUDFLARE_DEPLOY.md` gains an agent-discovery verification block; `README.md` documents the agent-readable
+  surfaces.
 
 ## [0.4.0] — 2026-09-03
 

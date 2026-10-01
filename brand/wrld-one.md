@@ -4,6 +4,7 @@
 
 **Property.** wrld.one — reserved domain for an emerging unified platform.
 **Status.** **Scope TBD.** As of 2026-04-18, wrld.one is referenced in internal configs but has no public-facing scope defined.
+**Update 2026-09-30.** wrld.design links to `https://wrld.one` from its primary nav under the label **Directory** (Ridgeway, BugSmash review r37kW). Treat "Directory" as the confirmed public label for the link; the product scope below is still unconfirmed.
 
 ## Posture until scope is confirmed
 

@@ -298,6 +298,44 @@ any published file references an asset that didn't make it. `npm run serve`
 previews the result. Full setup, the exact dashboard build settings, and the
 runbook are in [`docs/CLOUDFLARE_DEPLOY.md`](docs/CLOUDFLARE_DEPLOY.md).
 
+### Agent-readable surfaces
+
+The origin is meant to be read by agents as well as people, and says so:
+
+| Surface | Path | Standard |
+| --- | --- | --- |
+| Content signals (`search=yes, ai-input=yes, ai-train=yes`) | [`/robots.txt`](https://wrld.design/robots.txt) | [contentsignals.org](https://contentsignals.org/) |
+| LLM overview | [`/llms.txt`](https://wrld.design/llms.txt) | [llmstxt.org](https://llmstxt.org/) |
+| API catalog + `Link` headers on `/` | [`/.well-known/api-catalog`](https://wrld.design/.well-known/api-catalog) | RFC 9727, RFC 8288 |
+| OpenAPI description of the static surface | [`/openapi.json`](https://wrld.design/openapi.json) | OpenAPI 3.1 |
+| Agent skill + discovery index (digest generated at build) | [`/SKILL.md`](https://wrld.design/SKILL.md), [`/.well-known/agent-skills/index.json`](https://wrld.design/.well-known/agent-skills/index.json) | Agent Skills Discovery v0.2.0 |
+| Agent registration and credential guidance | [`/auth.md`](https://wrld.design/auth.md) | Auth.md |
+| Protected resource metadata (authorization servers, `agent_auth`) | [`/.well-known/oauth-protected-resource`](https://wrld.design/.well-known/oauth-protected-resource) | RFC 9728 |
+| Login design guidelines for agents building a WRLD surface | [`docs/LOGIN_DESIGN.md`](docs/LOGIN_DESIGN.md) | — |
+| AI Search, MCP and agents guideline (namespaces, endpoints, overlay spec, web rules) | [`docs/AI_SEARCH_AGENTS.md`](docs/AI_SEARCH_AGENTS.md) | Cloudflare AI Search, MCP |
+| MCP client registration for the WRLD search endpoint | [`.mcp.json`](.mcp.json) | MCP (Streamable HTTP) |
+
+Re-run the readiness scan after any change to these (`POST https://isitagentready.com/api/scan` with
+`{"url": "https://wrld.design"}`); the expected results are listed in
+[`docs/CLOUDFLARE_DEPLOY.md`](docs/CLOUDFLARE_DEPLOY.md).
+
+### Search, MCP and agents
+
+Every WRLD property gets search, answers and an agent tool from **one Cloudflare
+AI Search namespace endpoint**, `https://search.wrld.ai` (`/search`,
+`/chat/completions`, `/mcp`), which merges the wrld.tech crawl and the
+help.wrld.tech docs. wrld.design uses it too: the search button in the pill nav
+(⌘K) opens the **WRLD.AI overlay** — the same dialog wrld.tech ships, called
+straight from the browser because this Worker is assets-only.
+
+| What | Where |
+| --- | --- |
+| The guideline: inventory, namespace rules, public vs private, the overlay spec, Agents SDK, web rules and metadata | [`docs/AI_SEARCH_AGENTS.md`](docs/AI_SEARCH_AGENTS.md) |
+| Annotated reference cards (`/system#agents`) | [`preview/agents-search-overlay.html`](preview/agents-search-overlay.html) · [`preview/agents-answer.html`](preview/agents-answer.html) · [`preview/agents-discovery.html`](preview/agents-discovery.html) |
+| React / shadcn components | [`registry/ui/wrld-search-trigger.tsx`](registry/ui/wrld-search-trigger.tsx) · [`registry/blocks/wrld-search-dialog.tsx`](registry/blocks/wrld-search-dialog.tsx) |
+| Reference Cloudflare McpAgent to build from | [`agents/wrld-search-agent/`](agents/wrld-search-agent/) |
+| The static implementation | [`deploy/index.html`](deploy/index.html) (`#searchBtn`, `#aiDialog`) |
+
 ## Component registry (21st.dev)
 
 Every UI-kit component also ships as a **self-contained TypeScript port** under

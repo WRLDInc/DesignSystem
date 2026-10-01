@@ -328,6 +328,47 @@
       "url": "https://21st.dev/@ridgelawrence/components/wrld-header",
       "installRef": "@ridgelawrence/wrld-header",
       "publishedAt": "2026-09-03T20:00:55.240Z"
+    },
+    {
+      "slug": "wrld-search-trigger",
+      "name": "WRLD Search Trigger",
+      "registry": "ui",
+      "file": "registry/ui/wrld-search-trigger.tsx",
+      "demo": "registry/ui/wrld-search-trigger.demo.tsx",
+      "description": "Round icon button that opens the WRLD.AI search overlay from a navigation bar, with an optional \u2318K / Ctrl K hint. Monochrome at rest, accent on hover, focus and while the dialog is open. Pair with WrldSearchDialog.",
+      "tags": [
+        "wrld",
+        "search",
+        "nav",
+        "trigger",
+        "ai"
+      ],
+      "source": "deploy/index.html",
+      "component": null,
+      "url": null,
+      "installRef": null,
+      "publishedAt": null
+    },
+    {
+      "slug": "wrld-search-dialog",
+      "name": "WRLD Search Dialog",
+      "registry": "blocks",
+      "file": "registry/blocks/wrld-search-dialog.tsx",
+      "demo": "registry/blocks/wrld-search-dialog.demo.tsx",
+      "description": "The WRLD.AI overlay: Search and Ask WRLD.AI tabs over a Cloudflare AI Search public endpoint (default search.wrld.ai), with debounced search, streamed answers, sources first, instance chips and every state's copy. Host owns open state and the trigger; search/ask are replaceable for proxies and demos.",
+      "tags": [
+        "wrld",
+        "search",
+        "ai",
+        "dialog",
+        "cloudflare",
+        "mcp"
+      ],
+      "source": "deploy/index.html",
+      "component": null,
+      "url": null,
+      "installRef": null,
+      "publishedAt": null
     }
   ]
 }

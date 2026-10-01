@@ -15,14 +15,14 @@ const settings = {
   eyebrow: "Get in touch",
   headline: "Tech that moves with you.",
   buttonLabel: "Start a conversation →",
-  contact: "ridge@wrld.tech · Dallas, TX",
+  contact: "helpdesk@wrld.tech | 469.299.9598",
 };
 
 export default function Demo(props: Partial<typeof settings>) {
   const s = { ...settings, ...props };
   return (
     <div style={frame}>
-      <WrldCta eyebrow={s.eyebrow} headline={s.headline} buttonLabel={s.buttonLabel} contact={s.contact} href="mailto:ridge@wrld.tech" />
+      <WrldCta eyebrow={s.eyebrow} headline={s.headline} buttonLabel={s.buttonLabel} contact={s.contact} href="mailto:helpdesk@wrld.tech" />
     </div>
   );
 }

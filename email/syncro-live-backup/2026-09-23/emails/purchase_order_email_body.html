@@ -1,0 +1,41 @@
+   <h3>Purchase Order: {{purchase_order_number}}</h3>
+
+
+    <h3>From:</h3>
+    Account #: {{vendor_account_number}}  <br>
+    Phone:     {{account_phone}}          <br>
+    Email:     {{account_email}}          <br>
+
+    <h3>To:</h3>
+    {{vendor_name}} <br>
+    Attn: {{vendor_rep_first_name}} {{vendor_rep_last_name}}
+
+    <h3>Shipping Instructions:</h3>
+    {{purchase_order_shipping_notes}}
+
+    <h3>Note:</h3>
+    {{purchase_order_general_notes}}
+
+    <h3>Order Details:</h3>
+    <h4>Expected by: {{purchase_order_expected_date}}</h4>
+
+    <table class="table" width='800px' border="solid">
+      <thead>
+      <tr>
+        <th>Number</th>
+        <th>Item</th>
+        <th>UPC</th>
+        <th>SKU</th>
+        <th>Order Qty.</th>
+        <th>Price</th>
+        <th>Total</th>
+      </tr>
+      </thead>
+      <tbody>
+      {{purchase_order_line_item_rows}}
+      </tbody>
+    </table>
+
+    <p>&nbsp;</p>
+    <p>&nbsp;</p>
+    <p>&nbsp;</p>

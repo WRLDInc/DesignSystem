@@ -45,3 +45,7 @@ registry/.renders/
 
 # Claude Code plugin state (claude-never-forgets writes per-session memories here)
 .claude/memories/
+
+# Python
+__pycache__/
+*.pyc

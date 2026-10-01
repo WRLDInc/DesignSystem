@@ -1,0 +1,51 @@
+# WRLD.design
+
+> The open design system behind every WRLD surface: tokens, type, components, brand rules and reference implementations for WRLD Tech Co. and its properties (wrld.tech, WRLD.host, WRLD.AI, WRLD.Services, WRLD.Support, WRLD.Press, WRLD.One). Served from the Cloudflare edge; source of truth is github.com/WRLDInc/DesignSystem.
+
+Everything here is public, read-only and CORS-open. No credentials are needed to read it. Content signals in /robots.txt allow search, ai-input and ai-train. Machine-readable discovery lives at /.well-known/api-catalog, and the OpenAPI description of the served files is /openapi.json.
+
+Non-negotiables when you build with it: surfaces stay monochrome and accents are interactive only; sentence case everywhere; no emoji as iconography (Lucide, 1.5px stroke); the starburst mark is never a circle or disc; `wrld.tech` and `wrld.design` are lowercase, `WRLD.AI`, `WRLD.host`, `WRLD.Services`, `WRLD.Support`, `WRLD.Press`, `WRLD.One` keep their casing.
+
+## Start here
+
+- [README — the brand book and index](https://wrld.design/README.md): entity map, voice, visual foundations, iconography, what lives where.
+- [SKILL.md — the agent skill](https://wrld.design/SKILL.md): how an AI agent should use this system to produce on-brand work.
+- [Master brand brief](https://wrld.design/brand/CLAUDE.md): the authoritative brief for any assisted design or content work.
+- [Interactive system page](https://wrld.design/system): foundations, components and brand, with copyable prompts.
+
+## Tokens and stylesheets
+
+- [styles.css](https://wrld.design/styles.css): the one-line consumer entry point (tokens + type + fonts).
+- [tokens/tokens.css](https://wrld.design/tokens/tokens.css): the canonical CSS custom properties, light and dark.
+- [tokens/tokens.json](https://wrld.design/tokens/tokens.json): the same tokens as data.
+- [tokens/tokens.ts](https://wrld.design/tokens/tokens.ts): typed export for TypeScript consumers.
+- [registry/theme/wrld.css](https://wrld.design/registry/theme/wrld.css): the generated shadcn / Tailwind v4 theme.
+
+## Components
+
+- [registry/manifest.json](https://wrld.design/registry/manifest.json): every 21st.dev component with slug, description and tags.
+- [_ds_manifest.json](https://wrld.design/_ds_manifest.json): the UI-kit bundle manifest and the preview-card index.
+- [ui_kits/wrld-tech/](https://wrld.design/ui_kits/wrld-tech/): flagship marketing kit.
+- [ui_kits/wrld-ai/](https://wrld.design/ui_kits/wrld-ai/): product dashboard kit.
+- [Login design guidelines](https://wrld.design/docs/LOGIN_DESIGN.md): how a WRLD sign-in surface is built, and which identity provider fronts which door.
+
+## Identity and agent access
+
+- [auth.md](https://wrld.design/auth.md): agent audience, registration methods and credential use for WRLD identity.
+- [OAuth protected resource metadata](https://wrld.design/.well-known/oauth-protected-resource): the authorization servers WRLD surfaces trust.
+- [Agent skills index](https://wrld.design/.well-known/agent-skills/index.json): discoverable skills with digests.
+
+## Search, MCP and agents
+
+- [AI Search, MCP and agents guideline](https://wrld.design/docs/AI_SEARCH_AGENTS.md): how every WRLD property gets search, answers and an agent tool from one Cloudflare AI Search namespace — inventory, namespace rules, public vs private endpoints, the overlay spec, Agents SDK patterns, and the web rules and metadata each site ships.
+- WRLD search endpoint: `https://search.wrld.ai/search`, `https://search.wrld.ai/chat/completions` (OpenAI-compatible, streams) and `https://search.wrld.ai/mcp` (Streamable HTTP, tool `search`). Namespace endpoint over wrld.tech and help.wrld.tech; browser calls need an authorized WRLD origin, MCP clients do not.
+- [Search overlay reference card](https://wrld.design/preview/agents-search-overlay), [Ask WRLD.AI answer](https://wrld.design/preview/agents-answer), [Agent surfaces per property](https://wrld.design/preview/agents-discovery) — the annotated cards on the `/system#agents` section.
+- [Reference McpAgent](https://github.com/WRLDInc/DesignSystem/tree/main/agents/wrld-search-agent): copy-and-rename Cloudflare Agent exposing WRLD search as MCP tools.
+
+## Optional
+
+- [Changelog](https://wrld.design/docs/CHANGELOG.md)
+- [Consumers of wrld.design](https://wrld.design/docs/CONSUMERS.md)
+- [Deploy runbook](https://wrld.design/docs/CLOUDFLARE_DEPLOY.md)
+- [21st.dev publishing runbook](https://wrld.design/docs/21ST_PUBLISHING.md)
+- [Sitemap](https://wrld.design/sitemap.xml)

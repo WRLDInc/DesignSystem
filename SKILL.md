@@ -17,6 +17,7 @@ Read `README.md` first — it's the source of truth for entity naming, tone, vis
 - `ui_kits/wrld-tech/` — flagship marketing site UI kit (header, hero, services grid, values strip, CTA, footer).
 - `ui_kits/wrld-ai/` — WRLD.AI product dashboard UI kit (sidebar, agent list, agent detail, run history, stat cards).
 - `styleguide/index.html` — upstream interactive reference, viewable as-is.
+- `docs/AI_SEARCH_AGENTS.md` — how a WRLD surface gets search, answers and an agent tool: the Cloudflare AI Search namespace endpoint (`https://search.wrld.ai`), the WRLD.AI overlay spec (trigger, dialog, tabs, states, copy), public vs private use, Agents SDK patterns, and the web rules and `<meta wrld_*>` metadata every property ships. Reference cards: `preview/agents-*.html`; components: `registry/ui/wrld-search-trigger.tsx`, `registry/blocks/wrld-search-dialog.tsx`.
 - `registry/` — the 21st.dev registry: self-contained TypeScript ports of every kit component (`Wrld*`) with demos, the generated shadcn theme `registry/theme/wrld.css`, and `manifest.json`. Use these when the target project is React + shadcn; publish with `npm run registry:publish` (see `docs/21ST_PUBLISHING.md`).
 
 ## How to use this skill
