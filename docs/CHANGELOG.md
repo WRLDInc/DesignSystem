@@ -12,7 +12,7 @@ All notable changes to the WRLD Design System are documented here. This project 
   checks, adherence-lint triage, consumer and issue triage, PR routing, registry curation — and the guardrails: judgments
   inform, people decide; brand content still needs Ridgeway; credentials stay in the environment; nothing TypeSafe
   touches the published site, the registry ports or the UI kits. `docs/CONTRIBUTING.md` gains a matching section.
-=======
+
 ## [0.6.0] — 2026-09-30
 
 Native support for Cloudflare AI Search and Cloudflare Agents, and the **API / MCP / Agents** card the wrld.design
