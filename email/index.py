@@ -28,7 +28,7 @@ VARS = {
         ("{{ticket_public_comments_for_email}}", "All public comments, newest first, each cut at 2500 chars. Two <div>s per comment; the wrapper CSS restyles them."),
         ("{{ticket_public_fulltext_comments_for_email}}", "Same, uncut. Used by the compact comment template."),
         ("{{initial_comment_body}}", "Original request, used in Created / Autoresponder."),
-        ("{{ticket_url}}", "Deep link into the ticket."),
+        ("{{online_profile_url}}", "Portal link with a sign-in key on portal.wrld.tech. Every \"view online\" button uses it. Never {{ticket_url}}: that is the staff ticket page on wrld.syncromsp.com."),
     ],
     "gleap": [
         ("{{{htmlContent}}}", "The reply. Mandatory, must sit inside a <table>."),

@@ -211,7 +211,7 @@ def ticket_appointment(d):
 
 def lead_autoresponder(d):
     steps = ('<ol style="margin:0 0 12px 22px;padding:0;">'
-             '<li style="margin:0 0 6px 0;">Open a ticket at <a href="https://support.wrld.tech" style="color:#0a0a0a;">support.wrld.tech</a>, '
+             '<li style="margin:0 0 6px 0;">Open a ticket at <a href="https://portal.wrld.tech/portal/v2/tickets/new" style="color:#0a0a0a;">portal.wrld.tech</a>, '
              'or right-click the WRLD icon in your taskbar and choose Remote Support Request.</li>'
              '<li style="margin:0 0 6px 0;">Email us from the address we have on file for you.</li>'
              '<li style="margin:0;">Send to the support inbox directly. Don\'t CC helpdesk@wrld.tech or help@wrld.support.</li></ol>')
@@ -219,7 +219,7 @@ def lead_autoresponder(d):
         prose("<p>Hi there,</p><p>Your email reached us, but it didn't match a contact in our system, so <strong>no ticket was created</strong> "
               "and this inbox isn't watched for unmatched mail.</p><p>To get help, please do one of the following:</p>" + steps +
               "<p>Or just call us and we'll sort it out.</p>"),
-        primary("Open a ticket online", "https://support.wrld.tech", secondary=("Call 469.299.9598", "tel:" + b["phone_std_tel"])),
+        primary("Open a ticket online", B.PORTAL_NEW_TICKET, secondary=("Call 469.299.9598", "tel:" + b["phone_std_tel"])),
     ], help_strip(b, reply_hint=False)), "No ticket was created from your email. Here's how to reach us.", False
 
 TEMPLATES = {
@@ -258,6 +258,12 @@ def validate(html, key):
     used = set(re.findall(r"\{\{[a-z0-9_]+\}\}", html))
     return sorted(used - allowed_tags(key))
 
+# Links customers must never get: the staff app, tags that resolve to it, and dead hosts.
+FORBIDDEN = ("wrld.syncromsp.com", "{{ticket_url}}", "{{ticket_link}}", "support.wrld.tech")
+
+def forbidden_links(html):
+    return [f for f in FORBIDDEN if f in html]
+
 def main():
     bad = {}
     for d in B.DIRECTIONS:
@@ -268,6 +274,11 @@ def main():
             (out / FILENAMES[key]).write_text(html, encoding="utf-8")
             v = validate(html, key)
             if v: bad[key] = v
+    # Also police the wrapper and ticket bodies build.py writes.
+    for d in B.DIRECTIONS:
+        for f in (B.DIST / "templates" / d / "syncro").glob("*.html"):
+            hits = forbidden_links(f.read_text(encoding="utf-8"))
+            if hits: bad[f"{d}/{f.name}"] = ["forbidden link: " + h for h in hits]
     if bad:
         for k, v in bad.items(): print("NOT ALLOWED", k, v)
         sys.exit(1)
