@@ -1,0 +1,252 @@
+/* ============================================================
+   WRLD design system → PanelAlpha client area
+   Source of truth: github.com/WRLDInc/DesignSystem
+              file: integrations/panelalpha/client-area.css
+   Tokens:  https://wrld.design/tokens/tokens.css
+   Brief:   brand/wrld-host.md  (hover accent #00adee, commerce #EE9300)
+
+   Where it goes: PanelAlpha admin → Configuration → Client Area →
+   "Client Area CSS". Paste the whole file. PanelAlpha injects it after
+   its own stylesheets, so plain `body.is-light` / `body.is-dark`
+   selectors win over the app's `:root` / `.is-dark` variable blocks.
+
+   Rules applied (README → Visual foundations):
+   - Surfaces stay monochrome. Primary fills are `--fg` (near-black in
+     light, near-white in dark) with inverted text — the canonical
+     WRLD primary button. Accents appear on hover / focus only.
+   - Montserrat for headings, Ubuntu for UI, Ubuntu Mono for code.
+   - Hairline borders, 4px inputs / buttons, 8px cards, xs resting
+     shadow, md + accent-tinted shadow on hover, no bounce, no glass.
+   ============================================================ */
+
+/* ---------- Fonts (served from wrld.design, CORS open, immutable) --- */
+@font-face { font-family: 'Montserrat'; src: url('https://wrld.design/fonts/Montserrat-VariableFont_wght.ttf') format('truetype-variations'); font-weight: 100 900; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Ubuntu'; src: url('https://wrld.design/fonts/Ubuntu-Light.ttf') format('truetype'); font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Ubuntu'; src: url('https://wrld.design/fonts/Ubuntu-Regular.ttf') format('truetype'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Ubuntu'; src: url('https://wrld.design/fonts/Ubuntu-Medium.ttf') format('truetype'); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Ubuntu'; src: url('https://wrld.design/fonts/Ubuntu-Bold.ttf') format('truetype'); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Ubuntu Mono'; src: url('https://wrld.design/fonts/UbuntuMono-Regular.ttf') format('truetype'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Ubuntu Mono'; src: url('https://wrld.design/fonts/UbuntuMono-Bold.ttf') format('truetype'); font-weight: 700; font-style: normal; font-display: swap; }
+
+/* ---------- WRLD tokens (subset of tokens/tokens.css) -------------- */
+:root {
+  --wrld-mono-0: #ffffff; --wrld-mono-50: #fafafa; --wrld-mono-100: #f4f4f5;
+  --wrld-mono-200: #e4e4e7; --wrld-mono-300: #d4d4d8; --wrld-mono-400: #a1a1aa;
+  --wrld-mono-500: #71717a; --wrld-mono-600: #52525b; --wrld-mono-700: #3f3f46;
+  --wrld-mono-800: #27272a; --wrld-mono-900: #18181b; --wrld-mono-950: #0a0a0a;
+
+  --wrld-accent-primary: #007fee;   --wrld-accent-primary-rgb: 0 127 238;
+  --wrld-accent-secondary: #00adee; --wrld-accent-secondary-rgb: 0 173 238;
+  --wrld-accent-warm: #EE9300;      --wrld-accent-warm-rgb: 238 147 0;
+
+  --wrld-status-success: #10b981; --wrld-status-warning: #f59e0b;
+  --wrld-status-danger: #ef4444;  --wrld-status-info: #3b82f6;
+
+  --wrld-font-display: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+  --wrld-font-body: 'Ubuntu', system-ui, -apple-system, sans-serif;
+  --wrld-font-mono: 'Ubuntu Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --wrld-radius-sm: 4px; --wrld-radius-md: 8px; --wrld-radius-lg: 12px;
+  --wrld-duration-default: 200ms; --wrld-ease-standard: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  /* wrld.host weighting: hover/focus accent is the cooler sky blue */
+  --wrld-hover: var(--wrld-accent-secondary);
+  --wrld-hover-rgb: var(--wrld-accent-secondary-rgb);
+}
+
+/* ---------- Shared — Vuetify variables → WRLD tokens ---------------- */
+body.is-light, body.is-dark {
+  --v-success-base: var(--wrld-status-success); --v-success-darken1: #059669;
+  --v-warning-base: var(--wrld-status-warning); --v-warning-darken1: #d97706;
+  --v-error-base: var(--wrld-status-danger);    --v-error-darken1: #dc2626;
+  --v-info-base: var(--wrld-status-info);       --v-info-darken1: #2563eb;
+  --v-link-hover: var(--wrld-hover);
+
+  --wrld-shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.04);
+  --wrld-shadow-md: 0 4px 12px 0 rgb(0 0 0 / 0.08), 0 2px 4px 0 rgb(0 0 0 / 0.04);
+  --wrld-shadow-lg: 0 12px 32px 0 rgb(0 0 0 / 0.10), 0 4px 8px 0 rgb(0 0 0 / 0.04);
+  --wrld-shadow-hover: 0 10px 40px -8px rgb(var(--wrld-hover-rgb) / 0.20);
+  --wrld-focus-ring: 0 0 0 3px rgb(var(--wrld-hover-rgb) / 0.28);
+}
+
+/* ---------- Light mode ---------------------------------------------- */
+body.is-light {
+  --wrld-bg: var(--wrld-mono-0); --wrld-bg-subtle: var(--wrld-mono-50);
+  --wrld-bg-muted: var(--wrld-mono-100); --wrld-bg-elevated: var(--wrld-mono-0);
+  --wrld-fg: var(--wrld-mono-950); --wrld-fg-muted: var(--wrld-mono-600);
+  --wrld-fg-subtle: var(--wrld-mono-500); --wrld-fg-inverse: var(--wrld-mono-0);
+  --wrld-border: var(--wrld-mono-200); --wrld-border-strong: var(--wrld-mono-300);
+
+  /* Primary = --fg. Mirrors the Style Manager "Customize Primary Colors"
+     values so the two never disagree: Base #0A0A0A · Darken 1 #000000 ·
+     Lighten 1 #3F3F46 · Lighten 2 #E4E4E7 · Faded #F4F4F5 */
+  --v-primary-base: var(--wrld-mono-950);   --v-primary-darken1: #000000;
+  --v-primary-lighten1: var(--wrld-mono-700); --v-primary-lighten2: var(--wrld-mono-200);
+  --v-primary-lighten4: var(--wrld-mono-100); --v-primary-lighten5: var(--wrld-mono-50);
+  --v-anchor-base: var(--wrld-mono-950);      --v-link-base: var(--wrld-mono-950);
+  --v-link-lighten5: rgb(var(--wrld-hover-rgb) / 0.12);
+
+  --v-secondary-base: var(--wrld-mono-700); --v-secondary-darken1: var(--wrld-mono-800);
+  --v-secondary-lighten1: var(--wrld-mono-600);
+
+  --v-gray-base: var(--wrld-mono-300);      --v-gray-lighten1: var(--wrld-mono-400);
+  --v-gray-lighten2: var(--wrld-mono-200);  --v-gray-lighten5: var(--wrld-mono-100);
+  --v-gray-darken1: var(--wrld-mono-500);   --v-gray-darken2: var(--wrld-mono-900);
+  --v-icon-base: var(--wrld-mono-500);      --v-icon-lighten1: var(--wrld-mono-400);
+  --v-panel-base: var(--wrld-mono-0);       --v-skeleton-base: var(--wrld-mono-100);
+  --v-backdrop-base: rgb(255 255 255 / 0.24);
+}
+
+/* ---------- Dark mode — neutral near-black, never blue-gray ---------- */
+body.is-dark {
+  --wrld-bg: var(--wrld-mono-950); --wrld-bg-subtle: var(--wrld-mono-900);
+  --wrld-bg-muted: var(--wrld-mono-800); --wrld-bg-elevated: var(--wrld-mono-900);
+  --wrld-fg: var(--wrld-mono-50); --wrld-fg-muted: var(--wrld-mono-400);
+  --wrld-fg-subtle: var(--wrld-mono-500); --wrld-fg-inverse: var(--wrld-mono-950);
+  --wrld-border: var(--wrld-mono-800); --wrld-border-strong: var(--wrld-mono-700);
+
+  --wrld-shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.30);
+  --wrld-shadow-md: 0 4px 12px 0 rgb(0 0 0 / 0.45), 0 2px 4px 0 rgb(0 0 0 / 0.25);
+  --wrld-shadow-lg: 0 12px 32px 0 rgb(0 0 0 / 0.55), 0 4px 8px 0 rgb(0 0 0 / 0.25);
+  --wrld-shadow-hover: 0 10px 40px -8px rgb(var(--wrld-hover-rgb) / 0.34);
+  --wrld-focus-ring: 0 0 0 3px rgb(var(--wrld-hover-rgb) / 0.40);
+
+  /* Primary inverts with the surface: near-white fill, near-black text */
+  --v-primary-base: var(--wrld-mono-50);    --v-primary-darken1: var(--wrld-mono-0);
+  --v-primary-lighten1: var(--wrld-mono-300); --v-primary-lighten2: var(--wrld-mono-800);
+  --v-primary-lighten4: rgb(255 255 255 / 0.06); --v-primary-lighten5: rgb(255 255 255 / 0.06);
+  --v-anchor-base: var(--wrld-mono-50);       --v-link-base: var(--wrld-mono-50);
+  --v-link-lighten5: rgb(var(--wrld-hover-rgb) / 0.16);
+
+  --v-secondary-base: var(--wrld-mono-300); --v-secondary-darken1: rgb(10 10 10 / 0.4);
+
+  --v-gray-base: var(--wrld-mono-700);      --v-gray-lighten1: var(--wrld-mono-500);
+  --v-gray-lighten2: var(--wrld-mono-800);  --v-gray-lighten5: var(--wrld-mono-900);
+  --v-gray-darken1: var(--wrld-mono-400);   --v-gray-darken2: var(--wrld-mono-50);
+  --v-icon-base: var(--wrld-mono-400);      --v-icon-lighten1: var(--wrld-mono-500);
+  --v-panel-base: var(--wrld-mono-900);     --v-bar-base: rgb(10 10 10 / 0.80);
+  --v-skeleton-base: var(--wrld-mono-800);  --v-backdrop-base: rgb(10 10 10 / 0.60);
+}
+
+/* ---------- Typography --------------------------------------------- */
+.v-application,
+.v-application .v-btn,
+.v-application .v-input,
+.v-application .v-list-item,
+.v-application .v-tab {
+  font-family: var(--wrld-font-body) !important;
+}
+.v-application h1, .v-application h2, .v-application h3,
+.v-application h4, .v-application h5, .v-application h6,
+.v-application .text-h1, .v-application .text-h2, .v-application .text-h3,
+.v-application .text-h4, .v-application .text-h5, .v-application .text-h6,
+.v-application .v-card__title, .v-application .v-toolbar__title {
+  font-family: var(--wrld-font-display) !important;
+  letter-spacing: -0.02em !important;
+  line-height: 1.2;
+}
+.v-application h1, .v-application h2,
+.v-application .text-h1, .v-application .text-h2, .v-application .text-h3 {
+  font-weight: 700 !important;
+}
+.v-application h3, .v-application h4, .v-application h5, .v-application h6,
+.v-application .v-card__title, .v-application .v-toolbar__title {
+  font-weight: 600 !important;
+}
+.v-application code, .v-application kbd, .v-application pre, .v-application .text-mono {
+  font-family: var(--wrld-font-mono) !important;
+}
+
+/* ---------- Surfaces: hairlines, radii, resting shadows ------------- */
+/* PanelAlpha hard-codes its body text colour (#49495f / #fff) and gives the
+   app bar a white border, so these need !important to reach --fg / --border. */
+body.is-light .v-application, body.is-dark .v-application {
+  color: var(--wrld-fg) !important;
+}
+.v-application .app-bar.v-toolbar,
+.v-application .v-app-bar.v-toolbar {
+  box-shadow: none !important;
+  border-bottom: 1px solid var(--wrld-border) !important;
+}
+body.is-dark .v-application .app-bar.v-toolbar,
+body.is-dark .v-application .v-app-bar.v-toolbar {
+  background-color: var(--wrld-bg) !important;
+}
+body.is-dark .v-application { background-color: var(--wrld-bg) !important; }
+body.is-dark .v-application .v-card.v-sheet,
+body.is-dark .v-application .v-sheet.v-toolbar,
+body.is-dark .v-application .style-drawer {
+  background-color: var(--wrld-bg-elevated) !important;
+}
+
+.v-application .v-card.v-sheet {
+  border: 1px solid var(--wrld-border);
+  border-radius: var(--wrld-radius-md);
+  box-shadow: var(--wrld-shadow-xs) !important;
+  transition: box-shadow var(--wrld-duration-default) var(--wrld-ease-standard),
+              border-color var(--wrld-duration-default) var(--wrld-ease-standard),
+              transform var(--wrld-duration-default) var(--wrld-ease-standard);
+}
+.v-application .v-card.v-sheet.v-card--link:hover,
+.v-application a > .v-card.v-sheet:hover {
+  border-color: var(--wrld-border-strong);
+  box-shadow: var(--wrld-shadow-md), var(--wrld-shadow-hover) !important;
+}
+.v-application .v-dialog > .v-card.v-sheet { border-radius: var(--wrld-radius-lg); box-shadow: var(--wrld-shadow-lg) !important; }
+.v-application .v-menu__content { border: 1px solid var(--wrld-border); border-radius: var(--wrld-radius-sm); box-shadow: var(--wrld-shadow-md) !important; }
+
+/* ---------- Buttons: mono fill, accent only on hover / focus ------ */
+.v-application .v-btn {
+  border-radius: var(--wrld-radius-sm) !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  font-weight: 500 !important;
+  transition: background-color var(--wrld-duration-default) var(--wrld-ease-standard),
+              border-color var(--wrld-duration-default) var(--wrld-ease-standard),
+              box-shadow var(--wrld-duration-default) var(--wrld-ease-standard),
+              transform var(--wrld-duration-default) var(--wrld-ease-standard),
+              color var(--wrld-duration-default) var(--wrld-ease-standard);
+}
+.v-application .v-btn.v-btn--has-bg.primary { color: var(--wrld-fg-inverse) !important; }
+.v-application .v-btn.v-btn--has-bg.primary:hover {
+  box-shadow: var(--wrld-shadow-hover) !important;
+  transform: translateY(-1px);
+}
+.v-application .v-btn.v-btn--has-bg.primary:active { transform: translateY(1px); box-shadow: none !important; }
+.v-application .v-btn.v-btn--outlined { border: 1px solid var(--wrld-border-strong) !important; }
+.v-application .v-btn.v-btn--outlined:hover { border-color: var(--wrld-fg) !important; }
+.v-application .v-btn.v-btn--text:hover,
+.v-application .v-btn.v-btn--plain:hover { color: var(--wrld-hover) !important; }
+.v-application .v-btn:focus-visible { box-shadow: var(--wrld-focus-ring) !important; outline: none; }
+.v-application .v-btn::before { display: none; } /* Vuetify's flat hover tint — accents are shadows, not fills */
+
+/* ---------- Links & tabs ------------------------------------------- */
+.v-application a { transition: color var(--wrld-duration-default) var(--wrld-ease-standard); }
+.v-application a:hover { color: var(--wrld-hover) !important; }
+.v-application .v-tab { text-transform: none !important; letter-spacing: 0 !important; font-weight: 500; }
+.v-application .v-tab:hover { color: var(--wrld-hover) !important; }
+.v-application .v-tabs-slider { height: 2px; }
+
+/* ---------- Inputs -------------------------------------------------- */
+.v-application .v-input--is-focused .v-input__slot,
+.v-application .v-input--is-focused fieldset,
+.v-application .v-text-field--outlined.v-input--is-focused fieldset {
+  border-color: var(--wrld-hover) !important;
+  box-shadow: var(--wrld-focus-ring);
+}
+.v-application .v-text-field--outlined fieldset { border-color: var(--wrld-border); }
+.v-application .v-text-field--outlined:not(.v-input--is-focused):hover fieldset { border-color: var(--wrld-border-strong); }
+.v-application .v-text-field--outlined > .v-input__control > .v-input__slot,
+.v-application .v-select__slot,
+.v-application .v-input__slot { border-radius: var(--wrld-radius-sm); }
+
+/* ---------- Chips, alerts, status ---------------------------------- */
+.v-application .v-chip { border-radius: var(--wrld-radius-sm); font-weight: 500; }
+.v-application .v-alert { border-radius: var(--wrld-radius-sm); }
+
+/* ---------- Motion: tight and precise, honor reduced motion --------- */
+@media (prefers-reduced-motion: reduce) {
+  .v-application *, .v-application *::before, .v-application *::after {
+    transition-duration: 1ms !important; animation-duration: 1ms !important;
+  }
+}

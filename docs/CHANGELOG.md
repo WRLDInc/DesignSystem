@@ -2,6 +2,18 @@
 
 All notable changes to the WRLD Design System are documented here. This project follows semantic versioning.
 
+## [Unreleased]
+
+### Added
+
+- **PanelAlpha client-area integration** (`integrations/panelalpha/`). A drop-in stylesheet for the
+  PanelAlpha hosting panel at `deployboi.wrld.host` that maps PanelAlpha's Vuetify `--v-*` theme variables
+  to WRLD tokens in both light and dark mode, loads Montserrat / Ubuntu / Ubuntu Mono from wrld.design, and
+  restyles buttons, cards, tabs, inputs and the app bar to the README's rules (mono surfaces, `--fg` primary
+  fills, accent on hover and focus only, hairline borders, 4 / 8px radii). `style-manager.md` records the
+  logos, favicon, mode switch and the five primary colours applied in PanelAlpha's Style Manager, plus the
+  two colour schemes that were considered and why the monochrome one shipped. Registered in `docs/CONSUMERS.md`.
+
 ## [0.4.0] — 2026-09-03
 
 ### Added

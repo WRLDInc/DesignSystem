@@ -10,6 +10,7 @@ change is a contract change for every row below.
 | WRLD.one | `WRLDInc/wrld.one` | `tokens/tokens.css`, `registry/theme/wrld.css` | `WrldButton`, `WrldStatCard`, `WrldTopBar` | Reads Better Stack for its own status strip |
 | WRLD.AI dashboard | `WRLDInc/CentralizeWRLD` | `registry/theme/wrld.css` | `WrldSidebar`, `WrldTopBar`, `WrldStatCard`, `WrldAgentList`, `WrldAgentDetail`, `WrldRunHistory`, `WrldHelpButton` | shadcn host |
 | **PulseWRLD** — public services status | `WRLDInc/publicServicesStatus-web` | `styles.css`, favicons, `wrld-mark-white.png` | `WrldTopBar`, `WrldEyebrow`, `WrldStatCard`; local stand-ins for a status pill and an uptime bar | Cloudflare Worker at a `*.wrld.tech` subdomain (name pending). Needs two new atoms — see below. |
+| **PanelAlpha** — WordPress hosting panel (`deployboi.wrld.host`) | this repo, [`integrations/panelalpha/`](../integrations/panelalpha/README.md) | `fonts/*` only (hotlinked from wrld.design); tokens are inlined in `client-area.css` | None — Vuetify 2 app themed through `--v-*` variables; logos and favicon are uploaded as data URLs via the Style Manager | Client-area CSS pasted into the admin; the applied Style Manager values are recorded in `style-manager.md`. Sub-brand wrld.host. |
 
 ## Requested atoms
 
