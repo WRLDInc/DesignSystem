@@ -29,7 +29,9 @@ Admin > Syncro Administration - PDF/Email Templates > Email Templates (https://w
 Tags, verified against the editor's Available Template Tags list on 2026-09-22:
   {{reply_above_line}}        Syncro's reply marker. First row of every ticket body. Keep it or inbound replies carry the whole quoted email.
   {{logo_100}}                Account logo, 100px. Not used (no dark-mode variant); hosted lockups instead.
-  {{ticket_number}} {{ticket_subject}} {{ticket_status}} {{ticket_date}} {{ticket_url}} {{tech_name}}
+  {{ticket_number}} {{ticket_subject}} {{ticket_status}} {{ticket_date}} {{tech_name}}
+  {{online_profile_url}}      Portal link with sign-in key, on portal.wrld.tech. Used for every "view online" button.
+  NEVER {{ticket_url}} / {{ticket_link}}: they resolve to the STAFF ticket page on wrld.syncromsp.com.
   {{customer_first_name}} {{customer_full_name}}
   {{comment_body}} {{comment_sender_name}} {{comment_created_at}}
                               The comment that fired the email. Available in Ticket Comment, Ticket Created and Ticket Resolved;

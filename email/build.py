@@ -46,11 +46,20 @@ SOCIALS = [
     ("X", "https://x.com/wrldtechco"),
 ]
 
+# Customer-facing portal, white-labelled on portal.wrld.tech (verified 2026-10-01).
+# wrld.syncromsp.com is the STAFF app: never link customers there. {{ticket_url}} / {{ticket_link}}
+# resolve to the staff ticket page, so ticket emails use {{online_profile_url}} instead, which Syncro
+# renders as https://portal.wrld.tech/my_profile/v2/index?portal_key=... (one-click sign-in).
+PORTAL_HOME = "https://portal.wrld.tech/portal/v2/index"
+PORTAL_TICKETS = "https://portal.wrld.tech/portal/v2/tickets"
+PORTAL_NEW_TICKET = "https://portal.wrld.tech/portal/v2/tickets/new"
+PORTAL_SAMPLE = "https://portal.wrld.tech/my_profile/v2/index"   # mockups only
+
 BRANDS = {
     "tech": {
         "id": "tech", "entity": "WRLD Tech Co.", "product": "WRLD.Support",
         "site": "https://wrld.tech", "site_label": "wrld.tech",
-        "portal": "https://wrld.syncromsp.com/my_profile/v2/index", "portal_label": "Support portal",
+        "portal": PORTAL_HOME, "portal_label": "Support portal",
         "email": "helpdesk@wrld.tech", "accent": T["accentPrimary"],
         "phone_sla": "469.850.3968", "phone_sla_tel": "+14698503968",
         "phone_std": "469.299.9598", "phone_std_tel": "+14692999598",
@@ -451,7 +460,7 @@ def render_syncro_ticket_comment(direction, mode, compact=False):
         # Syncro's history tag always includes the newest comment, so the mockup does too.
         hist_items = [(s["tech"], s["latest_time"], s["latest"])] + s["history"]
         history = sample_history(hist_items, direction, syncro=True)
-        url = "https://wrld.syncromsp.com/tickets/117754091"
+        url = PORTAL_SAMPLE
         logo = None
     else:
         ticket, subject, status, tech = "{{ticket_number}}", "{{ticket_subject}}", "{{ticket_status}}", "{{tech_name}}"
@@ -460,7 +469,7 @@ def render_syncro_ticket_comment(direction, mode, compact=False):
         latest = "{{comment_body}}"
         latest_time = "{{comment_created_at}}"
         history = "{{ticket_public_fulltext_comments_for_email}}" if compact else "{{ticket_public_comments_for_email}}"
-        url = "{{ticket_url}}"
+        url = "{{online_profile_url}}"  # portal sign-in link; {{ticket_url}} is the staff page
         logo = None  # hosted WRLD.TECH lockups with dark-mode swap (logo_img)
     sender = s["tech"] if mode == "sample" else "{{comment_sender_name}}"
 
@@ -470,7 +479,7 @@ def render_syncro_ticket_comment(direction, mode, compact=False):
         body.append(message_block(latest, sender=sender, time=latest_time, label="Latest reply", direction=direction))
         body.append(spacer(20))
     body.append(f"<tr><td>{meta_rows([('Ticket', f'#{ticket}'), ('Status', status), ('Assigned to', tech), ('Opened', opened)])}</td></tr>")
-    body.append(cta_row(button("View and reply online", url), text_link("Open the support portal", b["portal"], muted=True)))
+    body.append(cta_row(button("View in your portal", url), text_link("All your tickets", PORTAL_TICKETS, muted=True)))
     if compact:
         body.append(history_block(history, "Conversation", direction, syncro=True,
                                   note="Newest reply first. Everything said on this ticket so far is below, so you never have to dig for context."))
@@ -486,10 +495,10 @@ def render_syncro_ticket_created(direction, mode, autoresponder=False):
     b = BRANDS["tech"]; s = SAMPLE
     if mode == "sample":
         ticket, subject, customer, problem = s["ticket"], s["subject"], s["customer"].split()[0], s["history"][-1][2]
-        url = "https://wrld.syncromsp.com/tickets/117754091"; logo = None
+        url = PORTAL_SAMPLE; logo = None
     else:
         ticket, subject, customer, problem = "{{ticket_number}}", "{{ticket_subject}}", "{{customer_first_name}}", "{{initial_comment_body}}"
-        url = "{{ticket_url}}"; logo = None
+        url = "{{online_profile_url}}"; logo = None
     kicker = "We received your request" if autoresponder else "A ticket was opened for you"
     body = [header(direction, b, "Ticket", f"#{ticket}", logo_html=logo), card_open(direction)]
     body.append(title_block(esc(subject) if mode == "sample" else subject, chip("New", b["accent"]), kicker=kicker))
@@ -497,7 +506,7 @@ def render_syncro_ticket_created(direction, mode, autoresponder=False):
     body.append(message_block(intro, direction="ledger"))
     body.append(spacer(16))
     body.append(message_block(problem, label="What you told us", direction=direction))
-    body.append(cta_row(button("Track this ticket", url), text_link("Open the support portal", b["portal"], muted=True)))
+    body.append(cta_row(button("Track it in your portal", url), text_link("All your tickets", PORTAL_TICKETS, muted=True)))
     body.append(help_strip(b))
     body.append(card_close()); body.append(footer(b))
     return body
@@ -506,14 +515,14 @@ def render_syncro_ticket_resolved(direction, mode):
     b = BRANDS["tech"]; s = SAMPLE
     if mode == "sample":
         ticket, subject, customer, tech = s["ticket"], s["subject"], s["customer"].split()[0], s["tech"]
-        history = sample_history(s["history"], direction, syncro=True); url = "https://wrld.syncromsp.com/tickets/117754091"; logo = None
+        history = sample_history(s["history"], direction, syncro=True); url = PORTAL_SAMPLE; logo = None
     else:
         ticket, subject, customer, tech = "{{ticket_number}}", "{{ticket_subject}}", "{{customer_first_name}}", "{{tech_name}}"
-        history = "{{ticket_public_comments_for_email}}"; url = "{{ticket_url}}"; logo = None
+        history = "{{ticket_public_comments_for_email}}"; url = "{{online_profile_url}}"; logo = None
     body = [header(direction, b, "Ticket", f"#{ticket}", logo_html=logo), card_open(direction)]
     body.append(title_block(esc(subject) if mode == "sample" else subject, chip("Resolved", T["success"]), kicker="Marked resolved"))
     body.append(message_block(f"<p>Hi {customer},</p><p>{tech} marked this ticket resolved. If anything is still off, just reply to this email and it reopens automatically with the full history attached, no need to start over.</p>", direction="ledger"))
-    body.append(cta_row(button("Review the ticket", url), text_link("Reopen by replying", "mailto:" + b["email"], muted=True)))
+    body.append(cta_row(button("Review in your portal", url), text_link("Reopen by replying", "mailto:" + b["email"], muted=True)))
     body.append(history_block(history, "What we did", direction, syncro=True))
     body.append(help_strip(b, reply_hint=False))
     body.append(card_close()); body.append(footer(b))
@@ -838,7 +847,9 @@ Admin > Syncro Administration - PDF/Email Templates > Email Templates (https://w
 Tags, verified against the editor's Available Template Tags list on 2026-09-22:
   {{reply_above_line}}        Syncro's reply marker. First row of every ticket body. Keep it or inbound replies carry the whole quoted email.
   {{logo_100}}                Account logo, 100px. Not used (no dark-mode variant); hosted lockups instead.
-  {{ticket_number}} {{ticket_subject}} {{ticket_status}} {{ticket_date}} {{ticket_url}} {{tech_name}}
+  {{ticket_number}} {{ticket_subject}} {{ticket_status}} {{ticket_date}} {{tech_name}}
+  {{online_profile_url}}      Portal link with sign-in key, on portal.wrld.tech. Used for every "view online" button.
+  NEVER {{ticket_url}} / {{ticket_link}}: they resolve to the STAFF ticket page on wrld.syncromsp.com.
   {{customer_first_name}} {{customer_full_name}}
   {{comment_body}} {{comment_sender_name}} {{comment_created_at}}
                               The comment that fired the email. Available in Ticket Comment, Ticket Created and Ticket Resolved;
