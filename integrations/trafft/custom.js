@@ -1,8 +1,12 @@
 /* =====================================================================
    WRLD theme for Trafft — calendar.wrld.tech — Custom JS
    Paste into: Trafft admin → Customize → Booking Website → Custom Code
-               → Custom JS. Pairs with custom.css; the CSS stands alone,
-               so this file is optional.
+               → Custom JS, wrapped in an HTML script element. Trafft writes
+               the field into the document head with postscribe, which
+               parses HTML: bare JavaScript is stored but never runs. Never
+               write a closing script tag anywhere in this file, comments
+               included, or the browser ends the script there. Pairs with
+               custom.css; the CSS stands alone, so this file is optional.
    Source:     github.com/WRLDInc/DesignSystem — integrations/trafft/custom.js
 
    1. Keeps the browser-chrome colour (<meta name="theme-color">) on the

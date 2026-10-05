@@ -25,9 +25,14 @@ Visual proof page: <https://claude.ai/artifact/VFiAXPB4m1LLaiAwwhWcWZ> (private 
 1. Open <https://calendar.admin.wrld.tech/customize/booking-website/custom-code>.
 2. Replace the whole **Custom CSS** field with `custom.css`. The Gleap rule that
    lived there before is carried over at the bottom of the file — nothing is lost.
-3. Optional: paste `custom.js` into **Custom JS**. To follow the visitor's OS
-   light/dark setting, set `followSystemTheme: true` at the top of the file.
-4. Save, then hard-refresh <https://calendar.wrld.tech> and run the checks below.
+3. Optional: paste `custom.js` into **Custom JS**, wrapped as
+   `<script>` … `</script>`. Trafft writes this field into `<head>` with
+   postscribe, which parses HTML, so bare JavaScript is stored but never runs.
+   To follow the visitor's OS light/dark setting, set `followSystemTheme: true`
+   at the top of the file.
+4. Edit the fields by typing. A scripted value change does not raise the
+   *Save Changes* bar. Then save, hard-refresh <https://calendar.wrld.tech>,
+   and run the checks below.
 
 To roll back, restore the previous CSS (the four-line Gleap media query, now
 section 11 of `custom.css`) and clear Custom JS.
@@ -101,8 +106,11 @@ Customer info*, *Choose Location / Employee / Extras / Time → sentence case*.
 
 ## Checks after saving
 
-- [ ] `https://calendar.wrld.tech/api/v1/public/custom.css?id=__nuxt` returns this file
-      verbatim (Trafft does not strip `@font-face` or `url()`).
+- [ ] `https://calendar.wrld.tech/api/v1/public/custom.css?id=__nuxt` returns this file.
+      Trafft keeps `@font-face` and `url()` and only converts line endings to CRLF
+      (verified 2026-10-05).
+- [ ] The Custom JS ran: on the live site, `window.__wrldTrafftTheme === true` and
+      `<meta name="theme-color">` reads `#ffffff`.
 - [ ] Body text renders in Ubuntu (DevTools → Computed → `font-family`: `"WRLD Ubuntu"`).
 - [ ] Services: the card hover shows the blue border and lift; *Book now* is near-black.
 - [ ] Booking: the selected day and slot are solid; a field left empty shows a red border.
