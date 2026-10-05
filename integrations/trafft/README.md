@@ -17,7 +17,8 @@ selection.
 | ![Services, before](screenshots/before-services.jpg) | ![Services, after](screenshots/after-services.jpg) |
 | ![Calendar, before](screenshots/before-calendar.jpg) | ![Calendar, after](screenshots/after-calendar.jpg) |
 
-Also: [customer info form](screenshots/after-customer-info.jpg) · [dark theme](screenshots/after-services-dark.jpg).
+Also: [customer info form](screenshots/after-customer-info.jpg) · [dark theme](screenshots/after-services-dark.jpg) · [390px phone](screenshots/after-mobile.jpg).
+Visual proof page: <https://claude.ai/artifact/VFiAXPB4m1LLaiAwwhWcWZ> (private — shared from the page's Share menu).
 
 ## Install
 
