@@ -88,6 +88,44 @@ step), service detail and locations pages.
   (`rgb(0 0 0 / 0.06)` at 24px), which the brand allows on technical surfaces.
 - **Footer** — mono links that turn blue on hover; social icons rest in grayscale.
 
+## Service images (meeting-type icons)
+
+All 22 Trafft services, the 8 private and extended ones included, use one WRLD tile each. The tile is a
+Lucide glyph at the WRLD 1.5px stroke on the off-white dot grid, with a hairline edge
+(`service-icons/`, 512px PNG plus source SVG). This is direction **B · Hairline**, chosen on 2026-10-05 over
+a near-black mono tile and a starburst-textured tile. It keeps *Book now* as the only solid shape on
+each card. Rebuild with `python3 integrations/trafft/service-icons/build.py` (macOS; it uses QuickLook to
+rasterise and fetches pinned `lucide-static` glyphs on first run).
+
+Upload through *Services → service → Appearance → Service image*. The cropper defaults to the central
+~80%, which cuts off the hairline edge, so crop both steps (1:1 thumbnail, 2:1 large layout) to the full
+width. Verify by sampling the saved image: the left-edge pixel at mid-height should read `#e4e4e7`.
+
+| ID | Service | Glyph | Tile |
+| --- | --- | --- | --- |
+| 25 | General/Other Meeting | `calendar-days` | [`general-meeting.png`](service-icons/general-meeting.png) |
+| 9 | Quick Meeting / Call | `phone` | [`quick-call.png`](service-icons/quick-call.png) |
+| 20 | Online Meeting (Consult / Intros / Discovery) | `video` | [`online-meeting.png`](service-icons/online-meeting.png) |
+| 13 | Intros & Consultations @ Your Location | `messages-square` | [`intros-your-location.png`](service-icons/intros-your-location.png) |
+| 7 | ONE-ON-ONE Remote Training / Onboarding / Troubleshooting | `monitor-play` | [`remote-training-1on1.png`](service-icons/remote-training-1on1.png) |
+| 6 | Meet at WRLD Tech Office | `building-2` | [`office-visit.png`](service-icons/office-visit.png) |
+| 21 | Partner / Vendor Meeting | `handshake` | [`partner-vendor.png`](service-icons/partner-vendor.png) |
+| 18 | Group Online / Conference Call (Teams) | `users` | [`group-call.png`](service-icons/group-call.png) |
+| 26 | Direct Book w/ Ridge (Extended Hours) | `user-round` | [`direct-ridge.png`](service-icons/direct-ridge.png) |
+| 12 | Direct Book w/ WRLD (Extended) | `calendar-clock` | [`direct-wrld.png`](service-icons/direct-wrld.png) |
+| 11 | Site Survey / IT Audit / Other On Site | `clipboard-check` | [`site-survey.png`](service-icons/site-survey.png) |
+| 14 | Technology Business Review | `chart-line` | [`business-review.png`](service-icons/business-review.png) |
+| 22 | Remote Collab / Project Work / Etc. (private) | `folder-kanban` | [`remote-collab.png`](service-icons/remote-collab.png) |
+| 23 | WRLD.host / Website & Online Presence … | `globe` | [`web-presence.png`](service-icons/web-presence.png) |
+| 5 | In person Training / Onboarding | `graduation-cap` | [`onsite-training.png`](service-icons/onsite-training.png) |
+| 15 | Service Appointment at your Location | `wrench` | [`service-appointment.png`](service-icons/service-appointment.png) |
+| 8 | Meet at WRLD Tech Office (private) | `building-2` | [`office-visit-private.png`](service-icons/office-visit-private.png) |
+| 4 | Meeting at your Location with WRLD Tech | `map-pin` | [`onsite-meeting.png`](service-icons/onsite-meeting.png) |
+| 10 | Online / Conference Call (Zoom, Teams) (Extended) | `video` | [`online-call-extended.png`](service-icons/online-call-extended.png) |
+| 2 | Online / Conference Call (Zoom, Teams) | `video` | [`online-call.png`](service-icons/online-call.png) |
+| 19 | GROUP Remote Training / Onboarding | `presentation` | [`group-training.png`](service-icons/group-training.png) |
+| 24 | Scheduled On-Site/Extended Hours | `clock` | [`onsite-extended.png`](service-icons/onsite-extended.png) |
+
 ## Admin settings this makes inert
 
 The CSS takes precedence over these *Theme and Appearance* settings, so changing
