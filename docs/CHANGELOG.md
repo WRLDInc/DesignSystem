@@ -2,6 +2,18 @@
 
 All notable changes to the WRLD Design System are documented here. This project follows semantic versioning.
 
+## [Unreleased]
+
+### Added
+
+- **A WRLD theme for the Trafft booking site** (`integrations/trafft/`) — `custom.css` and `custom.js` for the
+  Custom Code fields behind <https://calendar.wrld.tech>. The theme re-points Trafft's palette, font and Element Plus
+  variables at the WRLD tokens. It restyles the header as the wrld.design pill, the buttons after
+  `ui_kits/wrld-tech/Button.jsx`, and the cards, badges, calendar, time slots, forms, dialogs and footer, in light and
+  dark. The README documents the cascade strategy (Trafft loads custom CSS first), the admin settings it makes
+  inert, recommended sentence-case labels, and a post-install checklist. calendar.wrld.tech is added to
+  `docs/CONSUMERS.md`.
+
 ## [0.4.0] — 2026-09-03
 
 ### Added

@@ -1,0 +1,825 @@
+/* =====================================================================
+   WRLD theme for Trafft — calendar.wrld.tech
+   Paste into: Trafft admin → Customize → Booking Website → Custom Code
+               → Custom CSS (replace the whole field).
+   Source:     github.com/WRLDInc/DesignSystem — integrations/trafft/custom.css
+   Tokens:     mirrors tokens/tokens.css v0.1.0 (the --wrld-* subset below)
+
+   HOW THIS FILE WINS THE CASCADE — read before editing.
+   Trafft links this stylesheet FIRST in <head>, ahead of ~70 of its own
+   sheets, so every tie on specificity goes to Trafft. Its components are
+   Vue-scoped (`.x[data-v-hash]`, 0-2-0) and its hover rules stack :not()
+   chains up to 0-7-0. Three rules keep this file ahead without
+   !important:
+     1. Trafft's own variables are re-pointed at :root:root[data-theme]
+        (0-3-0), above Trafft's :root[data-theme=light] (0-2-0). Most of
+        the re-theme happens here — Trafft's rules then render WRLD values.
+     2. Component rules are scoped under html[data-theme] (+0-1-1), which
+        beats a scoped Trafft selector of the same shape.
+     3. Where a Trafft state rule is too specific to beat (hover, selected),
+        set Trafft's variables ON that element instead. A custom property
+        declared on an element always beats the inherited :root value.
+   The [data-theme] attribute is shared: Trafft writes light|dark to <html>,
+   which is exactly the switch WRLD tokens key off — dark mode comes along.
+
+   Brand rules applied: surfaces stay monochrome; #007fee appears only on
+   hover, focus and selection; 4px inputs, 8px cards, 12px modals; Ubuntu
+   body, Montserrat display; tight 200ms motion, no bounce.
+   ===================================================================== */
+
+
+/* ---------------------------------------------------------------------
+   0. Typefaces — Ubuntu from wrld.design (CORS open, cached a year).
+      Montserrat is already bundled by Trafft, so it is not re-fetched.
+      Unique family names so nothing collides with Trafft's font menu.
+   --------------------------------------------------------------------- */
+@font-face { font-family: 'WRLD Ubuntu'; src: url('https://wrld.design/fonts/Ubuntu-Light.ttf') format('truetype'); font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: 'WRLD Ubuntu'; src: url('https://wrld.design/fonts/Ubuntu-Regular.ttf') format('truetype'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'WRLD Ubuntu'; src: url('https://wrld.design/fonts/Ubuntu-Medium.ttf') format('truetype'); font-weight: 500 600; font-style: normal; font-display: swap; }
+@font-face { font-family: 'WRLD Ubuntu'; src: url('https://wrld.design/fonts/Ubuntu-Bold.ttf') format('truetype'); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: 'WRLD Ubuntu Mono'; src: url('https://wrld.design/fonts/UbuntuMono-Regular.ttf') format('truetype'); font-weight: 400; font-style: normal; font-display: swap; }
+
+
+/* ---------------------------------------------------------------------
+   1. WRLD tokens (subset of tokens/tokens.css — keep values in sync)
+   --------------------------------------------------------------------- */
+:root {
+  --wrld-mono-0:   #ffffff;
+  --wrld-mono-50:  #fafafa;
+  --wrld-mono-100: #f4f4f5;
+  --wrld-mono-200: #e4e4e7;
+  --wrld-mono-300: #d4d4d8;
+  --wrld-mono-400: #a1a1aa;
+  --wrld-mono-500: #71717a;
+  --wrld-mono-600: #52525b;
+  --wrld-mono-700: #3f3f46;
+  --wrld-mono-800: #27272a;
+  --wrld-mono-900: #18181b;
+  --wrld-mono-950: #0a0a0a;
+
+  /* Interactive only — hover, focus, selection. Never a static fill. */
+  --wrld-accent-primary:     #007fee;
+  --wrld-accent-primary-rgb: 0 127 238;
+  --wrld-accent-warm:        #EE9300;
+  --wrld-accent-warm-rgb:    238 147 0;
+
+  --wrld-status-success: #10b981;
+  --wrld-status-warning: #f59e0b;
+  --wrld-status-danger:  #ef4444;
+
+  --wrld-font-display: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+  --wrld-font-body:    'WRLD Ubuntu', 'Ubuntu', system-ui, -apple-system, sans-serif;
+  --wrld-font-mono:    'WRLD Ubuntu Mono', 'Ubuntu Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --wrld-ls-display:   -0.02em;
+  --wrld-ls-eyebrow:   0.12em;
+
+  --wrld-radius-sm:   4px;
+  --wrld-radius-md:   8px;
+  --wrld-radius-lg:   12px;
+  --wrld-radius-pill: 9999px;
+
+  --wrld-duration-micro:   120ms;
+  --wrld-duration-default: 200ms;
+  --wrld-ease-standard:    cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+:root,
+:root[data-theme="light"] {
+  --wrld-bg:          var(--wrld-mono-0);
+  --wrld-bg-subtle:   var(--wrld-mono-50);
+  --wrld-bg-muted:    var(--wrld-mono-100);
+  --wrld-bg-elevated: var(--wrld-mono-0);
+  --wrld-fg:          var(--wrld-mono-950);
+  --wrld-fg-muted:    var(--wrld-mono-600);
+  --wrld-fg-subtle:   var(--wrld-mono-500);
+  --wrld-fg-inverse:  var(--wrld-mono-0);
+  --wrld-border:        var(--wrld-mono-200);
+  --wrld-border-strong: var(--wrld-mono-300);
+
+  --wrld-shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.04);
+  --wrld-shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.08), 0 1px 2px 0 rgb(0 0 0 / 0.04);
+  --wrld-shadow-md: 0 4px 12px 0 rgb(0 0 0 / 0.08), 0 2px 4px 0 rgb(0 0 0 / 0.04);
+  --wrld-shadow-lg: 0 12px 32px 0 rgb(0 0 0 / 0.10), 0 4px 8px 0 rgb(0 0 0 / 0.04);
+  --wrld-shadow-accent-primary: 0 10px 40px -8px rgb(var(--wrld-accent-primary-rgb) / 0.22);
+  --wrld-focus-ring: 0 0 0 3px rgb(var(--wrld-accent-primary-rgb) / 0.28);
+
+  /* Theme-local helpers (not WRLD tokens): fg as a channel triplet for tints,
+     and the dot-grid ink allowed on technical surfaces. */
+  --wt-fg-rgb: 10 10 10;
+  --wt-grid-ink: rgb(0 0 0 / 0.06);
+}
+
+:root[data-theme="dark"] {
+  --wrld-bg:          var(--wrld-mono-950);
+  --wrld-bg-subtle:   var(--wrld-mono-950);
+  --wrld-bg-muted:    var(--wrld-mono-800);
+  --wrld-bg-elevated: var(--wrld-mono-900);
+  --wrld-fg:          var(--wrld-mono-50);
+  --wrld-fg-muted:    var(--wrld-mono-400);
+  --wrld-fg-subtle:   var(--wrld-mono-500);
+  --wrld-fg-inverse:  var(--wrld-mono-950);
+  --wrld-border:        var(--wrld-mono-800);
+  --wrld-border-strong: var(--wrld-mono-700);
+
+  --wrld-shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.30);
+  --wrld-shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.40), 0 1px 2px 0 rgb(0 0 0 / 0.20);
+  --wrld-shadow-md: 0 4px 12px 0 rgb(0 0 0 / 0.45), 0 2px 4px 0 rgb(0 0 0 / 0.25);
+  --wrld-shadow-lg: 0 12px 32px 0 rgb(0 0 0 / 0.55), 0 4px 8px 0 rgb(0 0 0 / 0.25);
+  --wrld-shadow-accent-primary: 0 10px 40px -8px rgb(var(--wrld-accent-primary-rgb) / 0.36);
+  --wrld-focus-ring: 0 0 0 3px rgb(var(--wrld-accent-primary-rgb) / 0.40);
+
+  --wt-fg-rgb: 250 250 250;
+  --wt-grid-ink: rgb(255 255 255 / 0.06);
+}
+
+
+/* ---------------------------------------------------------------------
+   2. Trafft palette → WRLD. Overrides Theme & Appearance (primary colour,
+      font, background colour) — those admin pickers no longer apply.
+   --------------------------------------------------------------------- */
+:root:root[data-theme] {
+  font-family: var(--wrld-font-body);
+  --font-family: var(--wrld-font-body);
+  --el-font-family: var(--wrld-font-body);
+  --font-color: var(--wrld-fg);
+
+  /* Brand colour is monochrome. Blue is reserved for focus (-90, -25). */
+  --color-primary:     var(--wrld-fg);
+  --color-primary-900: var(--wrld-fg);
+  --color-primary-90:  var(--wrld-accent-primary);
+  --color-primary-50:  rgb(var(--wt-fg-rgb) / 0.50);
+  --color-primary-30:  rgb(var(--wt-fg-rgb) / 0.30);
+  --color-primary-25:  rgb(var(--wrld-accent-primary-rgb) / 0.28);
+  --color-primary-10:  rgb(var(--wt-fg-rgb) / 0.06);
+  --color-primary-05:  rgb(var(--wt-fg-rgb) / 0.035);
+  --color-primary-00:  rgb(var(--wt-fg-rgb) / 0);
+
+  /* Trafft's slate greys → WRLD zinc mono scale */
+  --color-cloudy:       var(--wrld-mono-50);
+  --color-cloudy-rgb:   250, 250, 250;
+  --color-metal:        var(--wrld-mono-200);
+  --color-metal-rgb:    228, 228, 231;
+  --color-concrete:     var(--wrld-mono-300);
+  --color-graphite:     var(--wrld-mono-500);
+  --color-graphite-rgb: 113, 113, 122;
+  --color-steel-grey:   var(--wrld-mono-400);
+  --color-black:        var(--wrld-mono-950);
+  --color-dark:         var(--wrld-mono-800);
+  --color-dark-rgb:     39, 39, 42;
+
+  /* Status stays semantic */
+  --color-red:     var(--wrld-status-danger);
+  --color-red-50:  rgb(239 68 68 / 0.50);
+  --color-red-15:  rgb(239 68 68 / 0.15);
+  --color-red-05:  rgb(239 68 68 / 0.05);
+  --color-red-02:  rgb(239 68 68 / 0.02);
+  --color-green:     var(--wrld-status-success);
+  --color-green-rgb: 16, 185, 129;
+  --color-orange:     var(--wrld-status-warning);
+  --color-orange-rgb: 245, 158, 11;
+
+  --elevation-small:  var(--wrld-shadow-xs);
+  --elevation-medium: var(--wrld-shadow-sm);
+  --elevation-large:  var(--wrld-shadow-lg);
+
+  /* Element Plus (date pickers, selects, dialogs) */
+  --el-color-primary:         var(--wrld-fg);
+  --el-color-primary-light-3: var(--wrld-mono-600);
+  --el-color-primary-light-5: var(--wrld-mono-400);
+  --el-color-primary-light-7: var(--wrld-mono-300);
+  --el-color-primary-light-8: var(--wrld-mono-200);
+  --el-color-primary-light-9: var(--wrld-mono-100);
+  --el-color-primary-dark-2:  var(--wrld-mono-800);
+  --el-text-color-primary:    var(--wrld-fg);
+  --el-border-radius-base:    var(--wrld-radius-sm);
+  --el-overlay-color-lighter: rgb(10 10 10 / 0.48);
+  --el-checkbox-checked-icon-color: var(--wrld-fg-inverse);
+}
+
+:root:root[data-theme="light"] {
+  --theme-color-primary:   var(--wrld-bg-elevated);
+  --theme-color-secondary: var(--wrld-bg);
+  --theme-color-border:    var(--wrld-border);
+  --theme-background-color: var(--wrld-bg);
+  --theme-user-defined-background-color: var(--wrld-bg-subtle);
+  --theme-color-text:      var(--wrld-fg);
+}
+
+:root:root[data-theme="dark"] {
+  --font-color: var(--wrld-fg);
+  --theme-color-primary:   var(--wrld-bg-elevated);
+  --theme-color-primary-rgb: 24, 24, 27;
+  --theme-color-secondary: var(--wrld-bg);
+  --theme-color-secondary-rgb: 10, 10, 10;
+  --theme-color-border:    var(--wrld-border);
+  --theme-background-color: var(--wrld-bg);
+  --theme-user-defined-background-color: var(--wrld-bg);
+  --theme-color-text:      var(--wrld-fg);
+
+  /* In dark, Trafft reuses black/dark/cloudy as surfaces */
+  --color-dark:      var(--wrld-mono-900);
+  --color-dark-rgb:  24, 24, 27;
+  --color-graphite:  var(--wrld-mono-400);
+  --color-graphite-rgb: 161, 161, 170;
+  --color-concrete:  var(--wrld-mono-700);
+  --color-metal:     var(--wrld-mono-800);
+  --color-metal-rgb: 39, 39, 42;
+  --color-cloudy:    var(--wrld-mono-900);
+  --color-cloudy-rgb: 24, 24, 27;
+  --el-overlay-color-lighter: rgb(0 0 0 / 0.64);
+}
+
+/* Trafft also writes the admin background colour inline on #__app, which
+   out-ranks :root for everything below it. Redeclare one level down. */
+html[data-theme] #__app > * {
+  --theme-user-defined-background-color: var(--wrld-bg-subtle);
+}
+
+/* Dark: Trafft paints white text on primary fills; primary is near-white
+   in dark, so those few fills get the inverse ink. */
+html[data-theme="dark"] :is(
+  .sfv__categories__item.is-active,
+  .ser-cat-filter__dropdown__item.is-active,
+  .ui-pagination > li.ui-pagination--active a,
+  .booking-details-mobile__header,
+  .el-date-table td.current:not(.disabled) .el-date-table-cell__text,
+  .el-date-table td.selected .el-date-table-cell__text
+) {
+  --color-white: var(--wrld-fg-inverse);
+}
+html[data-theme="dark"] .ui-radio-button.el-radio-button .el-radio-button__inner {
+  --el-radio-button-checked-text-color: var(--wrld-fg-inverse);
+}
+/* Dark: Trafft paints these from black/dark/graphite at 0-4-0; re-point
+   the variables on the element rather than out-ranking the rules. */
+html[data-theme="dark"] :is(.bs-service-card, .bs-employee-card, .bs-location-card, .booking-ts) {
+  --color-black: var(--wrld-bg-elevated);
+  --color-dark:  var(--wrld-bg-elevated);
+}
+html[data-theme="dark"] .ui-cal__day {
+  --color-dark:     var(--wrld-bg-elevated);
+  --color-graphite: var(--wrld-border-strong);
+  --color-black:    transparent;
+}
+
+
+/* ---------------------------------------------------------------------
+   3. Type
+   --------------------------------------------------------------------- */
+html[data-theme] body {
+  font-family: var(--wrld-font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+html[data-theme] :is(h1, h2, h3, h4) {
+  font-family: var(--wrld-font-display);
+  letter-spacing: var(--wrld-ls-display);
+  text-wrap: balance;
+}
+html[data-theme] .services__header__title h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+html[data-theme] ::selection {
+  background: rgb(var(--wrld-accent-primary-rgb) / 0.25);
+  color: var(--wrld-fg);
+}
+html[data-theme] .rich-text-wrapper a,
+html[data-theme] .ui-checkbox .el-checkbox .el-checkbox__label a {
+  color: var(--wrld-fg);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  transition: color var(--wrld-duration-default) var(--wrld-ease-standard);
+}
+html[data-theme] .rich-text-wrapper a:hover,
+html[data-theme] .ui-checkbox .el-checkbox .el-checkbox__label a:hover {
+  color: var(--wrld-accent-primary);
+}
+
+
+/* ---------------------------------------------------------------------
+   4. Header — floating hairline pill, as on wrld.design
+   --------------------------------------------------------------------- */
+html[data-theme] .header,
+html[data-theme] .header.with-shadow {
+  background-color: transparent;
+  box-shadow: none;
+  padding: 12px 16px 0;
+}
+html[data-theme] .header__content__primary {
+  height: 56px;
+  padding: 0 8px 0 20px;
+  background-color: var(--wrld-bg-elevated);
+  border: 1px solid var(--wrld-border);
+  border-radius: var(--wrld-radius-pill);
+}
+html[data-theme] .header__content__primary__left__logo a img {
+  max-height: 32px;
+}
+html[data-theme] .header__content__primary__left__items a {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--wrld-fg);
+  transition: color var(--wrld-duration-default) var(--wrld-ease-standard);
+}
+html[data-theme] .header__content__primary__left__items a:hover,
+html[data-theme] .header__content__primary__left__items a.router-link-active {
+  color: var(--wrld-accent-primary);
+}
+html[data-theme] .header__content__primary__left__items a.router-link-active::after {
+  height: 1px;
+  bottom: -6px;
+  background-color: var(--wrld-accent-primary);
+}
+html[data-theme] .header-language,
+html[data-theme] .header-language__button {
+  border-radius: var(--wrld-radius-pill);
+}
+html[data-theme] .header-language__button {
+  height: 40px;
+  padding: 8px 14px;
+  font-size: 14px;
+  background-color: transparent;
+  transition: background-color var(--wrld-duration-default) var(--wrld-ease-standard);
+}
+html[data-theme] .header__mobile-menu {
+  top: calc(100% + 8px);
+  left: 16px;
+  right: 16px;
+  width: auto;
+  padding: 8px 24px;
+  border: 1px solid var(--wrld-border);
+  border-radius: var(--wrld-radius-lg);
+  box-shadow: var(--wrld-shadow-lg);
+}
+/* Dark mode: swap to the white WRLD.TECH lockup (Chrome, Safari, Firefox) */
+html[data-theme="dark"] .header__content__primary__left__logo a img,
+html[data-theme="dark"] img.footer-logo {
+  content: url('https://wrld.design/assets/logos/wrld-tech-white.png');
+}
+
+
+/* ---------------------------------------------------------------------
+   5. Buttons — ui_kits/wrld-tech/Button.jsx
+      primary: fg fill, blue shadow lift on hover
+      info / plain: hairline secondary, border strengthens on hover
+   --------------------------------------------------------------------- */
+html[data-theme] .ui-button {
+  font-family: var(--wrld-font-body);
+  font-weight: 500;
+  letter-spacing: 0;
+  border-radius: var(--wrld-radius-sm);
+  transition:
+    background-color var(--wrld-duration-default) var(--wrld-ease-standard),
+    border-color var(--wrld-duration-default) var(--wrld-ease-standard),
+    color var(--wrld-duration-default) var(--wrld-ease-standard),
+    box-shadow var(--wrld-duration-default) var(--wrld-ease-standard),
+    transform var(--wrld-duration-default) var(--wrld-ease-standard);
+}
+html[data-theme] .ui-button.is-rounded {
+  border-radius: var(--wrld-radius-pill);
+}
+html[data-theme] .ui-button__type__primary {
+  --color-primary-90: var(--wrld-fg); /* hover keeps the fill; the lift carries it */
+  --spinner-line-color: var(--wrld-fg-inverse);
+  color: var(--wrld-fg-inverse);
+  border-color: var(--wrld-fg);
+}
+html[data-theme] .ui-button__type__info,
+html[data-theme] .ui-button__type__plain {
+  --color-primary-05: transparent;
+  --color-cloudy: transparent;
+  background-color: transparent;
+  color: var(--wrld-fg);
+  border: 1px solid var(--wrld-border-strong);
+}
+/* Mouse focus shows no ring; keyboard focus gets the WRLD ring below */
+html[data-theme] .ui-button:focus:not(:focus-visible) {
+  box-shadow: none;
+}
+html[data-theme] :is(.ui-button__type__info, .ui-button__type__plain):focus:not(:focus-visible) {
+  border-color: var(--wrld-border-strong);
+}
+html[data-theme] .ui-button__type__primary:hover:not(:disabled):not(.is-loading) {
+  box-shadow: var(--wrld-shadow-accent-primary);
+  transform: translateY(-1px);
+}
+html[data-theme] :is(.ui-button__type__info, .ui-button__type__plain):hover:not(:disabled) {
+  border-color: var(--wrld-fg);
+}
+html[data-theme] .ui-button__type__borderless:hover:not(:disabled) {
+  color: var(--wrld-accent-primary);
+}
+/* Same weight as the hover rule above, so a press always settles the lift */
+html[data-theme] .ui-button:active:not(:disabled):not(.is-loading) {
+  box-shadow: none;
+  transform: translateY(1px);
+}
+html[data-theme] .ui-button:focus-visible:not(:disabled) {
+  box-shadow: var(--wrld-focus-ring);
+}
+
+
+/* ---------------------------------------------------------------------
+   6. Services page — filters, categories, cards, badges
+   --------------------------------------------------------------------- */
+/* Search + sort + team/location filters read as WRLD inputs */
+html[data-theme] .ui-search__input,
+html[data-theme] .ui-filter__button {
+  background-color: var(--wrld-bg-elevated);
+  border: 1px solid var(--wrld-border-strong);
+  border-radius: var(--wrld-radius-sm);
+  transition:
+    border-color var(--wrld-duration-default) var(--wrld-ease-standard),
+    box-shadow var(--wrld-duration-default) var(--wrld-ease-standard);
+}
+html[data-theme] .ui-search__input input {
+  background-color: transparent;
+  color: var(--wrld-fg);
+}
+html[data-theme] .ui-search__input:hover:not(:focus-within),
+html[data-theme] .ui-search__input:hover:not(:focus-within) input,
+html[data-theme] .ui-filter__button:hover {
+  background-color: var(--wrld-bg-elevated);
+  border-color: var(--wrld-fg-subtle);
+}
+html[data-theme] .ui-search__input:focus-within,
+html[data-theme] .ui-filter__button:focus-visible,
+html[data-theme] .ui-filter__button[data-headlessui-state~="open"] {
+  border-color: var(--wrld-accent-primary);
+  box-shadow: var(--wrld-focus-ring);
+}
+html[data-theme] .ui-search__mobile-button {
+  background-color: var(--wrld-bg-elevated);
+  border-color: var(--wrld-border-strong);
+}
+
+/* Category list — quiet rows, solid fill when selected */
+html[data-theme] .sfv__categories__item {
+  background-color: transparent;
+  color: var(--wrld-fg-muted);
+  border-radius: var(--wrld-radius-sm);
+  padding: 6px 12px;
+  transition:
+    background-color var(--wrld-duration-default) var(--wrld-ease-standard),
+    color var(--wrld-duration-default) var(--wrld-ease-standard);
+}
+html[data-theme] .sfv__categories__item:hover:not(.is-active) {
+  background-color: var(--wrld-bg-muted);
+  color: var(--wrld-fg);
+}
+html[data-theme] .sfv__categories__item.is-active {
+  background-color: var(--wrld-fg);
+  color: var(--wrld-fg-inverse);
+}
+html[data-theme] .ser-cat-filter__dropdown__item {
+  background-color: var(--wrld-bg-elevated);
+  border-color: var(--wrld-border);
+}
+
+/* Cards — hairline, accent border + lift only on hover (wrld.design .card) */
+html[data-theme] .service-card-wrapper,
+html[data-theme] .bs-service-card,
+html[data-theme] .bs-employee-card,
+html[data-theme] .bs-location-card {
+  background-color: var(--wrld-bg-elevated);
+  border: 1px solid var(--wrld-border);
+  border-radius: var(--wrld-radius-md);
+  transition:
+    border-color var(--wrld-duration-default) var(--wrld-ease-standard),
+    box-shadow var(--wrld-duration-default) var(--wrld-ease-standard);
+}
+html[data-theme] .service-card-wrapper:hover {
+  border-color: var(--wrld-accent-primary);
+  box-shadow: var(--wrld-shadow-accent-primary);
+}
+html[data-theme] :is(.bs-service-card, .bs-employee-card, .bs-location-card):hover {
+  border-color: var(--wrld-fg-subtle);
+}
+html[data-theme] .service-card-grid-sm__cnt__up h4 {
+  font-weight: 600;
+}
+html[data-theme] .service-card-extras-tag {
+  color: var(--wrld-fg-subtle);
+}
+
+/* Badges (Online / Training / On Site) — WRLD default pill, monochrome.
+   Overrides the per-service colours set in the admin. */
+html[data-theme] .ui-tag {
+  height: 20px;
+  padding: 0 8px;
+  color: var(--wrld-fg);
+  background-color: var(--wrld-bg-elevated);
+  border: 1px solid var(--wrld-border);
+  border-radius: var(--wrld-radius-pill);
+}
+html[data-theme] .ui-tag__content {
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 18px;
+}
+
+/* Service imagery sits on the 8px card radius family */
+html[data-theme] .service-card-grid-sm .ui-avatar,
+html[data-theme] .service-card-grid-sm .ui-avatar__image {
+  border-radius: var(--wrld-radius-md);
+}
+
+/* Pagination */
+html[data-theme] .ui-pagination > li > a {
+  border-radius: var(--wrld-radius-sm);
+}
+
+
+/* ---------------------------------------------------------------------
+   7. Booking flow
+   --------------------------------------------------------------------- */
+/* Containers: hairline cards instead of drop shadows */
+html[data-theme] .booking__wrapper__content,
+html[data-theme] .booking-details {
+  background-color: var(--wrld-bg-elevated);
+  border: 1px solid var(--wrld-border);
+  box-shadow: none;
+}
+html[data-theme] .booking-details-body,
+html[data-theme] .booking-details-body-check {
+  background-color: transparent;
+}
+html[data-theme] .booking-details-body__item__header {
+  color: var(--wrld-fg-subtle);
+}
+html[data-theme] .booking-details-body__item.active i::before {
+  color: var(--wrld-fg);
+}
+html[data-theme] .bk-sticky-foot {
+  background-color: var(--wrld-bg-elevated);
+  border: 1px solid var(--wrld-border);
+  box-shadow: none;
+}
+
+/* Calendar — hover strengthens the border; selection is a solid fill.
+   Selection rides Trafft's own rules via scoped variables so it holds in
+   both themes without fighting the 0-5-0 dark-mode selectors. */
+html[data-theme] .ui-cal__day {
+  border-color: var(--wrld-border);
+  border-radius: var(--wrld-radius-sm);
+  font-variant-numeric: tabular-nums;
+  transition:
+    border-color var(--wrld-duration-micro) var(--wrld-ease-standard),
+    background-color var(--wrld-duration-micro) var(--wrld-ease-standard),
+    color var(--wrld-duration-micro) var(--wrld-ease-standard);
+}
+/* :root:root clears Trafft's dark hover rule (0-7-0) */
+:root:root[data-theme] .ui-cal__day:hover:not(.loading):not(.is-selected):not(.is-disabled) {
+  background-color: transparent;
+  border-color: var(--wrld-accent-primary);
+  color: var(--wrld-accent-primary);
+}
+html[data-theme] .ui-cal__day.is-selected {
+  --color-primary:    var(--wrld-fg-inverse);
+  --color-primary-90: var(--wrld-fg);
+  --color-primary-10: var(--wrld-fg);
+}
+
+/* Time slots — same grammar as calendar days */
+html[data-theme] .booking-ts {
+  border-color: var(--wrld-border);
+  border-radius: var(--wrld-radius-sm);
+  font-variant-numeric: tabular-nums;
+  transition:
+    border-color var(--wrld-duration-micro) var(--wrld-ease-standard),
+    background-color var(--wrld-duration-micro) var(--wrld-ease-standard);
+}
+html[data-theme] .booking-ts:hover:not(.is-disabled):not(.is-active) {
+  background: var(--wrld-bg-elevated);
+  border-color: var(--wrld-accent-primary);
+}
+html[data-theme] .booking-ts:hover:not(.is-disabled):not(.is-active) span {
+  color: var(--wrld-accent-primary);
+}
+html[data-theme] .booking-ts.is-active {
+  --color-primary:    var(--wrld-fg-inverse);
+  --color-primary-90: var(--wrld-fg);
+  --color-primary-05: var(--wrld-fg);
+  --color-primary-10: var(--wrld-fg);
+  --color-graphite:   var(--wrld-mono-400);
+  background: var(--wrld-fg);
+}
+
+/* Month / week toggle */
+html[data-theme] .ui-radio-button.el-radio-button .el-radio-button__inner {
+  font-family: var(--wrld-font-body);
+  font-weight: 500;
+}
+
+/* Tabs (Customer info / Existing account) — eyebrow microtype */
+html[data-theme] .ui-tabs.el-tabs .el-tabs__header .el-tabs__nav-wrap .el-tabs__item {
+  font-size: 12px;
+  letter-spacing: var(--wrld-ls-eyebrow);
+  color: var(--wrld-fg-subtle);
+}
+html[data-theme] .ui-tabs.el-tabs .el-tabs__header .el-tabs__nav-wrap .el-tabs__item:hover:not(.is-active) {
+  background-color: transparent;
+  color: var(--wrld-accent-primary);
+}
+html[data-theme] .ui-tabs.el-tabs .el-tabs__header .el-tabs__nav-wrap .el-tabs__item.is-active {
+  background-color: transparent;
+  color: var(--wrld-fg);
+}
+html[data-theme] .ui-tabs.el-tabs .el-tabs__header .el-tabs__nav-wrap::after {
+  height: 1px;
+  background-color: var(--wrld-border);
+}
+
+/* Form fields — 4px radius, strong hairline, accent border + 3px ring on focus */
+html[data-theme] :is(
+  .ui-input .el-input__wrapper,
+  .ui-textarea .el-textarea__inner,
+  .ui-select .el-select__wrapper,
+  .ui-select-v2.el-select .el-select__wrapper,
+  .vue-tel-input-container
+) {
+  background-color: var(--wrld-bg);
+  border: 1px solid var(--wrld-border-strong);
+  border-radius: var(--wrld-radius-sm);
+  transition:
+    border-color var(--wrld-duration-default) var(--wrld-ease-standard),
+    box-shadow var(--wrld-duration-default) var(--wrld-ease-standard);
+}
+html[data-theme] :is(
+  .ui-input .el-input__wrapper,
+  .ui-textarea .el-textarea__inner,
+  .ui-select .el-select__wrapper,
+  .ui-select-v2.el-select .el-select__wrapper,
+  .vue-tel-input-container
+):hover {
+  border-color: var(--wrld-fg-subtle);
+}
+html[data-theme] :is(
+  .ui-input .el-input__wrapper.is-focus,
+  .ui-input .el-input__wrapper:focus-within,
+  .ui-textarea .el-textarea__inner:focus,
+  .ui-select .el-select__wrapper.is-focused,
+  .ui-select-v2.el-select .el-select__wrapper.is-focused,
+  .vue-tel-input-container:focus-within
+) {
+  border-color: var(--wrld-accent-primary);
+  box-shadow: var(--wrld-focus-ring);
+}
+/* Phone: Trafft sets the container border !important from
+   --theme-color-border, so steer the variable; it rings the inner element. */
+html[data-theme] .vue-tel-input-container        { --theme-color-border: var(--wrld-border-strong); }
+html[data-theme] .vue-tel-input-container:hover  { --theme-color-border: var(--wrld-fg-subtle); }
+html[data-theme] .vue-tel-input-container:focus-within { --theme-color-border: var(--wrld-accent-primary); }
+html[data-theme] .vue-tel-input-container .trafft-tel-input:focus-within {
+  box-shadow: none;
+}
+html[data-theme] .vue-tel-input-container .trafft-tel-input .vti__dropdown {
+  border-radius: var(--wrld-radius-sm) 0 0 var(--wrld-radius-sm);
+}
+html[data-theme] :is(.ui-input .el-input__wrapper input, .ui-textarea .el-textarea__inner) {
+  font-family: var(--wrld-font-body);
+  font-weight: 400;
+  color: var(--wrld-fg);
+}
+html[data-theme] .ui-input .el-input__wrapper input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px var(--wrld-bg-subtle) inset;
+  -webkit-text-fill-color: var(--wrld-fg);
+}
+html[data-theme] .ui-form-item.el-form-item .el-form-item__label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--wrld-fg-muted);
+}
+
+/* Checkbox */
+html[data-theme] .ui-checkbox .el-checkbox .el-checkbox__inner {
+  border-color: var(--wrld-border-strong);
+  border-radius: var(--wrld-radius-sm);
+}
+html[data-theme] .ui-checkbox .el-checkbox:hover .el-checkbox__inner {
+  border-color: var(--wrld-accent-primary);
+}
+
+/* File upload — content-sized flex child in Trafft; pin it to the column */
+html[data-theme] .ui-upload {
+  width: 100%;
+}
+html[data-theme] .ui-upload .el-upload .el-upload-dragger {
+  background-color: var(--wrld-bg);
+  border: 1px dashed var(--wrld-border-strong);
+  border-radius: var(--wrld-radius-md);
+}
+html[data-theme] .ui-upload .el-upload .el-upload-dragger:hover,
+html[data-theme] .ui-upload.active .el-upload .el-upload-dragger {
+  border-color: var(--wrld-accent-primary);
+}
+
+
+/* ---------------------------------------------------------------------
+   8. Dialogs, menus, toasts
+   --------------------------------------------------------------------- */
+html[data-theme] .ui-dialog {
+  border: 1px solid var(--wrld-border);
+  box-shadow: var(--wrld-shadow-lg);
+}
+html[data-theme] .ui-dialog.el-dialog .ui-dialog__header,
+html[data-theme] .ui-dialog.el-dialog .el-dialog__footer {
+  border-color: var(--wrld-border);
+}
+html[data-theme] :is(.header-language__list, .ui-popper.el-popper, .ui-select-popper.el-popper, .ui-select-v2-popper.el-popper, .ui-date-picker-popper.el-popper) {
+  border: 1px solid var(--wrld-border);
+  border-radius: var(--wrld-radius-md);
+  box-shadow: var(--wrld-shadow-md);
+}
+html[data-theme] .ui-message.el-message {
+  border: 1px solid var(--wrld-border);
+  border-radius: var(--wrld-radius-md);
+  box-shadow: var(--wrld-shadow-md);
+}
+
+
+/* ---------------------------------------------------------------------
+   9. Page background + footer
+   --------------------------------------------------------------------- */
+/* Replaces the uploaded background image with the WRLD dot grid */
+html[data-theme] .dl__wrapper__background,
+html[data-theme] .booking-layout__wrapper__background {
+  background-image: radial-gradient(var(--wt-grid-ink) 1px, transparent 1.25px);
+  background-size: 24px 24px;
+  background-repeat: repeat;
+  background-position: 0 0;
+}
+html[data-theme] .footer {
+  background-color: var(--wrld-bg);
+  border-top: 1px solid var(--wrld-border);
+}
+html[data-theme] .footer a {
+  color: var(--wrld-fg);
+  text-decoration: none;
+  transition: color var(--wrld-duration-default) var(--wrld-ease-standard);
+}
+html[data-theme] .footer a:hover {
+  color: var(--wrld-accent-primary);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+html[data-theme] .footer-custom-text,
+html[data-theme] .footer__mark {
+  color: var(--wrld-fg-subtle);
+}
+/* Social icons rest in mono and take their colour back on hover */
+html[data-theme] .footer-social-media :is(img, svg) {
+  filter: grayscale(1);
+  opacity: 0.72;
+  transition:
+    filter var(--wrld-duration-default) var(--wrld-ease-standard),
+    opacity var(--wrld-duration-default) var(--wrld-ease-standard);
+}
+html[data-theme] .footer-social-media a:hover :is(img, svg) {
+  filter: none;
+  opacity: 1;
+}
+/* Dark: the X mark is black artwork — keep the set inverted mono */
+html[data-theme="dark"] .footer-social-media :is(img, svg),
+html[data-theme="dark"] .footer-social-media a:hover :is(img, svg) {
+  filter: grayscale(1) invert(1);
+}
+
+
+/* ---------------------------------------------------------------------
+   10. Focus + motion
+   --------------------------------------------------------------------- */
+html[data-theme] :is(a, [role="button"], summary):focus-visible {
+  outline: 2px solid var(--wrld-accent-primary);
+  outline-offset: 3px;
+  border-radius: var(--wrld-radius-sm);
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme] *,
+  html[data-theme] *::before,
+  html[data-theme] *::after {
+    transition-duration: 1ms !important;
+    animation-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+  html[data-theme] .ui-button { transform: none !important; }
+}
+
+
+/* ---------------------------------------------------------------------
+   11. Third-party widgets
+   --------------------------------------------------------------------- */
+/* Gleap: hide the AI quick actions and input on phones (carried over
+   from the previous Custom CSS). */
+@media (max-width: 580px) {
+  .gleap-ai-ui-quick-actions,
+  .gleap-ai-ui-input-container:focus-within,
+  .gleap-ai-ui-input-container {
+    display: none !important;
+  }
+}
