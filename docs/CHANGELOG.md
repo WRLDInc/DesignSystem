@@ -6,6 +6,11 @@ All notable changes to the WRLD Design System are documented here. This project 
 
 ### Added
 
+- **WRLD Help (Gleap) on wrld.design.** `scripts/build_site.mjs` injects the same Gleap loader and public SDK key used
+  on wrld.one and WRLD.host into every full page: `/`, `/404`, `/system`, `/styleguide/` and each `ui_kits/*` index.
+  Preview cards and the printable quote templates are excluded on purpose, and the snippet does nothing when the page
+  is framed, so embeds never stack a second launcher. The SDK loads after `load`, off the critical path.
+
 - **Quote and agreement framework.** A printable US Letter document system for client quotes, managed services
   agreements and SOWs, built from the structure of the Essential tier managed IT agreement:
   - `templates/quote/quote.css`: every `wq-` block (sheet, running head with client mark, cover, chips, meta strip,
