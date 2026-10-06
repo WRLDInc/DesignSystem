@@ -335,7 +335,7 @@
       "registry": "ui",
       "file": "registry/ui/wrld-search-trigger.tsx",
       "demo": "registry/ui/wrld-search-trigger.demo.tsx",
-      "description": "Round icon button that opens the WRLD.AI search overlay from a navigation bar, with an optional \u2318K / Ctrl K hint. Monochrome at rest, accent on hover, focus and while the dialog is open. Pair with WrldSearchDialog.",
+      "description": "Round icon button that opens the WRLD.AI search overlay from a navigation bar, with an optional ⌘K / Ctrl K hint. Monochrome at rest, accent on hover, focus and while the dialog is open. Pair with WrldSearchDialog.",
       "tags": [
         "wrld",
         "search",
@@ -365,6 +365,26 @@
         "mcp"
       ],
       "source": "deploy/index.html",
+      "component": null,
+      "url": null,
+      "installRef": null,
+      "publishedAt": null
+    },
+    {
+      "slug": "wrld-quote",
+      "name": "WRLD Quote",
+      "registry": "blocks",
+      "file": "registry/blocks/wrld-quote.tsx",
+      "demo": "registry/blocks/wrld-quote.demo.tsx",
+      "description": "Web-rendered WRLD quote or managed services agreement: running head with the client's mark, cover with chips and meta, free-form sections, line items, the inverted total band, one-time fees, terms and an accept action. Use in portals and proposal links; print uses templates/quote.",
+      "tags": [
+        "wrld",
+        "quote",
+        "pricing",
+        "agreement",
+        "proposal"
+      ],
+      "source": "templates/quote/quote.css",
       "component": null,
       "url": null,
       "installRef": null,

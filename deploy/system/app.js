@@ -19,6 +19,7 @@
     brand: "logo mark identity voice",
     components: "ui patterns controls",
     agents: "api mcp search ai cloudflare agent overlay namespace endpoint discovery metadata",
+    documents: "quote agreement proposal sow pricing invoice print pdf letter signature",
   };
 
   // Every WRLD surface needs these regardless of which card was picked.
@@ -291,7 +292,7 @@
     el.dataset.name = tpl.name.toLowerCase();
     el.dataset.subtitle = (tpl.description || "").toLowerCase();
     el.dataset.group = "templates";
-    el.dataset.aliases = "document paged deck";
+    el.dataset.aliases = "document paged deck quote agreement print";
 
     const preview = document.createElement("div");
     preview.className = "ds-card-preview";
@@ -327,7 +328,7 @@
   }
 
   function templateAsCard(tpl) {
-    return { name: tpl.name, group: "Templates", subtitle: tpl.description, path: tpl.entryPath, isTemplate: true, folder: tpl.folder };
+    return { name: tpl.name, group: "Templates", subtitle: tpl.description, path: tpl.entryPath, isTemplate: true, folder: tpl.folder, files: tpl.files };
   }
 
   function aliasesFor(group) {
@@ -540,7 +541,8 @@
 
     let specific = [card.path];
     if (isComponent) specific.push(...relatedComponentSources(card), "_ds_bundle.js", "_ds_manifest.json");
-    if (isTemplate) specific = [card.path, `${card.folder}/support.js`, `${card.folder}/ds-base.js`];
+    // Templates list their own companions; the legacy default is the paged-document runtime.
+    if (isTemplate) specific = [card.path, ...(card.files || [`${card.folder}/support.js`, `${card.folder}/ds-base.js`])];
     specific = [...new Set(specific)];
 
     const lines = [];

@@ -312,6 +312,7 @@ The origin is meant to be read by agents as well as people, and says so:
 | Agent registration and credential guidance | [`/auth.md`](https://wrld.design/auth.md) | Auth.md |
 | Protected resource metadata (authorization servers, `agent_auth`) | [`/.well-known/oauth-protected-resource`](https://wrld.design/.well-known/oauth-protected-resource) | RFC 9728 |
 | Login design guidelines for agents building a WRLD surface | [`docs/LOGIN_DESIGN.md`](docs/LOGIN_DESIGN.md) | — |
+| Quote and agreement guidelines (printable framework, client documents) | [`docs/QUOTE_DESIGN.md`](docs/QUOTE_DESIGN.md) | — |
 | AI Search, MCP and agents guideline (namespaces, endpoints, overlay spec, web rules) | [`docs/AI_SEARCH_AGENTS.md`](docs/AI_SEARCH_AGENTS.md) | Cloudflare AI Search, MCP |
 | MCP client registration for the WRLD search endpoint | [`.mcp.json`](.mcp.json) | MCP (Streamable HTTP) |
 
@@ -335,6 +336,24 @@ straight from the browser because this Worker is assets-only.
 | React / shadcn components | [`registry/ui/wrld-search-trigger.tsx`](registry/ui/wrld-search-trigger.tsx) · [`registry/blocks/wrld-search-dialog.tsx`](registry/blocks/wrld-search-dialog.tsx) |
 | Reference Cloudflare McpAgent to build from | [`agents/wrld-search-agent/`](agents/wrld-search-agent/) |
 | The static implementation | [`deploy/index.html`](deploy/index.html) (`#searchBtn`, `#aiDialog`) |
+
+### Quotes and agreements
+
+Client quotes, managed services agreements and SOWs share one printable
+framework: `wq-` blocks on the `--wrld-*` tokens, US Letter sheets, a running
+head that carries the client's mark, one inverted total band, and signatures
+for both parties. Paper is monochrome; the lockup carries the colour.
+
+| What | Where |
+| --- | --- |
+| The guideline: anatomy, block reference, tokens, copy rules, producing a client document | [`docs/QUOTE_DESIGN.md`](docs/QUOTE_DESIGN.md) |
+| Framework stylesheet | [`templates/quote/quote.css`](templates/quote/quote.css) |
+| Reference agreement (seven sheets) and one-page tiered quote, sample client | [`templates/quote/index.html`](templates/quote/index.html) · [`templates/quote/tiered.html`](templates/quote/tiered.html) |
+| Annotated card (`/system#documents`) | [`preview/documents-quote.html`](preview/documents-quote.html) |
+| React / shadcn port for portals and proposal links | [`registry/blocks/wrld-quote.tsx`](registry/blocks/wrld-quote.tsx) |
+
+Real client documents are produced from the template outside this repo; client
+names, contacts and pricing never land in a public tree.
 
 ## Component registry (21st.dev)
 

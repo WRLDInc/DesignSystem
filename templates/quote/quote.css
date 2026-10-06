@@ -1,0 +1,250 @@
+/* ============================================================
+   WRLD Design System · Quote & agreement framework
+   templates/quote/quote.css
+
+   A printable US Letter document system for quotes, managed-service
+   agreements and SOWs. Every block is a `wq-` class built on the
+   canonical `--wrld-*` tokens; nothing here introduces a new colour,
+   radius or type size outside the scale.
+
+   Guideline:  docs/QUOTE_DESIGN.md
+   Reference:  templates/quote/index.html  (sample client, sample values)
+   Card:       preview/documents-quote.html
+   React port: registry/blocks/wrld-quote.tsx
+
+   Paper is always light. A printed page has no hover, so it has no
+   accent: the only colour on the page is the blue rule inside the
+   WRLD.TECH lockup. Accents return in the web (React) version, on
+   interactive elements only.
+   ============================================================ */
+
+@import url('../../styles.css');
+
+:root {
+  /* Sheet geometry: US Letter at 96 CSS px per inch. */
+  --wq-sheet-w: 8.5in;
+  --wq-sheet-h: 11in;
+  --wq-margin-x: 0.6in;
+  --wq-margin-y: 0.5in;
+
+  /* Print type scale. Mapped from the system scale, tuned for paper:
+     body sits near 9.5pt, the cover title near 26pt. */
+  --wq-fs-title: 2.125rem;   /* 34px · cover title (fs-h1 step, print) */
+  --wq-fs-h2: 1.25rem;       /* 20px · section heading (= --wrld-fs-h4) */
+  --wq-fs-h3: 0.875rem;      /* 14px · sub-heading (= --wrld-fs-body-sm) */
+  --wq-fs-body: 0.78125rem;  /* 12.5px · body copy */
+  --wq-fs-small: 0.6875rem;  /* 11px · notes, table cells */
+  --wq-fs-micro: 0.59375rem; /* 9.5px · mono labels, running head/foot */
+}
+
+/* ---------- Canvas ---------- */
+html.wq, html.wq body {
+  background: var(--wrld-bg-muted);
+  color: var(--wrld-fg);
+  font-family: var(--wrld-font-body);
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+html.wq body { margin: 0; padding: var(--wrld-space-8) var(--wrld-space-4); }
+.wq *, .wq *::before, .wq *::after { box-sizing: border-box; }
+.wq p, .wq h1, .wq h2, .wq h3, .wq ul, .wq ol, .wq dl, .wq dd { margin: 0; }
+/* Reset the site-level element styles (p at 16px, h1 margins) to the
+   sheet print scale. :where() holds specificity at element level so every
+   wq- class still wins. */
+:where(.wq-sheet) p, :where(.wq-sheet) li, :where(.wq-sheet) dd, :where(.wq-sheet) dt, :where(.wq-sheet) td { font-size: inherit; line-height: inherit; color: inherit; }
+:where(.wq-sheet) h1, :where(.wq-sheet) h2, :where(.wq-sheet) h3 { margin: 0; }
+.wq ul, .wq ol { padding: 0; list-style: none; }
+
+/* ---------- Sheet ---------- */
+.wq-sheet {
+  width: var(--wq-sheet-w);
+  height: var(--wq-sheet-h);
+  margin: 0 auto var(--wrld-space-8);
+  padding: var(--wq-margin-y) var(--wq-margin-x);
+  background: var(--wrld-mono-0);
+  box-shadow: var(--wrld-shadow-md);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-size: var(--wq-fs-body);
+  line-height: var(--wrld-lh-body);
+}
+.wq-body { flex: 1; display: flex; flex-direction: column; gap: var(--wrld-space-6); padding: var(--wrld-space-6) 0; min-height: 0; }
+
+/* ---------- Running head & foot ---------- */
+.wq-head, .wq-foot {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--wrld-space-4);
+  font-family: var(--wrld-font-mono); font-size: var(--wq-fs-micro);
+  letter-spacing: 0.06em; color: var(--wrld-fg-subtle);
+}
+.wq-head { padding-bottom: var(--wrld-space-3); border-bottom: var(--wrld-border-hairline) solid var(--wrld-border); }
+.wq-foot { padding-top: var(--wrld-space-2); border-top: var(--wrld-border-hairline) solid var(--wrld-border); }
+.wq-head .wq-lockup { height: 18px; width: auto; display: block; }
+.wq-head-right { display: flex; align-items: center; gap: var(--wrld-space-3); }
+.wq-foot b { font-weight: 700; color: var(--wrld-fg-muted); }
+
+/* ---------- Client mark slot ----------
+   A client deliverable carries the client's logo, in the client's own
+   colours (the one exception to monochrome paper; never recolour it).
+   Use a trimmed, transparent PNG or an SVG. Size by aspect ratio so the
+   client mark sits at the same optical weight as the WRLD.TECH lockup:
+     wide    3:1 or wider  -> 22px tall (default)
+     mid     1.5:1 to 3:1  -> 26px tall  (.is-mid)
+     square  under 1.5:1   -> 30px tall  (.is-square)
+   The WRLD.TECH lockup is 18px; client marks run a step taller because
+   most are lighter than the WRLD wordmark. Width never passes 140px; a
+   very wide mark shrinks to fit instead.
+   With no file, the name renders as plain type (.wq-client-name). */
+.wq-client { display: inline-flex; align-items: center; gap: var(--wrld-space-2); }
+.wq-client img { height: 22px; width: auto; max-width: 140px; object-fit: contain; object-position: right center; display: block; }
+.wq-client.is-mid img { height: 26px; }
+.wq-client.is-square img { height: 30px; }
+.wq-client-name {
+  font-family: var(--wrld-font-display); font-weight: var(--wrld-fw-semibold);
+  font-size: var(--wq-fs-small); letter-spacing: var(--wrld-ls-eyebrow);
+  text-transform: uppercase; color: var(--wrld-fg);
+}
+.wq-x { color: var(--wrld-fg-subtle); }
+
+/* ---------- Type ---------- */
+.wq-eyebrow {
+  font-family: var(--wrld-font-body); font-size: var(--wq-fs-micro); font-weight: var(--wrld-fw-medium);
+  letter-spacing: var(--wrld-ls-eyebrow); text-transform: uppercase; color: var(--wrld-fg-muted);
+}
+.wq-title {
+  font-family: var(--wrld-font-display); font-weight: var(--wrld-fw-bold);
+  font-size: var(--wq-fs-title); line-height: 1.08; letter-spacing: var(--wrld-ls-display);
+  color: var(--wrld-fg); max-width: 22ch; text-wrap: balance;
+}
+.wq-lede { font-size: 0.875rem; line-height: 1.6; color: var(--wrld-fg-muted); max-width: 62ch; }
+.wq p { text-wrap: pretty; }
+.wq-muted { color: var(--wrld-fg-muted); }
+.wq-mono { font-family: var(--wrld-font-mono); }
+.wq strong { font-weight: var(--wrld-fw-medium); color: var(--wrld-fg); }
+
+/* ---------- Cover ---------- */
+.wq-cover { display: flex; flex-direction: column; gap: var(--wrld-space-4); padding-top: var(--wrld-space-4); }
+.wq-chips { display: flex; flex-wrap: wrap; gap: var(--wrld-space-2); }
+.wq-chip {
+  font-family: var(--wrld-font-mono); font-size: var(--wq-fs-micro); letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--wrld-fg-muted); border: var(--wrld-border-hairline) solid var(--wrld-border-strong);
+  border-radius: var(--wrld-radius-pill); padding: 3px 9px; white-space: nowrap;
+}
+.wq-chip.is-solid { background: var(--wrld-mono-950); border-color: var(--wrld-mono-950); color: var(--wrld-mono-0); }
+
+/* Key/value strip: prepared for, by, issued, term. */
+.wq-meta {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--wrld-space-4);
+  padding: var(--wrld-space-3) 0;
+  border-top: var(--wrld-border-hairline) solid var(--wrld-border);
+  border-bottom: var(--wrld-border-hairline) solid var(--wrld-border);
+}
+.wq-meta > div { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.wq-label {
+  font-family: var(--wrld-font-mono); font-size: var(--wq-fs-micro); letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--wrld-fg-subtle);
+}
+.wq-value { font-weight: var(--wrld-fw-medium); font-size: var(--wq-fs-small); line-height: 1.45; color: var(--wrld-fg); }
+.wq-value small { display: block; font-weight: 400; color: var(--wrld-fg-muted); font-size: var(--wq-fs-micro); }
+
+/* ---------- Letter ---------- */
+.wq-letter { display: flex; flex-direction: column; gap: var(--wrld-space-3); max-width: 64ch; }
+.wq-letter .wq-salutation { font-family: var(--wrld-font-display); font-weight: var(--wrld-fw-semibold); font-size: var(--wq-fs-h3); }
+.wq-sender { display: flex; flex-direction: column; gap: 1px; padding-top: var(--wrld-space-2); }
+.wq-sender .wq-name { font-family: var(--wrld-font-display); font-weight: var(--wrld-fw-semibold); font-size: var(--wq-fs-h3); }
+.wq-sender .wq-mono { font-size: var(--wq-fs-small); color: var(--wrld-fg-muted); }
+
+/* ---------- Section ---------- */
+.wq-section { display: flex; flex-direction: column; gap: var(--wrld-space-3); }
+.wq-section-head { display: flex; align-items: baseline; gap: var(--wrld-space-3); padding-bottom: var(--wrld-space-2); border-bottom: var(--wrld-border-hairline) solid var(--wrld-border); }
+.wq-num { font-family: var(--wrld-font-mono); font-size: var(--wq-fs-small); color: var(--wrld-fg-subtle); letter-spacing: 0.06em; }
+.wq-h2 { font-family: var(--wrld-font-display); font-weight: var(--wrld-fw-semibold); font-size: var(--wq-fs-h2); line-height: var(--wrld-lh-heading); letter-spacing: var(--wrld-ls-display); color: var(--wrld-fg); }
+.wq-h3 { font-family: var(--wrld-font-display); font-weight: var(--wrld-fw-semibold); font-size: var(--wq-fs-h3); line-height: var(--wrld-lh-heading); letter-spacing: -0.01em; color: var(--wrld-fg); margin-top: var(--wrld-space-1); }
+.wq-cols { display: grid; grid-template-columns: 1fr 1fr; gap: var(--wrld-space-6); }
+
+/* ---------- Lists ---------- */
+/* The house bullet is a short hairline rule, never a dot, emoji or check. */
+.wq-list { display: flex; flex-direction: column; gap: 5px; }
+.wq-list li { display: grid; grid-template-columns: 10px 1fr; gap: var(--wrld-space-2); }
+.wq-list li::before { content: ""; height: 1px; margin-top: 0.8em; background: var(--wrld-fg-subtle); }
+.wq-list.is-cols { display: grid; grid-template-columns: 1fr 1fr; column-gap: var(--wrld-space-6); row-gap: 5px; }
+
+/* ---------- Facts (coverage, SLA, included time) ---------- */
+.wq-facts { display: grid; grid-template-columns: repeat(4, 1fr); border: var(--wrld-border-hairline) solid var(--wrld-border); border-radius: var(--wrld-radius-md); }
+.wq-facts > div { padding: var(--wrld-space-3) var(--wrld-space-4); display: flex; flex-direction: column; gap: 2px; }
+.wq-facts > div + div { border-left: var(--wrld-border-hairline) solid var(--wrld-border); }
+.wq-fact { font-family: var(--wrld-font-display); font-weight: var(--wrld-fw-semibold); font-size: 0.9375rem; letter-spacing: -0.01em; line-height: 1.3; }
+
+/* ---------- Tables ---------- */
+.wq-table { width: 100%; border-collapse: collapse; font-size: var(--wq-fs-small); }
+.wq-table th {
+  text-align: left; font-family: var(--wrld-font-mono); font-weight: 400; font-size: var(--wq-fs-micro);
+  letter-spacing: 0.12em; text-transform: uppercase; color: var(--wrld-fg-subtle);
+  padding: 0 var(--wrld-space-3) var(--wrld-space-2) 0; border-bottom: var(--wrld-border-hairline) solid var(--wrld-border-strong);
+}
+.wq-table td { padding: var(--wrld-space-2) var(--wrld-space-3) var(--wrld-space-2) 0; border-bottom: var(--wrld-border-hairline) solid var(--wrld-mono-100); vertical-align: top; color: var(--wrld-fg-muted); }
+.wq-table td:first-child { color: var(--wrld-fg); font-weight: var(--wrld-fw-medium); }
+.wq-table .is-num { text-align: right; font-family: var(--wrld-font-mono); font-size: 0.75rem; white-space: nowrap; }
+.wq-table th.is-num { text-align: right; font-family: var(--wrld-font-mono); font-size: var(--wq-fs-micro); }
+.wq-table .is-strong { color: var(--wrld-fg); font-weight: 700; }
+.wq-table th:last-child, .wq-table td:last-child { padding-right: 0; }
+
+/* ---------- Total band ----------
+   The one inverted moment in the document, like the CTA band on the
+   site. Fixed to the mono scale: it is near-black on paper. */
+.wq-total {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--wrld-space-6);
+  background: var(--wrld-mono-950); color: var(--wrld-mono-50);
+  border-radius: var(--wrld-radius-md); padding: var(--wrld-space-5) var(--wrld-space-6);
+}
+.wq-total .wq-label { color: var(--wrld-mono-400); }
+.wq-total-sum { font-family: var(--wrld-font-display); font-weight: var(--wrld-fw-bold); font-size: 1.75rem; letter-spacing: -0.03em; line-height: 1.1; white-space: nowrap; }
+.wq-total-sum span { font-family: var(--wrld-font-mono); font-weight: 400; font-size: var(--wq-fs-small); letter-spacing: 0; color: var(--wrld-mono-400); margin-left: 6px; }
+.wq-total-break { font-family: var(--wrld-font-mono); font-size: var(--wq-fs-micro); color: var(--wrld-mono-300); line-height: 1.6; max-width: 46ch; }
+
+/* ---------- Fee callout (one-time charges) ---------- */
+.wq-fee { display: grid; grid-template-columns: 170px 1fr; gap: var(--wrld-space-5); border: var(--wrld-border-hairline) solid var(--wrld-border-strong); border-radius: var(--wrld-radius-md); padding: var(--wrld-space-4) var(--wrld-space-5); }
+.wq-fee-sum { font-family: var(--wrld-font-display); font-weight: var(--wrld-fw-bold); font-size: 1.375rem; letter-spacing: -0.02em; line-height: 1.2; }
+.wq-fee p { font-size: var(--wq-fs-small); color: var(--wrld-fg-muted); }
+
+/* ---------- Payment methods & definition rows ---------- */
+.wq-defs { display: flex; flex-direction: column; }
+.wq-defs > div { display: grid; grid-template-columns: 150px 80px 1fr; gap: var(--wrld-space-3); padding: var(--wrld-space-2) 0; border-bottom: var(--wrld-border-hairline) solid var(--wrld-mono-100); font-size: var(--wq-fs-small); }
+.wq-defs dt { font-weight: var(--wrld-fw-medium); color: var(--wrld-fg); }
+.wq-defs .wq-fee-tag { font-family: var(--wrld-font-mono); color: var(--wrld-fg); }
+.wq-defs dd { color: var(--wrld-fg-muted); }
+.wq-tag { font-family: var(--wrld-font-mono); font-size: var(--wq-fs-micro); letter-spacing: 0.1em; text-transform: uppercase; color: var(--wrld-fg); border: var(--wrld-border-hairline) solid var(--wrld-fg); border-radius: var(--wrld-radius-pill); padding: 1px 6px; margin-left: 6px; white-space: nowrap; }
+
+/* ---------- Notes ---------- */
+.wq-note { font-size: var(--wq-fs-small); line-height: 1.55; color: var(--wrld-fg-muted); padding: var(--wrld-space-3) var(--wrld-space-4); background: var(--wrld-bg-subtle); border-radius: var(--wrld-radius-sm); }
+.wq-note strong { color: var(--wrld-fg); }
+
+/* ---------- Tiers (good / better / best variant) ---------- */
+.wq-tiers { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--wrld-space-3); }
+.wq-tier { border: var(--wrld-border-hairline) solid var(--wrld-border); border-radius: var(--wrld-radius-md); padding: var(--wrld-space-4); display: flex; flex-direction: column; gap: var(--wrld-space-3); }
+.wq-tier.is-recommended { border: var(--wrld-border-standard) solid var(--wrld-mono-950); }
+.wq-tier-price { font-family: var(--wrld-font-display); font-weight: var(--wrld-fw-bold); font-size: 1.5rem; letter-spacing: -0.03em; line-height: 1.2; }
+.wq-tier-price span { font-family: var(--wrld-font-mono); font-weight: 400; font-size: var(--wq-fs-micro); color: var(--wrld-fg-subtle); letter-spacing: 0; margin-left: 4px; }
+
+/* ---------- Signature block ---------- */
+.wq-sign { display: grid; grid-template-columns: 1fr 1fr; gap: var(--wrld-space-8); }
+.wq-party { display: flex; flex-direction: column; gap: var(--wrld-space-5); }
+.wq-party .wq-label { color: var(--wrld-fg); font-weight: 700; }
+.wq-line { border-top: var(--wrld-border-hairline) solid var(--wrld-fg-subtle); padding-top: 4px; margin-top: var(--wrld-space-6); font-family: var(--wrld-font-mono); font-size: var(--wq-fs-micro); letter-spacing: 0.12em; text-transform: uppercase; color: var(--wrld-fg-subtle); }
+.wq-line-pair { display: grid; grid-template-columns: 1fr 110px; gap: var(--wrld-space-4); }
+
+/* ---------- Summary bar (tier · client · term) ---------- */
+.wq-summary { display: flex; flex-wrap: wrap; gap: var(--wrld-space-2) var(--wrld-space-6); padding: var(--wrld-space-3) var(--wrld-space-4); border: var(--wrld-border-hairline) solid var(--wrld-border); border-radius: var(--wrld-radius-sm); }
+.wq-summary > div { display: flex; gap: var(--wrld-space-2); align-items: baseline; }
+
+/* ---------- Print ---------- */
+@page { size: letter; margin: 0; }
+@media print {
+  html.wq, html.wq body { background: var(--wrld-mono-0); padding: 0; }
+  .wq-sheet { margin: 0; box-shadow: none; break-after: page; page-break-after: always; }
+  .wq-sheet:last-child { break-after: auto; page-break-after: auto; }
+}
+@media screen and (max-width: 8.9in) {
+  /* Keep the paper true to size; let narrow screens scroll it. */
+  html.wq body { overflow-x: auto; }
+}
