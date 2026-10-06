@@ -319,6 +319,68 @@ for (const f of ['openapi.json', join('.well-known', 'api-catalog'), join('.well
 }
 
 // ---------------------------------------------------------------------------
+// 3e. WRLD Help — the Gleap widget, same project and loader as wrld.one and
+//     WRLD.host, so a visitor gets the one support inbox across the network.
+//
+// Injected here rather than hand-pasted into each page: styleguide/index.html
+// is re-synced from the canonical Claude Design project, which would silently
+// drop a hand edit, and a list in one place is what keeps the next page from
+// shipping without it.
+//
+// Full pages only. Deliberately NOT injected into:
+//   preview/*    cards iframed into /system and Craft docs — a launcher in
+//                every 200px card is noise, and /system already carries one
+//   templates/*  printable quotes and agreements; a launcher has no place on
+//                paper or in a client-facing proposal link
+// The snippet also bails when framed, so a full page embedded elsewhere does
+// not stack a second launcher on its host.
+//
+// The key is Gleap's public browser SDK key (already served on wrld.one and
+// WRLD.host). Never put a Gleap admin secret here.
+// ---------------------------------------------------------------------------
+const GLEAP_SDK_KEY = 'GwUBVVrc0r6XgEthA41dwFXeev3mGB3p';
+const GLEAP_PAGES = [
+  'index.html',
+  '404.html',
+  join('system', 'index.html'),
+  join('styleguide', 'index.html'),
+  ...readdirSync(join(DIST, 'ui_kits'))
+    .map((kit) => join('ui_kits', kit, 'index.html'))
+    .filter((p) => isFile(join(DIST, p))),
+];
+const GLEAP_MARKER = '<!-- wrld-help:gleap -->';
+const gleapSnippet = `${GLEAP_MARKER}
+<script>
+  if (window.self === window.top) {
+    window.addEventListener('load', function () {
+      var s = document.createElement('script');
+      s.src = 'https://sdk.gleap.io/latest/index.js';
+      s.async = true;
+      s.onload = function () {
+        if (window.Gleap) window.Gleap.initialize('${GLEAP_SDK_KEY}');
+      };
+      document.head.appendChild(s);
+    });
+  }
+</script>
+`;
+
+for (const page of GLEAP_PAGES) {
+  const p = join(DIST, page);
+  if (!isFile(p)) {
+    console.error(`Build failed — Gleap page ${page} is missing from dist/. Update GLEAP_PAGES.`);
+    process.exit(1);
+  }
+  const html = readFileSync(p, 'utf8');
+  if (html.includes(GLEAP_MARKER)) continue;
+  if (!html.includes('</body>')) {
+    console.error(`Build failed — ${page} has no </body>; cannot inject the Gleap widget.`);
+    process.exit(1);
+  }
+  writeFileSync(p, html.replace(/<\/body>(?![\s\S]*<\/body>)/, `${gleapSnippet}</body>`));
+}
+
+// ---------------------------------------------------------------------------
 // 4. Verify: every local reference in the shipped tree must resolve
 //    *inside dist*. This is the gate that makes the allowlist safe to edit.
 // ---------------------------------------------------------------------------
