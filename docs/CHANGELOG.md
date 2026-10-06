@@ -6,6 +6,22 @@ All notable changes to the WRLD Design System are documented here. This project 
 
 ### Added
 
+- **Quote and agreement framework.** A printable US Letter document system for client quotes, managed services
+  agreements and SOWs, built from the structure of the Essential tier managed IT agreement:
+  - `templates/quote/quote.css`: every `wq-` block (sheet, running head with client mark, cover, chips, meta strip,
+    letter, section, house list, facts, line-item table, inverted total band, fee callout, definition rows, note,
+    tiers, summary bar, signatures, running foot) on the canonical `--wrld-*` tokens, with `@page` and print rules.
+    Paper is monochrome; the only colour is the blue rule in the WRLD.TECH lockup.
+  - `templates/quote/index.html` (seven-sheet reference agreement) and `templates/quote/tiered.html` (one-page good /
+    better / best), both with a fictional client and sample values. `templates/` joins the publish allowlist.
+  - `docs/QUOTE_DESIGN.md`: anatomy, block reference, tokens, copy rules, producing a client document, accessibility.
+  - `preview/documents-quote.html`: annotated card, new **Documents** section on `/system`; both templates listed under
+    Templates (`_ds_manifest.json`). The template "Use" prompt now lists a template's own companion files.
+  - `registry/blocks/wrld-quote.tsx` + demo: the React / shadcn port for portals and proposal links. Theme-aware, the
+    mark rendered as an alpha mask on `--wrld-fg`, accent only on the accept action's hover and focus. Listed in
+    `registry/manifest.json`, unpublished until the next `npm run registry:publish`.
+  - README, `SKILL.md` and `llms.txt` point at all of it.
+
 - **TypeSafe is enabled project-wide for Claude Code.** `.claude/settings.json` registers the `typesafe-ai`
   marketplace and enables `typesafe@typesafe-ai`, so every checkout gets the `typesafe:typesafe-ai` skill on first
   launch. A root `CLAUDE.md` says when to use it in this repo — design review against the brand rules, copy and tone

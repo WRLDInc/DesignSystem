@@ -74,6 +74,10 @@ const PUBLISH = [
   'preview',
   'ui_kits',
 
+  // Printable document templates (quote / agreement). Their CSS imports
+  // ../../styles.css, so the tree has to keep this depth.
+  'templates',
+
   // Component bundle consumed by the ui_kit index pages, plus its manifest.
   '_ds_bundle.js',
   '_ds_manifest.json',

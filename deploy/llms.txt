@@ -28,6 +28,7 @@ Non-negotiables when you build with it: surfaces stay monochrome and accents are
 - [ui_kits/wrld-tech/](https://wrld.design/ui_kits/wrld-tech/): flagship marketing kit.
 - [ui_kits/wrld-ai/](https://wrld.design/ui_kits/wrld-ai/): product dashboard kit.
 - [Login design guidelines](https://wrld.design/docs/LOGIN_DESIGN.md): how a WRLD sign-in surface is built, and which identity provider fronts which door.
+- [Quote and agreement guidelines](https://wrld.design/docs/QUOTE_DESIGN.md): the printable quote framework, its blocks, tokens and copy rules. Reference documents: [agreement](https://wrld.design/templates/quote/), [tiered quote](https://wrld.design/templates/quote/tiered).
 
 ## Identity and agent access
 
