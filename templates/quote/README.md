@@ -20,7 +20,9 @@ values. Real client documents are produced outside this repo.
    `styles.css`, `tokens/`, `colors_and_type.css` and `fonts/` in the same
    relative layout.
 2. Replace the reference number, client, contact, dates, line items, totals
-   and the breakdown line. Add the client's logo inside `.wq-client`.
+   and the breakdown line. Add the client's logo inside `.wq-client`: wide
+   marks (3:1+) at the default 22px, `is-mid` for 1.5:1 to 3:1, `is-square`
+   under 1.5:1. Client colours stay; see `docs/QUOTE_DESIGN.md` §2.1.
 3. Keep each sheet's content inside its foot. If a block runs over, move it to
    the next `<article class="wq-sheet">` and renumber the page counters.
 4. Chrome → Print → Save as PDF, Letter, margins none, background graphics on.

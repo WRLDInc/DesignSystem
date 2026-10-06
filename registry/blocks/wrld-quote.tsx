@@ -76,8 +76,10 @@ export interface WrldQuoteProps extends Omit<React.HTMLAttributes<HTMLElement>, 
   reference: string;
   /** Client name. It is the cover title. */
   client: string;
-  /** The client's own logo. Without one, the name renders as type. Never recreate a client mark. */
+  /** The client's own logo, in its own colours. Without one, the name renders as type. Never recreate a client mark. */
   clientLogoSrc?: string;
+  /** Logo shape by aspect ratio: "wide" 3:1+ (22px tall, default), "mid" 1.5:1 to 3:1 (26px), "square" under 1.5:1 (30px). Max width 140px. */
+  clientLogoAspect?: "wide" | "mid" | "square";
   /** Names the document type. Defaults to "Managed IT & cybersecurity agreement". */
   eyebrow?: string;
   lede?: React.ReactNode;
@@ -135,6 +137,7 @@ export function WrldQuote({
   reference,
   client,
   clientLogoSrc,
+  clientLogoAspect = "wide",
   eyebrow = "Managed IT & cybersecurity agreement",
   lede,
   chips = [],
@@ -232,7 +235,11 @@ export function WrldQuote({
           <span>{reference}</span>
           <span aria-hidden="true">×</span>
           {clientLogoSrc ? (
-            <img src={clientLogoSrc} alt={client} style={{ height: 22, width: "auto", display: "block" }} />
+            <img
+              src={clientLogoSrc}
+              alt={client}
+              style={{ height: { wide: 22, mid: 26, square: 30 }[clientLogoAspect], width: "auto", maxWidth: 140, objectFit: "contain", display: "block" }}
+            />
           ) : (
             <span style={{ fontFamily: t.fontDisplay, fontWeight: 600, fontSize: 12, letterSpacing: "0.12em", textTransform: "uppercase", color: t.fg }}>{client}</span>
           )}

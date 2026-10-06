@@ -20,6 +20,9 @@ All notable changes to the WRLD Design System are documented here. This project 
   - `registry/blocks/wrld-quote.tsx` + demo: the React / shadcn port for portals and proposal links. Theme-aware, the
     mark rendered as an alpha mask on `--wrld-fg`, accent only on the accept action's hover and focus. Listed in
     `registry/manifest.json`, unpublished until the next `npm run registry:publish`.
+  - Client logo sizing by aspect ratio (wide 22px, `.is-mid` 26px, `.is-square` 30px, 140px max width), client
+    colours kept as the one exception to monochrome paper; documented in `docs/QUOTE_DESIGN.md` §2.1, noted in both
+    templates and exposed on the React port as `clientLogoAspect`.
   - README, `SKILL.md` and `llms.txt` point at all of it.
 
 - **TypeSafe is enabled project-wide for Claude Code.** `.claude/settings.json` registers the `typesafe-ai`

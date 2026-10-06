@@ -59,7 +59,7 @@ this repo: client names, contacts and pricing stay out of a public tree.
 | --- | --- | --- | --- |
 | Sheet | `wq-sheet` > `wq-head` + `wq-body` + `wq-foot` | Every page | Fixed 8.5 × 11in, 0.6in side margins, 0.5in top and bottom. Content that does not fit moves to the next sheet; nothing scales down to fit. |
 | Running head | `wq-head` | Every page | WRLD.TECH lockup (`assets/logos/wrld-tech-black.png`, 18px tall), document reference in mono, `×`, the client mark. |
-| Client mark | `wq-client` | Running head | The client's own logo file, 18 to 28px tall. With no file, their name as uppercase Montserrat (`wq-client-name`), never a recreated logo. |
+| Client mark | `wq-client` (`.is-mid`, `.is-square`) | Running head | The client's own logo file, sized by aspect ratio (§2.1). With no file, their name as uppercase Montserrat (`wq-client-name`), never a recreated logo. |
 | Cover | `wq-cover` | Page 1 | Eyebrow names the document type, title is the client's name, lede says what it is and who it is for. |
 | Chips | `wq-chip`, `wq-chip.is-solid` | Cover | Tier (solid), pricing basis, term. Three at most. |
 | Meta strip | `wq-meta` | Cover | Four fields: prepared for, prepared by, issued, plus term or coverage. |
@@ -78,11 +78,30 @@ this repo: client names, contacts and pricing stay out of a public tree.
 | Signatures | `wq-sign` > `wq-party` | Last page | Both parties. Client first, then WRLD Inc. Signature, printed name and title, date. |
 | Running foot | `wq-foot` | Every page | Legal entity, contact line, page `NN / NN`. |
 
+### 2.1 Client logo
+
+Every client deliverable carries the client's logo in the running head, on every sheet, opposite the WRLD.TECH lockup.
+
+| Logo shape | Aspect ratio | Height | Class |
+| --- | --- | --- | --- |
+| Wide (wordmark, icon + wordmark) | 3:1 or wider | 22px | `wq-client` (default) |
+| Mid (stacked lockup, short wordmark) | 1.5:1 to 3:1 | 26px | `wq-client is-mid` |
+| Square (icon, badge, seal) | under 1.5:1 | 30px | `wq-client is-square` |
+
+- Width never passes 140px. A very wide mark keeps its proportions and shrinks to fit.
+- The WRLD.TECH lockup is 18px. Client marks run one step taller because most are lighter than the WRLD wordmark; the two should read at the same optical weight.
+- Use the client's file as supplied: a trimmed, transparent PNG (at least 2x the printed size, so 44px tall or more for a wide mark) or an SVG. No white box, no drop shadow, no outline.
+- The client mark keeps its own colours. It is the one exception to monochrome paper, and it is never recoloured to match WRLD.
+- The cover title stays the client's name in Montserrat; the logo is not repeated on the cover.
+- No logo yet: leave the name as type and get the file before the final send.
+
+Example: a 4.5:1 horizontal wordmark (icon + name) is a wide mark, 22px tall, about 99px wide.
+
 ## 3. Tokens
 
 | Element | Token |
 | --- | --- |
-| Paper | `--wrld-mono-0`. Paper is light in every theme; the document is the artifact. |
+| Paper | `--wrld-mono-0`. Paper is light in every theme; the document is the artifact. The client's logo is the only element in its own colours. |
 | Screen canvas around the sheets | `--wrld-bg-muted`, sheets lifted with `--wrld-shadow-md` (screen only) |
 | Body | `--wrld-font-body` 12.5px (≈ 9.5pt), `--wrld-lh-body`, `--wrld-fg` |
 | Secondary copy | `--wrld-fg-muted` (`#52525b`, 7.7:1 on white) |
@@ -114,7 +133,7 @@ elements only: the accept button, links, focus rings.
 
 1. Copy `templates/quote/index.html` to the client's working folder, outside this repo. Keep `quote.css` linked from wrld.design or vendored beside it.
 2. Replace the reference (`Q-2026-SAMPLE`), the client name, contact, dates and every value in the line items, total band and fee callout. Recalculate the breakdown line under the total.
-3. Add the client's logo to the running head. If you do not have their file, leave their name as type and ask for the logo before the final send.
+3. Add the client's logo to the running head and pick its size class from §2.1. If you do not have their file, leave their name as type and ask for the logo before the final send.
 4. Check every sheet in the browser at 100%. If a sheet's content runs past its foot, move the last block to the next sheet; never shrink type.
 5. Print to PDF from Chrome: Letter, margins none, background graphics on. The `@page` rule does the rest.
 6. File the PDF and the HTML source in the client's Craft folder under Billing, with a revision history line.

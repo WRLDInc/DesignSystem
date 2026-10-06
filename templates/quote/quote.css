@@ -84,10 +84,21 @@ html.wq body { margin: 0; padding: var(--wrld-space-8) var(--wrld-space-4); }
 .wq-foot b { font-weight: 700; color: var(--wrld-fg-muted); }
 
 /* ---------- Client mark slot ----------
-   A client deliverable carries the client's logo. Use their file at
-   18–28px tall; with no file, the name renders as plain type. */
+   A client deliverable carries the client's logo, in the client's own
+   colours (the one exception to monochrome paper; never recolour it).
+   Use a trimmed, transparent PNG or an SVG. Size by aspect ratio so the
+   client mark sits at the same optical weight as the WRLD.TECH lockup:
+     wide    3:1 or wider  -> 22px tall (default)
+     mid     1.5:1 to 3:1  -> 26px tall  (.is-mid)
+     square  under 1.5:1   -> 30px tall  (.is-square)
+   The WRLD.TECH lockup is 18px; client marks run a step taller because
+   most are lighter than the WRLD wordmark. Width never passes 140px; a
+   very wide mark shrinks to fit instead.
+   With no file, the name renders as plain type (.wq-client-name). */
 .wq-client { display: inline-flex; align-items: center; gap: var(--wrld-space-2); }
-.wq-client img { height: 18px; width: auto; display: block; }
+.wq-client img { height: 22px; width: auto; max-width: 140px; object-fit: contain; object-position: right center; display: block; }
+.wq-client.is-mid img { height: 26px; }
+.wq-client.is-square img { height: 30px; }
 .wq-client-name {
   font-family: var(--wrld-font-display); font-weight: var(--wrld-fw-semibold);
   font-size: var(--wq-fs-small); letter-spacing: var(--wrld-ls-eyebrow);
