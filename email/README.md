@@ -95,3 +95,12 @@ py -3 email/syncro_pdf_preview.py  # optional: PDF templates with sample data + 
 - `syncro-live-backup/2026-09-23/` is a snapshot of every live Syncro email and PDF template taken before the v1.2 deploy, with each template's edit URL and tag list in `index.json`. PDF templates also keep Syncro's own Version History.
 - Only the default PDF templates are restyled. The alternate invoice and ticket templates (possibly assigned to specific customers) and the disclaimer, packing slip and label templates are untouched.
 - Executive Summary reports are built from blocks in Syncro's report builder, not HTML, so there is nothing to restyle there.
+
+## Portal sign-in and notices (2026-10-07)
+
+- **Portal invite (SSO first).** `syncro/portal-invitation.html` tells the customer their account is active and shows "Login with Google" and "Login with Microsoft" buttons. Both open https://portal.wrld.tech, because the portal's provider links carry a short-lived signed token and cannot be linked from an email. "Create a password manually" is the optional fallback and uses Syncro's `{{invitation_url}}`.
+- **Provider marks.** `py -3 email/provider_icons.py` renders the official Google "G" and Microsoft marks to `assets/email/*.png` (54 px, shown at 18 px). wrld.design publishes `assets/`, so emails hotlink `https://wrld.design/assets/email/...`. These are third-party marks, kept out of `assets/logos/`.
+- **Notices.** `templates/<direction>/notices/` holds standalone, platform-neutral emails (full HTML, no Syncro tags) for messages outside Syncro's fixed template list, sent from Resend, Gleap, Spark or a script.
+  - `received-email.html`: "We received your email" acknowledgement.
+  - `notice-template.html`: blank scaffold. Copy it, replace every `[[...]]` marker, and send.
+  - Add a new notice by adding an entry to `NOTICES` in `syncro_extra.py`; it inherits the header, card, help strip and footer.

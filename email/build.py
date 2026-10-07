@@ -53,6 +53,13 @@ SOCIALS = [
 PORTAL_HOME = "https://portal.wrld.tech/portal/v2/index"
 PORTAL_TICKETS = "https://portal.wrld.tech/portal/v2/tickets"
 PORTAL_NEW_TICKET = "https://portal.wrld.tech/portal/v2/tickets/new"
+# Sign-in page. Its "Login with Google / Microsoft" buttons carry a short-lived signed
+# state token, so emails cannot deep-link to the providers; they land here instead.
+PORTAL_LOGIN = "https://portal.wrld.tech"
+# Provider marks for the SSO sign-in buttons (rendered by email/provider_icons.py,
+# published by wrld.design from assets/email/).
+ICON_GOOGLE = "https://wrld.design/assets/email/google-g.png"
+ICON_MICROSOFT = "https://wrld.design/assets/email/microsoft.png"
 PORTAL_SAMPLE = "https://portal.wrld.tech/my_profile/v2/index"   # mockups only
 
 BRANDS = {
