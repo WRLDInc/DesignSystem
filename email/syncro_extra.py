@@ -81,14 +81,47 @@ def primary(label, href, warm=False, secondary=None):
 # ---------------------------------------------------------------------------
 PORTAL = (b["portal_label"], b["portal"])
 
+def provider_button(label, icon_url, href):
+    """Light 'sign in with ...' button with the provider's mark, per Google/Microsoft sign-in guidance.
+    Deliberately carries no .btn/.fg classes, so it stays white with dark text in dark mode too."""
+    return (f'<table role="presentation" cellpadding="0" cellspacing="0" border="0" class="btn-full"><tr>'
+            f'<td bgcolor="#ffffff" style="background-color:#ffffff;border:1px solid {T["mono300"]};border-radius:4px;mso-padding-alt:10px 18px;">'
+            f'<a href="{href}" class="btn-full" style="display:inline-block;padding:10px 18px;font-family:{FONT_BODY};font-size:15px;line-height:20px;'
+            f'font-weight:500;color:#1f1f1f;text-decoration:none;border-radius:4px;">'
+            f'<img src="{icon_url}" width="18" height="18" alt="" style="display:inline-block;width:18px;height:18px;vertical-align:-3px;border:0;margin-right:10px;">'
+            f'{label}</a></td></tr></table>')
+
+def sso_buttons():
+    """Two provider buttons side by side; they stack on phones."""
+    return (f'{spacer(18)}<tr><td><table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>'
+            f'<td class="stack" valign="middle" style="padding-right:10px;">{provider_button("Login with Google", B.ICON_GOOGLE, B.PORTAL_LOGIN)}</td>'
+            f'<td class="stack stack-gap" valign="middle">{provider_button("Login with Microsoft", B.ICON_MICROSOFT, B.PORTAL_LOGIN)}</td>'
+            f'</tr></table></td></tr>'
+            f'<tr><td class="fg-subtle" style="font-family:{FONT_BODY};font-size:13px;line-height:19px;color:{T["mono500"]};padding-top:10px;">'
+            f'Google Workspace or Gmail address? Use Google. Microsoft 365 or Outlook address? Use Microsoft.</td></tr>')
+
+def outline_button(label, href):
+    return (f'<table role="presentation" cellpadding="0" cellspacing="0" border="0" class="btn-full"><tr>'
+            f'<td class="rule" style="border:1px solid {T["mono300"]};border-radius:4px;mso-padding-alt:10px 18px;">'
+            f'<a href="{href}" class="fg btn-full" style="display:inline-block;padding:10px 18px;font-family:{FONT_BODY};font-size:14px;line-height:20px;'
+            f'font-weight:500;color:{T["mono950"]};text-decoration:none;">{label}</a></td></tr></table>')
+
 def portal_invitation(d):
-    return doc(d, "Customer portal", "Invitation", "Finish setting up your portal login", "You're invited", "", [
-        prose("<p>Hi there,</p><p>We created a WRLD Tech Co. customer portal login for you. The portal is where you open and track support requests, "
-              "find your company's IT documentation, and review your account history.</p>"
-              "<p>Set your password once and you're in. If you ever forget it, use Forgot password on the sign-in page or give us a call.</p>"),
+    """Portal invite. Accounts sign in with Google or Microsoft SSO on portal.wrld.tech; a password is optional.
+    {{invitation_url}} is Syncro's set-a-password link, offered as the secondary path."""
+    return doc(d, "Customer portal", "Activated", "Your portal account is active", "Customer portal", chip("Active", T["success"]), [
+        prose('<p>Hi there,</p><p>Your WRLD Tech Co. customer portal account has been activated. Visit '
+              f'<a href="{B.PORTAL_LOGIN}" style="color:{T["mono950"]};text-decoration:underline;">portal.wrld.tech</a> '
+              'and sign in with the button that matches your company email.</p>'),
+        sso_buttons(),
         details([("Username", "{{portal_login}}")]),
-        primary("Create your password", "{{invitation_url}}"),
-    ], help_strip(b, reply_hint=False)), "Set your password to finish setting up your WRLD Tech Co. portal login.", False
+        f'{spacer(22)}<tr><td class="rule" style="border-top:1px solid {T["mono200"]};padding-top:18px;">{eyebrow("Prefer a password?")}</td></tr>'
+        f'<tr><td class="fg-muted" style="font-family:{FONT_BODY};font-size:14px;line-height:21px;color:{T["mono600"]};padding:8px 0 12px 0;">'
+        'You can skip single sign-on and set a password for your portal login instead. This is optional.</td></tr>'
+        f'<tr><td>{outline_button("Create a password manually", "{{invitation_url}}")}</td></tr>',
+        prose('<p style="margin-top:18px;">In the portal you can open and track support requests, find your company\'s IT documentation, '
+              'and review your account history.</p>'),
+    ], help_strip(b, reply_hint=False)), "Your WRLD Tech Co. portal account is active. Sign in with Google or Microsoft.", False
 
 def sso_portal_invitation(d):
     return doc(d, "Customer portal", "Invitation", "Your portal account is ready", "You're invited", "", [
@@ -244,6 +277,57 @@ TEMPLATES = {
 FILENAMES = {k: k.replace("_email_body", "").replace("_body", "").replace("_", "-") + ".html" for k in TEMPLATES}
 
 
+# ---------------------------------------------------------------------------
+# Notices: standalone, platform-neutral emails (full HTML documents, no Syncro tags).
+# For one-off or automated notices sent outside Syncro's fixed template list
+# (Resend, Gleap, Spark, a script). notice() is the reusable layout; NOTICES holds the copy.
+# ---------------------------------------------------------------------------
+def notice(d, kicker, title, chip_html, body_html, cta, secondary=None, ref=("Notice", "")):
+    parts = [header(d, b, ref[0], ref[1]), card_open(d), title_block(title, chip_html, kicker=kicker),
+             prose(body_html)]
+    if cta:
+        parts.append(primary(cta[0], cta[1], secondary=secondary))
+    parts += [help_strip(b, reply_hint=False), card_close(),
+              footer(b, legal_line="&copy; WRLD Tech Co. &middot;")]
+    return parts
+
+NOTICES = {
+    # Acknowledges an inbound email that did not (or not yet) become a ticket.
+    "received-email": dict(
+        title="We received your email", preheader="Thanks for reaching out. Your email is with the WRLD Tech Co. team.",
+        build=lambda d: notice(
+            d, "Message received", "We received your email", chip("Received", T["accentPrimary"]),
+            "<p>Hi there,</p>"
+            "<p>Thanks for reaching out to WRLD Tech Co. Your email arrived safely and is now with our team.</p>"
+            "<p>Here is what happens next:</p>"
+            '<ol style="margin:0 0 12px 22px;padding:0;">'
+            '<li style="margin:0 0 6px 0;">A member of our team reviews your message.</li>'
+            '<li style="margin:0 0 6px 0;">If it needs work, we open a ticket and email you the ticket number.</li>'
+            '<li style="margin:0;">You can follow every ticket in your client portal.</li></ol>'
+            "<p>We reply during business hours, Monday to Friday, 9am to 6pm CT. If your business is down, "
+            "call the priority line below instead of waiting on email.</p>",
+            ("Open the client portal", B.PORTAL_HOME), secondary=("Open a new ticket", B.PORTAL_NEW_TICKET),
+            ref=("Notice", "Message received"))),
+    # Blank scaffold: copy this file, replace every [[...]] marker, and send.
+    "notice-template": dict(
+        title="[[TITLE]]", preheader="[[PREHEADER: one sentence shown in the inbox preview]]",
+        build=lambda d: notice(
+            d, "[[KICKER]]", "[[TITLE]]", chip("[[STATUS]]", T["accentPrimary"]),
+            "<p>Hi [[FIRST NAME or there]],</p><p>[[First paragraph: what happened.]]</p>"
+            "<p>[[Second paragraph: what happens next, or what you need from them.]]</p>",
+            ("[[BUTTON LABEL]]", "[[BUTTON URL]]"), secondary=("[[LINK LABEL]]", "[[LINK URL]]"),
+            ref=("[[REF LABEL]]", "[[REF VALUE]]"))),
+}
+
+def render_notices():
+    for d in B.DIRECTIONS:
+        out = B.DIST / "templates" / d / "notices"
+        out.mkdir(parents=True, exist_ok=True)
+        for name, n in NOTICES.items():
+            html = B.full_email(n["build"](d), n["title"], d, n["preheader"])
+            (out / f"{name}.html").write_text(html, encoding="utf-8")
+
+
 def render(direction, key):
     parts, pre, reply = TEMPLATES[key](direction)
     return syncro_body(parts, reply_hint=reply, preheader=pre)
@@ -274,9 +358,10 @@ def main():
             (out / FILENAMES[key]).write_text(html, encoding="utf-8")
             v = validate(html, key)
             if v: bad[key] = v
-    # Also police the wrapper and ticket bodies build.py writes.
+    render_notices()
+    # Also police the wrapper and ticket bodies build.py writes, and the notices.
     for d in B.DIRECTIONS:
-        for f in (B.DIST / "templates" / d / "syncro").glob("*.html"):
+        for f in [*(B.DIST / "templates" / d / "syncro").glob("*.html"), *(B.DIST / "templates" / d / "notices").glob("*.html")]:
             hits = forbidden_links(f.read_text(encoding="utf-8"))
             if hits: bad[f"{d}/{f.name}"] = ["forbidden link: " + h for h in hits]
     if bad:
