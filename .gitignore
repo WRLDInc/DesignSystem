@@ -49,3 +49,7 @@ registry/.renders/
 # Python
 __pycache__/
 *.pyc
+
+# Deep-research working folders (notes and drafts stay local; the finished report is committed under docs/research/)
+research_notes/
+reports/
