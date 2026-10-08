@@ -53,3 +53,6 @@ __pycache__/
 # Deep-research working folders (notes and drafts stay local; the finished report is committed under docs/research/)
 research_notes/
 reports/
+
+# Personal Claude Code instructions (never committed; see https://docs.claude.com/en/docs/claude-code/memory)
+CLAUDE.local.md
