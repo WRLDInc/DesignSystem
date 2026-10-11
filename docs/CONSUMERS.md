@@ -10,6 +10,7 @@ change is a contract change for every row below.
 | WRLD.one | `WRLDInc/wrld.one` | `tokens/tokens.css`, `registry/theme/wrld.css` | `WrldButton`, `WrldStatCard`, `WrldTopBar` | Reads Better Stack for its own status strip |
 | WRLD.AI dashboard | `WRLDInc/CentralizeWRLD` | `registry/theme/wrld.css` | `WrldSidebar`, `WrldTopBar`, `WrldStatCard`, `WrldAgentList`, `WrldAgentDetail`, `WrldRunHistory`, `WrldHelpButton` | shadcn host |
 | **PulseWRLD** — public services status | `WRLDInc/publicServicesStatus-web` | `styles.css`, favicons, `wrld-mark-white.png` | `WrldTopBar`, `WrldEyebrow`, `WrldStatCard`; local stand-ins for a status pill and an uptime bar | Cloudflare Worker at a `*.wrld.tech` subdomain (name pending). Needs two new atoms — see below. |
+| WRLD.Tel — business VoIP landing | `WRLDInc/wrld.tel` | `styles.css` (tokens + type + fonts), favicons, `wrld-mark-{black,white}.png` | Static HTML on the `wrld-tech` kit patterns: pill header, hero, card grid, closing CTA band, footer | Cloudflare Pages at https://wrld.tel; portal at dash.wrld.tel |
 
 ## Shared search endpoint
 
