@@ -6,6 +6,12 @@ All notable changes to the WRLD Design System are documented here. This project 
 
 ### Added
 
+- **Email signatures.** `email/signature.py` generates four signature directions (split stack, ledger line, signal
+  strip, minimal mark) per person into `email/signatures/<person>/`, plus a review page at
+  `email/dist/signatures.html`. Inline styles only, PNG lockups and the mark tile hotlinked from
+  `wrld.design/assets/logos`, HTML buttons for schedule and portal, text social links. Replaces the img.email /
+  icns.email signature.
+
 - **WRLD Help (Gleap) on wrld.design.** `scripts/build_site.mjs` injects the same Gleap loader and public SDK key used
   on wrld.one and WRLD.host into every full page: `/`, `/404`, `/system`, `/styleguide/` and each `ui_kits/*` index.
   Preview cards and the printable quote templates are excluded on purpose, and the snippet does nothing when the page

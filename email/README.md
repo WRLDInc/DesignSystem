@@ -14,6 +14,14 @@ Directions: `ledger` (quiet), `signal` (dark header band), `thread` (conversatio
 
 Platform tags were verified against the live Syncro editor on 2026-09-22 (see `templates/README.md` for the list, including the tags that do not exist). `{{ticket_comment_body}}`, `{{location_logo_100}}` and `{{YEAR}}` were never real Syncro tags; the real ones are `{{comment_body}}`, `{{logo_100}}` and no year at all.
 
+## Signatures
+
+```
+py -3 email/signature.py   # writes email/signatures/<person>/<direction>.html and email/dist/signatures.html
+```
+
+Four directions: `split-stack`, `ledger-line`, `signal-strip`, `minimal-mark`. Add a person to `PEOPLE` and rerun. Review page: https://claude.ai/artifact/LBvcbQ2caXfDCmzENVE3GN
+
 `shots.py` needs Playwright (`py -3 -m pip install playwright && py -3 -m playwright install chromium`).
 
 ![Thread direction, Syncro ticket comment](screenshots/thread--syncro-ticket-comment--desktop.png)
