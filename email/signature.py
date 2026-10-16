@@ -26,7 +26,8 @@ SOCIALS = [
     ("Teams", "https://teams.microsoft.com/l/team/19%3Aa6H9kVWXIiPQKY-2rYCoCpW1hbhw1rv6amcmh0aJ7HA1%40thread.tacv2/conversations?groupId=35c9b1e9-ea3a-41a9-8eb3-76b4861756f8&tenantId=5625da99-1355-4fea-accf-2a83bef5ce42"),
     ("GitHub", "https://github.com/WRLDInc"),
 ]
-CTAS = [("Schedule a meeting", "https://calendar.wrld.tech"), ("Secure client portal", "https://portal.wrld.tech")]
+CTAS = [("Schedule a meeting", "https://calendar.wrld.tech/?utm=emailsignature"),
+        ("View the WRLD Directory", "https://wrld.one/?utm=emailsignature")]
 
 PEOPLE = {
     "ridgeway-lawrence": {
@@ -163,9 +164,12 @@ def signal_strip(p):
         tr(td(eyebrow(p["company"]))) + gap(8) + tr(td(contact_rows(p))) + gap(10)
         + tr(td(joined(PROPERTIES, weight=500) + dot() + joined(SOCIALS, MUTED), "font-size:11px;"))
         + gap(12) + tr(td(buttons())), extra="width:100%;")
+    # Explicit white body (bgcolor for Outlook) so the card reads as a card on grey or dark message panes.
     return table(
         tr(td(band, f"background-color:{INK};padding:14px 18px;border-radius:8px 8px 0 0;"))
-        + tr(td(body, f"padding:14px 18px 16px;border:1px solid {RULE};border-top:0;border-radius:0 0 8px 8px;")), 480)
+        + tr(td(body, f"background-color:{T['mono0']};padding:14px 18px 16px;border:1px solid {RULE};"
+                      f"border-top:0;border-radius:0 0 8px 8px;").replace("<td ", f'<td bgcolor="{T["mono0"]}" ', 1)),
+        480, f"background-color:{T['mono0']};")
 
 
 def minimal_mark(p):
@@ -173,7 +177,7 @@ def minimal_mark(p):
     contacts = (a(p["email"], f"mailto:{p['email']}") + dot() + a("O " + p["office"][0], p["office"][1])
                 + dot() + a("D " + p["direct"][0], p["direct"][1]))
     links = (joined(PROPERTIES, weight=500) + dot() + a("Schedule", CTAS[0][1], INK, 500)
-             + dot() + a("Client portal", CTAS[1][1], INK, 500))
+             + dot() + a("WRLD Directory", CTAS[1][1], INK, 500))
     right = table(
         tr(td(f'<span style="font-family:{FONT_DISPLAY};font-size:14px;font-weight:600;color:{INK};">{esc(p["name"])}</span>'
               f'<span style="color:{MUTED};">&nbsp;&nbsp;{esc(p["title"])}</span>'))
@@ -292,7 +296,7 @@ code { font-family: var(--mono); font-size: 0.95em; }
     <section><h3>What changed</h3><ul>
       <li>Images now come from <code>wrld.design/assets/logos</code>; the img.email and icns.email hosts are gone.</li>
       <li>Blue static labels, ALL CAPS title and the pin emoji replaced with monochrome eyebrow labels and sentence case.</li>
-      <li>Schedule and portal buttons are text, so they render with images off and scale on retina.</li>
+      <li>Schedule and WRLD Directory buttons are text, so they render with images off and scale on retina. Both carry <code>?utm=emailsignature</code>.</li>
       <li>Phone links use dialable <code>tel:+1…</code> numbers; the office extension dials through.</li>
       <li>Twitter now points to x.com; the same handle.</li>
     </ul></section>
