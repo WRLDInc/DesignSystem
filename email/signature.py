@@ -17,7 +17,7 @@ LOGO_WHITE = f"{ASSETS}/wrld-tech-white.png"        # 999x173, transparent: dark
 MARK_TILE = f"{ASSETS}/favicons/favicon-256x256.png"  # starburst on #0a0a0a: survives dark mode
 
 MAP_URL = "https://g.page/wrldtech"
-PROPERTIES = [("wrld.tech", "https://wrld.tech"), ("wrld.host", "https://wrld.host"), ("WRLD.AI", "https://wrld.ai")]
+PROPERTIES = [("WRLD.tech", "https://wrld.tech"), ("WRLD.host", "https://wrld.host"), ("WRLD.AI", "https://wrld.ai")]
 SOCIALS = [
     ("LinkedIn", "https://linkedin.com/company/wrldtech"),
     ("Facebook", "https://facebook.com/WRLDTechCo"),
@@ -26,8 +26,8 @@ SOCIALS = [
     ("Teams", "https://teams.microsoft.com/l/team/19%3Aa6H9kVWXIiPQKY-2rYCoCpW1hbhw1rv6amcmh0aJ7HA1%40thread.tacv2/conversations?groupId=35c9b1e9-ea3a-41a9-8eb3-76b4861756f8&tenantId=5625da99-1355-4fea-accf-2a83bef5ce42"),
     ("GitHub", "https://github.com/WRLDInc"),
 ]
-CTAS = [("Schedule a meeting", "https://calendar.wrld.tech/?utm=emailsignature"),
-        ("View the WRLD Directory", "https://wrld.one/?utm=emailsignature")]
+CTAS = [("Schedule a meeting", "https://calendar.wrld.tech/?utm_source=emailsignature&utm_medium=email"),
+        ("View the WRLD Directory", "https://wrld.one/?utm_source=emailsignature&utm_medium=email")]
 
 PEOPLE = {
     "ridgeway-lawrence": {
@@ -60,8 +60,11 @@ def dot(color=T["mono300"]):
     return f'<span style="color:{color};">&nbsp;&middot;&nbsp;</span>'
 
 
-def joined(items, color=INK, sep_color=T["mono300"], weight=400):
-    return dot(sep_color).join(a(l, h, color, weight) for l, h in items)
+SEP = "&nbsp;&nbsp;&nbsp;"  # link rows read as spaced words, no separators
+
+
+def joined(items, color=INK, weight=400):
+    return SEP.join(a(l, h, color, weight) for l, h in items)
 
 
 def table(rows, width=None, extra=""):
@@ -147,7 +150,7 @@ def ledger_line(p):
         tr(td(logo(LOGO_BLACK, 132))) + gap(14)
         + tr(td(name_block(p, 17))) + tr(td(eyebrow(p["company"]), "padding-top:2px;")) + gap(12)
         + rule() + gap(10) + tr(td(contact_rows(p))) + gap(10) + rule() + gap(8)
-        + tr(td(joined(PROPERTIES, weight=500) + f'<span style="color:{T["mono300"]};">&nbsp;&nbsp;/&nbsp;&nbsp;</span>'
+        + tr(td(joined(PROPERTIES, weight=500) + SEP
                 + joined(SOCIALS, MUTED), "font-size:11px;"))
         + gap(12) + tr(td(buttons())), 440)
 
@@ -162,7 +165,7 @@ def signal_strip(p):
         extra="width:100%;")
     body = table(
         tr(td(eyebrow(p["company"]))) + gap(8) + tr(td(contact_rows(p))) + gap(10)
-        + tr(td(joined(PROPERTIES, weight=500) + dot() + joined(SOCIALS, MUTED), "font-size:11px;"))
+        + tr(td(joined(PROPERTIES, weight=500) + SEP + joined(SOCIALS, MUTED), "font-size:11px;"))
         + gap(12) + tr(td(buttons())), extra="width:100%;")
     # Explicit white body (bgcolor for Outlook) so the card reads as a card on grey or dark message panes.
     return table(
@@ -176,8 +179,8 @@ def minimal_mark(p):
     """Mark tile plus three tight lines. Built for replies and mobile; dark-mode safe end to end."""
     contacts = (a(p["email"], f"mailto:{p['email']}") + dot() + a("O " + p["office"][0], p["office"][1])
                 + dot() + a("D " + p["direct"][0], p["direct"][1]))
-    links = (joined(PROPERTIES, weight=500) + dot() + a("Schedule", CTAS[0][1], INK, 500)
-             + dot() + a("WRLD Directory", CTAS[1][1], INK, 500))
+    links = (joined(PROPERTIES, weight=500) + SEP + a("Schedule", CTAS[0][1], INK, 500)
+             + SEP + a("WRLD Directory", CTAS[1][1], INK, 500))
     right = table(
         tr(td(f'<span style="font-family:{FONT_DISPLAY};font-size:14px;font-weight:600;color:{INK};">{esc(p["name"])}</span>'
               f'<span style="color:{MUTED};">&nbsp;&nbsp;{esc(p["title"])}</span>'))
@@ -296,7 +299,7 @@ code { font-family: var(--mono); font-size: 0.95em; }
     <section><h3>What changed</h3><ul>
       <li>Images now come from <code>wrld.design/assets/logos</code>; the img.email and icns.email hosts are gone.</li>
       <li>Blue static labels, ALL CAPS title and the pin emoji replaced with monochrome eyebrow labels and sentence case.</li>
-      <li>Schedule and WRLD Directory buttons are text, so they render with images off and scale on retina. Both carry <code>?utm=emailsignature</code>.</li>
+      <li>Schedule and WRLD Directory buttons are text, so they render with images off and scale on retina. Both carry <code>utm_source=emailsignature</code> and <code>utm_medium=email</code> so analytics files the clicks under Email.</li>
       <li>Phone links use dialable <code>tel:+1…</code> numbers; the office extension dials through.</li>
       <li>Twitter now points to x.com; the same handle.</li>
     </ul></section>
