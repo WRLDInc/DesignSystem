@@ -172,7 +172,7 @@ def signal_strip(p):
         tr(td(band, f"background-color:{INK};padding:14px 18px;border-radius:8px 8px 0 0;"))
         + tr(td(body, f"background-color:{T['mono0']};padding:14px 18px 16px;border:1px solid {RULE};"
                       f"border-top:0;border-radius:0 0 8px 8px;").replace("<td ", f'<td bgcolor="{T["mono0"]}" ', 1)),
-        480, f"background-color:{T['mono0']};")
+        480)  # no outer fill: it shows as square white corners behind the rounded band
 
 
 def minimal_mark(p):
