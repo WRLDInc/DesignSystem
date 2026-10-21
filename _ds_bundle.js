@@ -550,7 +550,9 @@ function useDocTheme() {
     const mq = window.matchMedia('(prefers-color-scheme: dark)');
     const read = () => {
       const attr = root.getAttribute('data-theme');
-      setMode(attr && /dark/i.test(attr) || (!attr || attr === 'auto') && mq.matches ? 'dark' : 'light');
+      // No attribute = the light theme (tokens.css declares :root light); only an
+      // explicit "auto" follows the OS preference.
+      setMode(attr && /dark/i.test(attr) || attr === 'auto' && mq.matches ? 'dark' : 'light');
     };
     read();
     const mo = new MutationObserver(read);

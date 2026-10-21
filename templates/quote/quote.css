@@ -51,8 +51,8 @@ html.wq body { margin: 0; padding: var(--wrld-space-8) var(--wrld-space-4); }
 /* Reset the site-level element styles (p at 16px, h1 margins) to the
    sheet print scale. :where() holds specificity at element level so every
    wq- class still wins. */
-:where(.wq-sheet) p, :where(.wq-sheet) li, :where(.wq-sheet) dd, :where(.wq-sheet) dt, :where(.wq-sheet) td { font-size: inherit; line-height: inherit; color: inherit; }
-:where(.wq-sheet) h1, :where(.wq-sheet) h2, :where(.wq-sheet) h3 { margin: 0; }
+:where(.wq-sheet, .wq-doc) p, :where(.wq-sheet, .wq-doc) li, :where(.wq-sheet, .wq-doc) dd, :where(.wq-sheet, .wq-doc) dt, :where(.wq-sheet, .wq-doc) td { font-size: inherit; line-height: inherit; color: inherit; }
+:where(.wq-sheet, .wq-doc) h1, :where(.wq-sheet, .wq-doc) h2, :where(.wq-sheet, .wq-doc) h3 { margin: 0; }
 .wq ul, .wq ol { padding: 0; list-style: none; }
 
 /* ---------- Sheet ---------- */
@@ -387,5 +387,7 @@ html.wq body { margin: 0; padding: var(--wrld-space-8) var(--wrld-space-4); }
 .wq-doc .wq-section, .wq-doc .wq-glance, .wq-doc .wq-tiers, .wq-doc .wq-meta { break-inside: avoid; }
 .wq-doc .is-page { break-before: page; }
 @media print {
-  .wq-doc { width: auto; margin: 0; padding: 0; box-shadow: none; }
+  /* @page margin is 0 (the sheets carry their own), so the flow keeps the
+     sheet margins as padding; otherwise it would print to the paper edge. */
+  .wq-doc { width: auto; margin: 0; padding: var(--wq-margin-y) var(--wq-margin-x); box-shadow: none; }
 }
