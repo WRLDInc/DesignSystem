@@ -545,9 +545,13 @@ function Lockup({
   theme = 'dark',
   size = 24,
   animated = false,
+  markSrc: markSrcProp,
   style
 }) {
-  const markSrc = theme === 'light' ? '../../assets/logos/wrld-mark-white.png' : '../../assets/logos/wrld-mark-black.png';
+  // Mark source: an explicit prop, then the host page's asset map
+  // (window.WRLD_ASSETS = { markBlack, markWhite }), then the repo paths.
+  const assetMap = typeof window !== 'undefined' && window.WRLD_ASSETS || {};
+  const markSrc = markSrcProp || (theme === 'light' ? assetMap.markWhite : assetMap.markBlack) || (theme === 'light' ? '../../assets/logos/wrld-mark-white.png' : '../../assets/logos/wrld-mark-black.png');
   const fg = theme === 'light' ? '#fff' : '#000';
   const subFg = theme === 'light' ? '#a1a1aa' : '#52525b';
   const hasSub = !!sub;
@@ -1700,7 +1704,7 @@ function Header({
         position: 'sticky',
         top: 0,
         zIndex: 100,
-        background: 'rgba(255,255,255,0.85)',
+        background: 'color-mix(in srgb, var(--bg) 85%, transparent)',
         backdropFilter: 'blur(12px)',
         borderBottom: '1px solid var(--border)',
         paddingBottom: showSubmenu ? submenuSlotH : 0,
@@ -1816,7 +1820,7 @@ function Header({
       position: 'sticky',
       top: 0,
       zIndex: 100,
-      background: 'rgba(255,255,255,0.95)',
+      background: 'color-mix(in srgb, var(--bg) 95%, transparent)',
       backdropFilter: 'blur(12px)',
       borderBottom: '1px solid var(--border)'
     }

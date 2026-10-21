@@ -2,10 +2,14 @@
 // `sub` can be a string (always shown) or null/undefined (hidden).
 // `animated` (boolean): when true, sub-label fades + wordmark nudges up smoothly when sub is set.
 //   Use `animated` for nav lockups that morph on hover. Static lockups (footer, sub-cards) leave it off.
-export function Lockup({ sub, theme = 'dark', size = 24, animated = false, style }) {
-  const markSrc = theme === 'light'
-    ? '../../assets/logos/wrld-mark-white.png'
-    : '../../assets/logos/wrld-mark-black.png';
+export function Lockup({ sub, theme = 'dark', size = 24, animated = false, markSrc: markSrcProp, style }) {
+  // Mark source: an explicit prop, then the host page's asset map
+  // (window.WRLD_ASSETS = { markBlack, markWhite }: the Design System
+  // artifact points these at its uploaded SVG marks), then the repo paths.
+  const assetMap = (typeof window !== 'undefined' && window.WRLD_ASSETS) || {};
+  const markSrc = markSrcProp
+    || (theme === 'light' ? assetMap.markWhite : assetMap.markBlack)
+    || (theme === 'light' ? '../../assets/logos/wrld-mark-white.png' : '../../assets/logos/wrld-mark-black.png');
   const fg = theme === 'light' ? '#fff' : '#000';
   const subFg = theme === 'light' ? '#a1a1aa' : '#52525b';
   const hasSub = !!sub;

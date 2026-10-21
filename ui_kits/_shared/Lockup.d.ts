@@ -10,6 +10,8 @@ export interface LockupProps {
   size?: number;
   /** Animate the sub-label fade + wordmark re-center (use for nav lockups that morph on hover). */
   animated?: boolean;
+  /** URL of the starburst mark. Default: window.WRLD_ASSETS.markBlack / .markWhite when the host page sets them, else assets/logos/wrld-mark-{black,white}.png beside the page. */
+  markSrc?: string;
   style?: React.CSSProperties;
 }
 

@@ -8,6 +8,7 @@ producing one must and must not do.
 | --- | --- |
 | Printable framework (`wq-` classes) | [`templates/quote/quote.css`](../templates/quote/quote.css) |
 | Reference document (sample client, sample values) | [`templates/quote/index.html`](../templates/quote/index.html), served at <https://wrld.design/templates/quote/> |
+| Reference proposal, the proposal direction (sample client) | [`templates/quote/proposal.html`](../templates/quote/proposal.html), served at <https://wrld.design/templates/quote/proposal> |
 | Preview card | [`preview/documents-quote.html`](../preview/documents-quote.html), in the Documents section of `/system` |
 | React port for portals and web quotes | [`registry/blocks/wrld-quote.tsx`](../registry/blocks/wrld-quote.tsx) |
 
@@ -22,6 +23,7 @@ deliverable.
 | Managed services agreement (one tier, recurring) | `agreement` | 6 to 8 Letter pages |
 | Good / better / best quote | `tiered` (`wq-tiers` block) | 1 to 2 pages |
 | Project quote or SOW (one-time, milestones) | `agreement` with the fee callout in place of the total band | 2 to 4 pages |
+| Technology business review + hardware quote + monthly tiers | `proposal` (§2.2): brand row, glance tiles, line items with totals, flush tiers, comparison table | 3 to 6 pages, or one `wq-doc` flow |
 
 The reference document is the Essential tier managed IT agreement, with a
 fictional client (Northbend Logistics) and sample values. Real client
@@ -97,6 +99,63 @@ Every client deliverable carries the client's logo in the running head, on every
 
 Example: a 4.5:1 horizontal wordmark (icon + name) is a wide mark, 22px tall, about 99px wide.
 
+### 2.2 The proposal direction
+
+Built from the Professional Machinery Group South technology business review
+(August 2026, Curtis Carney). It is the default for new client documents that
+review, quote and recommend in one piece; the agreement blocks above stay for
+the recurring-service agreement. `templates/quote/proposal.html` is the
+reference with a fictional client.
+
+```
+┌───────────────────────────────────────────────────────────┐
+│ W R L D              Technology business review: Client   │ running head, wordmark form
+│ [client mark 46px]                 ✺ │ WRLD / QUOTE        │ brand row (cover only)
+│ Client technology review and action plan                  │ title = client + document
+│ Lede. ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬ │
+│ PREPARED FOR · PREPARED BY · REFERENCE · DATE             │ meta strip, near-black top rule
+│ Dana, the thesis in one paragraph.                        │ intro
+│ ┌ TODAY $841.50 ┬ ONE-TIME $6,205.97 ┬▌NEW THIS TERM ┐    │ glance tiles, one highlighted
+│ 01  Where you are today                 CURRENT STATE     │ section head: accent number, rule, label
+│ → The server is out of support. …   → Multi-user …        │ arrow list, two columns
+│ 02  The investment                           HARDWARE     │
+│ QTY  DESCRIPTION             UNIT PRICE      TOTAL        │ line items with totals
+│ 03  Three ways to structure it                MONTHLY     │
+│ ┌ BASELINE $999 ┬ BETTER $1,299 ┬▌RECOMMENDED $1,999 ┐    │ flush tiers, one highlighted
+│ WHAT YOU GET · BASELINE · BETTER · RECOMMENDED            │ comparison table
+│ WRLD Inc. [DBA WRLD Tech Co.] CONFIDENTIAL   Quote · 01/04 │ running foot
+└───────────────────────────────────────────────────────────┘
+```
+
+| Block | Class | Rules |
+| --- | --- | --- |
+| Running head, wordmark form | `wq-head` > `wq-wordmark` + `wq-doc-title` | The spaced WRLD wordmark as type (`--wrld-ls-caps-xl`) on the left, the document title on the right. Replaces the lockup image when the brand row carries the mark. |
+| Brand row | `wq-brand-row` > `wq-client` + `wq-stack` | Cover sheet only. The client's mark at 46px tall on the left (`.is-wide` 36px for marks wider than 4:1; no file: the name in display caps). The starburst (`assets/logos/wrld-mark-black.svg`, 32px) with the stacked `WRLD` / `QUOTE` text on the right; the sub reads `Proposal` or `Agreement` when the document is one. Black on paper, always. |
+| Meta strip, strong | `wq-meta.is-strong` + `wq-label.is-display` | Near-black top rule, hairline below; labels in Montserrat 600. |
+| Intro | `wq-intro` | One paragraph, first name, the thesis. |
+| Glance tiles | `wq-glance` > div (`.is-highlight`), `wq-big` | Three tiles, hairline gaps on `--wrld-border`, `--wrld-bg-subtle` fills: today, one-time, new this term. One tile is `.is-highlight`: paper white, a 3px inset rule and its label in `--wrld-accent-primary`. One per document. |
+| Section head | `wq-section-head.is-rule` > `wq-num.is-accent` + `wq-h2` + `wq-section-label` | 2px near-black rule, the two-digit number in accent, an uppercase display label on the right ("Current state", "The investment"). `wq-h3.is-sub` for numbered sub-heads. |
+| Arrow list | `wq-list.is-arrows` (`.is-cols`), `wq-body-copy` | A mono `→` in accent instead of the hairline; paragraphs with a `<strong>` lead-in. One bullet style per document. |
+| Phases | `wq-phases` > div > `wq-phase-label` (`wq-phase-dates`) | Phase label in display caps + mono date range on the left, the plan on the right, hairlines between. |
+| Line items with totals | `wq-table.is-items`, `td.is-desc` (`<small>` rationale), `tfoot`, `tr.is-total` | Qty, description, unit, total; subtotal and tax muted; the total row on a 2px rule in display weight, the figure in mono bold. For hardware and one-time work; the total band stays for recurring services. |
+| Flush tiers | `wq-tiers.is-flush` > `wq-tier` (`.is-highlight`), `wq-tier-math` | Three tiers as one hairline-gapped block; the recommended tier is `.is-highlight` (paper white, 3px inset accent rule, label and math line in accent). `wq-tier-math` is the mono arithmetic that gets to the price. |
+| Comparison | `wq-table.is-compare`, `th.is-accent`, `td.is-accent`, `td.is-strong`, `.is-mono` | What you get per tier; the recommended column's header and its deltas in accent, the stronger inclusions in medium weight. |
+| Running foot | `wq-foot` + `wq-confidential` | Entity + `Confidential` in display caps, contact line, reference, validity and page. |
+| Flowing document | `wq-doc` (`.is-page` on sections) | One continuous Letter-width page for proposals read on screen first; `.is-page` starts a printed page. |
+
+Rules that change with this direction:
+
+- Paper is light in every theme: `.wq-sheet` and `.wq-doc` pin the semantic
+  tokens (`--wrld-bg*`, `--wrld-fg*`, `--wrld-border*`, `--wrld-logo*`) to
+  their light values, so a dark page or a dark frame only darkens the desk
+  around the sheet. Never undo that for a dark paper.
+- One accent voice on paper: `--wrld-accent-primary` on section numbers, arrow
+  bullets, the one highlighted tile or tier (label, inset rule, math line) and
+  the recommended comparison column. Never a fill, never body text, no status
+  colours. The client's mark keeps its own colours.
+- Numbers that carry money are mono; the arithmetic that reaches a price is
+  shown (`wq-tier-math`), never implied.
+
 ## 3. Tokens
 
 | Element | Token |
@@ -162,3 +221,4 @@ elements only: the accept button, links, focus rings.
 | Date | Change |
 | --- | --- |
 | 2026-10-06 | First version. Framework, reference document, card and React port, built from the Essential tier agreement structure. |
+| 2026-10-21 | Proposal direction (§2.2) from the PMGS technology business review: wordmark head, brand row with the starburst stack, glance tiles, accent section numbers, arrow list, phases, line items with totals, flush tiers, comparison table, `wq-doc` flow. Paper pinned light in every theme. `templates/quote/proposal.html`. |

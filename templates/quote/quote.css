@@ -248,3 +248,139 @@ html.wq body { margin: 0; padding: var(--wrld-space-8) var(--wrld-space-4); }
   /* Keep the paper true to size; let narrow screens scroll it. */
   html.wq body { overflow-x: auto; }
 }
+
+/* ============================================================
+   Paper is light in every theme
+   The sheet pins the semantic tokens to their light values, so a dark
+   page, a dark OS preference or the design system's dark frame never
+   tints the paper. Only the desk around the sheet follows the theme.
+   ============================================================ */
+.wq-sheet, .wq-doc {
+  --wrld-bg: var(--wrld-mono-0);
+  --wrld-bg-subtle: var(--wrld-mono-50);
+  --wrld-bg-muted: var(--wrld-mono-100);
+  --wrld-bg-elevated: var(--wrld-mono-0);
+  --wrld-fg: var(--wrld-mono-950);
+  --wrld-fg-muted: var(--wrld-mono-600);
+  --wrld-fg-subtle: var(--wrld-mono-500);
+  --wrld-fg-inverse: var(--wrld-mono-0);
+  --wrld-border: var(--wrld-mono-200);
+  --wrld-border-strong: var(--wrld-mono-300);
+  --wrld-logo: var(--wrld-mono-950);
+  --wrld-logo-inverse: var(--wrld-mono-0);
+  color: var(--wrld-fg);
+  color-scheme: light;
+}
+
+/* ============================================================
+   Proposal direction (from the PMGS technology business review)
+   The running head carries the spaced WRLD wordmark as type and the
+   document title; a brand row under it pairs the client's mark with the
+   starburst + "WRLD / QUOTE" stack. Section numbers, arrow bullets and
+   the one highlighted tile or tier carry the accent: the only colour on
+   paper besides the client's own mark. Accent never fills a surface.
+   ============================================================ */
+
+/* ---------- Running head, wordmark form ---------- */
+.wq-head .wq-wordmark {
+  font-family: var(--wrld-font-display, var(--font-display)); font-weight: var(--wrld-fw-bold);
+  font-size: var(--wq-fs-small); letter-spacing: var(--wrld-ls-caps-xl); text-transform: uppercase; color: var(--wrld-fg);
+}
+.wq-head .wq-doc-title {
+  font-family: var(--wrld-font-body, var(--font-body)); font-size: var(--wq-fs-small); letter-spacing: 0; text-transform: none;
+  color: var(--wrld-fg-muted); text-align: right;
+}
+
+/* ---------- Brand row: client mark × WRLD stack ---------- */
+.wq-brand-row { display: flex; align-items: center; justify-content: space-between; gap: var(--wrld-space-6); padding-top: var(--wrld-space-4); }
+.wq-brand-row .wq-client img { height: 46px; max-width: 220px; object-position: left center; }
+.wq-brand-row .wq-client.is-wide img { height: 36px; }
+.wq-brand-row .wq-client-name { font-size: var(--wq-fs-h3); letter-spacing: var(--wrld-ls-eyebrow); }
+.wq-stack { display: inline-flex; align-items: center; gap: var(--wrld-space-3); }
+.wq-stack img { height: 32px; width: 32px; display: block; }
+.wq-stack-text { display: grid; gap: 3px; border-left: var(--wrld-border-hairline) solid var(--wrld-border-strong); padding-left: var(--wrld-space-3); }
+.wq-stack-wordmark {
+  font-family: var(--wrld-font-display, var(--font-display)); font-weight: var(--wrld-fw-bold); font-size: 17px;
+  letter-spacing: var(--wrld-ls-caps-xl); line-height: 1; text-transform: uppercase; color: var(--wrld-fg);
+}
+.wq-stack-sub {
+  font-family: var(--wrld-font-display, var(--font-display)); font-weight: var(--wrld-fw-medium); font-size: 10.5px;
+  letter-spacing: var(--wrld-ls-caps-xl); line-height: 1; text-transform: uppercase; color: var(--wrld-fg-muted);
+}
+
+/* ---------- Display labels and the strong meta strip ---------- */
+.wq-label.is-display { font-family: var(--wrld-font-display, var(--font-display)); font-weight: var(--wrld-fw-semibold); letter-spacing: var(--wrld-ls-eyebrow); }
+.wq-meta.is-strong { border-top: var(--wrld-border-hairline) solid var(--wrld-fg); }
+.wq-intro { font-size: 0.875rem; line-height: 1.6; color: var(--wrld-fg); max-width: 62ch; }
+
+/* ---------- Glance tiles (today · one-time · new this term) ---------- */
+.wq-glance { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--wrld-border); border: var(--wrld-border-hairline) solid var(--wrld-border); }
+.wq-glance > div { display: grid; gap: 6px; align-content: start; background: var(--wrld-bg-subtle); padding: var(--wrld-space-4) var(--wrld-space-4); }
+.wq-glance p, .wq-tier p { font-size: var(--wq-fs-small); line-height: 1.45; color: var(--wrld-fg-muted); }
+.wq-big { font-family: var(--wrld-font-display, var(--font-display)); font-weight: var(--wrld-fw-semibold); font-size: 1.375rem; letter-spacing: -0.02em; line-height: 1.1; color: var(--wrld-fg); }
+.wq-big small { font-family: var(--wrld-font-body, var(--font-body)); font-weight: 400; font-size: var(--wq-fs-small); letter-spacing: 0; color: var(--wrld-fg-subtle); margin-left: 2px; }
+.wq-glance > .is-highlight, .wq-tier.is-highlight { background: var(--wrld-mono-0); box-shadow: inset 3px 0 0 var(--wrld-accent-primary); }
+.is-highlight > .wq-label { color: var(--wrld-accent-primary); }
+
+/* ---------- Section head with rule, accent number and right label ---------- */
+.wq-section-head.is-rule { border-bottom: var(--wrld-border-standard) solid var(--wrld-fg); padding-bottom: var(--wrld-space-2); }
+.wq-num.is-accent { color: var(--wrld-accent-primary); font-size: var(--wq-fs-micro); }
+.wq-section-label {
+  margin-left: auto; font-family: var(--wrld-font-display, var(--font-display)); font-weight: var(--wrld-fw-semibold);
+  font-size: var(--wq-fs-micro); letter-spacing: var(--wrld-ls-eyebrow); text-transform: uppercase; color: var(--wrld-fg-subtle); white-space: nowrap;
+}
+.wq-h3.is-sub { font-size: var(--wq-fs-h3); padding-bottom: var(--wrld-space-2); border-bottom: var(--wrld-border-hairline) solid var(--wrld-border); }
+.wq-lead-in { font-weight: var(--wrld-fw-medium); color: var(--wrld-fg); }
+.wq-body-copy { font-weight: 300; color: var(--wrld-fg-muted); }
+.wq-body-copy strong { font-weight: var(--wrld-fw-medium); color: var(--wrld-fg); }
+
+/* ---------- Arrow list ----------
+   The proposal variant of the house list: a mono arrow in the accent,
+   in place of the hairline. Keep the two apart within one document. */
+.wq-list.is-arrows li { grid-template-columns: 14px 1fr; gap: var(--wrld-space-2); }
+.wq-list.is-arrows li::before { content: "\2192"; height: auto; margin-top: 0; background: none; font-family: var(--wrld-font-mono, var(--font-mono)); font-size: var(--wq-fs-small); line-height: inherit; color: var(--wrld-accent-primary); }
+.wq-list.is-arrows li, .wq-list.is-arrows p { font-size: var(--wq-fs-body); }
+
+/* ---------- Phases ---------- */
+.wq-phases { display: flex; flex-direction: column; }
+.wq-phases > div { display: grid; grid-template-columns: 140px 1fr; gap: var(--wrld-space-5); padding: var(--wrld-space-3) 0; border-bottom: var(--wrld-border-hairline) solid var(--wrld-border); }
+.wq-phase-label { display: flex; flex-direction: column; gap: 4px; }
+.wq-phase-label .wq-label { color: var(--wrld-fg); }
+.wq-phase-dates { font-family: var(--wrld-font-mono, var(--font-mono)); font-size: var(--wq-fs-micro); letter-spacing: 0.06em; color: var(--wrld-fg-subtle); }
+
+/* ---------- Line items with a totals block ---------- */
+.wq-table.is-items td.is-desc { color: var(--wrld-fg); font-weight: var(--wrld-fw-medium); }
+.wq-table.is-items td.is-desc small { display: block; font-weight: 300; color: var(--wrld-fg-muted); font-size: var(--wq-fs-micro); line-height: 1.5; margin-top: 2px; }
+.wq-table.is-items tfoot td { border-bottom: 0; padding-top: var(--wrld-space-2); color: var(--wrld-fg-muted); }
+.wq-table.is-items tfoot tr.is-total td { border-top: var(--wrld-border-standard) solid var(--wrld-fg); padding-top: var(--wrld-space-3); color: var(--wrld-fg); font-family: var(--wrld-font-display, var(--font-display)); font-weight: var(--wrld-fw-semibold); font-size: var(--wq-fs-h3); }
+.wq-table.is-items tfoot tr.is-total td.is-num { font-family: var(--wrld-font-mono, var(--font-mono)); font-weight: 700; font-size: 0.9375rem; }
+
+/* ---------- Flush tiers and the comparison table ---------- */
+.wq-tiers.is-flush { gap: 1px; background: var(--wrld-border); border: var(--wrld-border-hairline) solid var(--wrld-border); }
+.wq-tiers.is-flush .wq-tier { border: 0; border-radius: 0; background: var(--wrld-bg-subtle); gap: 6px; }
+.wq-tier-math { font-family: var(--wrld-font-mono, var(--font-mono)); font-size: var(--wq-fs-micro); line-height: 1.6; color: var(--wrld-fg-muted); margin-top: auto; padding-top: var(--wrld-space-2); }
+.wq-tier.is-highlight .wq-tier-math { color: var(--wrld-accent-primary); }
+.wq-table.is-compare th { font-family: var(--wrld-font-display, var(--font-display)); font-weight: var(--wrld-fw-semibold); color: var(--wrld-fg); border-bottom-color: var(--wrld-fg); }
+.wq-table.is-compare th.is-accent, .wq-table.is-compare td.is-accent { color: var(--wrld-accent-primary); }
+.wq-table.is-compare td { border-bottom-color: var(--wrld-border); }
+.wq-table.is-compare td.is-strong { font-weight: var(--wrld-fw-medium); color: var(--wrld-fg); }
+.wq-table.is-compare .is-mono { font-family: var(--wrld-font-mono, var(--font-mono)); font-size: 0.75rem; }
+
+/* ---------- Running foot, proposal form ---------- */
+.wq-foot .wq-confidential { font-family: var(--wrld-font-display, var(--font-display)); font-weight: var(--wrld-fw-semibold); font-size: var(--wq-fs-micro); letter-spacing: var(--wrld-ls-eyebrow); text-transform: uppercase; color: var(--wrld-fg); margin-left: 4px; }
+
+/* ---------- Flowing document (screen-first proposals) ----------
+   One continuous page at Letter width instead of fixed sheets; sections
+   that must start a page carry `break-before: page`. Use for proposals
+   that are read on screen first and printed second. */
+.wq-doc {
+  width: var(--wq-sheet-w); margin: 0 auto var(--wrld-space-8); padding: 0.75in;
+  background: var(--wrld-mono-0); box-shadow: var(--wrld-shadow-md);
+  display: flex; flex-direction: column; gap: var(--wrld-space-6);
+  font-size: var(--wq-fs-body); line-height: var(--wrld-lh-body);
+}
+.wq-doc .wq-section, .wq-doc .wq-glance, .wq-doc .wq-tiers, .wq-doc .wq-meta { break-inside: avoid; }
+.wq-doc .is-page { break-before: page; }
+@media print {
+  .wq-doc { width: auto; margin: 0; padding: 0; box-shadow: none; }
+}
