@@ -1,4 +1,4 @@
-/* @ds-bundle: {"format":4,"namespace":"WRLDTechDesignSystemRemix_6276ea","components":[{"name":"Lockup","sourcePath":"ui_kits/_shared/Lockup.jsx"},{"name":"AgentDetail","sourcePath":"ui_kits/wrld-ai/AgentDetail.jsx"},{"name":"AgentList","sourcePath":"ui_kits/wrld-ai/AgentList.jsx"},{"name":"RunHistory","sourcePath":"ui_kits/wrld-ai/RunHistory.jsx"},{"name":"Sidebar","sourcePath":"ui_kits/wrld-ai/Sidebar.jsx"},{"name":"StatCard","sourcePath":"ui_kits/wrld-ai/StatCard.jsx"},{"name":"TopBar","sourcePath":"ui_kits/wrld-ai/TopBar.jsx"},{"name":"Button","sourcePath":"ui_kits/wrld-tech/Button.jsx"},{"name":"HelpButton","sourcePath":"ui_kits/wrld-tech/HelpButton.jsx"},{"name":"CTA","sourcePath":"ui_kits/wrld-tech/CTA.jsx"},{"name":"Eyebrow","sourcePath":"ui_kits/wrld-tech/Eyebrow.jsx"},{"name":"Footer","sourcePath":"ui_kits/wrld-tech/Footer.jsx"},{"name":"Header","sourcePath":"ui_kits/wrld-tech/Header.jsx"},{"name":"Hero","sourcePath":"ui_kits/wrld-tech/Hero.jsx"},{"name":"ServicesGrid","sourcePath":"ui_kits/wrld-tech/ServicesGrid.jsx"},{"name":"ValuesStrip","sourcePath":"ui_kits/wrld-tech/ValuesStrip.jsx"}],"sourceHashes":{"styleguide/tweaks-panel.jsx":"57fac7f3caf9","ui_kits/_shared/Lockup.jsx":"6c0ff84ad9d2","ui_kits/wrld-ai/AgentDetail.jsx":"a4fd6eee8f43","ui_kits/wrld-ai/AgentList.jsx":"fd556cea7ab8","ui_kits/wrld-ai/RunHistory.jsx":"3884edd6598d","ui_kits/wrld-ai/Sidebar.jsx":"78381d580953","ui_kits/wrld-ai/StatCard.jsx":"a947957ae150","ui_kits/wrld-ai/TopBar.jsx":"f9434490ea66","ui_kits/wrld-tech/Button.jsx":"237884ba4310","ui_kits/wrld-tech/CTA.jsx":"524f2ca63191","ui_kits/wrld-tech/Eyebrow.jsx":"bbf587253c14","ui_kits/wrld-tech/Footer.jsx":"032ecfba508b","ui_kits/wrld-tech/Header.jsx":"516be493f364","ui_kits/wrld-tech/HelpButton.jsx":"d78f236d80f6","ui_kits/wrld-tech/Hero.jsx":"675fb1562475","ui_kits/wrld-tech/ServicesGrid.jsx":"c302bc0eb9d0","ui_kits/wrld-tech/ValuesStrip.jsx":"e1c59922e2d5"},"inlinedExternals":[],"unexposedExports":[]} */
+/* @ds-bundle: {"format":4,"namespace":"WRLDTechDesignSystemRemix_6276ea","components":[{"name":"Lockup","sourcePath":"ui_kits/_shared/Lockup.jsx"},{"name":"AgentDetail","sourcePath":"ui_kits/wrld-ai/AgentDetail.jsx"},{"name":"AgentList","sourcePath":"ui_kits/wrld-ai/AgentList.jsx"},{"name":"RunHistory","sourcePath":"ui_kits/wrld-ai/RunHistory.jsx"},{"name":"Sidebar","sourcePath":"ui_kits/wrld-ai/Sidebar.jsx"},{"name":"StatCard","sourcePath":"ui_kits/wrld-ai/StatCard.jsx"},{"name":"TopBar","sourcePath":"ui_kits/wrld-ai/TopBar.jsx"},{"name":"Button","sourcePath":"ui_kits/wrld-tech/Button.jsx"},{"name":"HelpButton","sourcePath":"ui_kits/wrld-tech/HelpButton.jsx"},{"name":"CTA","sourcePath":"ui_kits/wrld-tech/CTA.jsx"},{"name":"Eyebrow","sourcePath":"ui_kits/wrld-tech/Eyebrow.jsx"},{"name":"Footer","sourcePath":"ui_kits/wrld-tech/Footer.jsx"},{"name":"Header","sourcePath":"ui_kits/wrld-tech/Header.jsx"},{"name":"Hero","sourcePath":"ui_kits/wrld-tech/Hero.jsx"},{"name":"ServicesGrid","sourcePath":"ui_kits/wrld-tech/ServicesGrid.jsx"},{"name":"ValuesStrip","sourcePath":"ui_kits/wrld-tech/ValuesStrip.jsx"}],"sourceHashes":{"styleguide/tweaks-panel.jsx":"57fac7f3caf9","ui_kits/_shared/Lockup.jsx":"6a59bca51220","ui_kits/wrld-ai/AgentDetail.jsx":"a4fd6eee8f43","ui_kits/wrld-ai/AgentList.jsx":"fd556cea7ab8","ui_kits/wrld-ai/RunHistory.jsx":"3884edd6598d","ui_kits/wrld-ai/Sidebar.jsx":"78381d580953","ui_kits/wrld-ai/StatCard.jsx":"a947957ae150","ui_kits/wrld-ai/TopBar.jsx":"f9434490ea66","ui_kits/wrld-tech/Button.jsx":"237884ba4310","ui_kits/wrld-tech/CTA.jsx":"524f2ca63191","ui_kits/wrld-tech/Eyebrow.jsx":"bbf587253c14","ui_kits/wrld-tech/Footer.jsx":"032ecfba508b","ui_kits/wrld-tech/Header.jsx":"516be493f364","ui_kits/wrld-tech/HelpButton.jsx":"d78f236d80f6","ui_kits/wrld-tech/Hero.jsx":"675fb1562475","ui_kits/wrld-tech/ServicesGrid.jsx":"c302bc0eb9d0","ui_kits/wrld-tech/ValuesStrip.jsx":"e1c59922e2d5"},"inlinedExternals":[],"unexposedExports":[]} */
 
 (() => {
 
@@ -538,22 +538,52 @@ Object.assign(window, {
 try { (() => {
 // Canonical WRLD lockup. Mark + wordmark + optional right-aligned sub-brand label.
 // `sub` can be a string (always shown) or null/undefined (hidden).
+// `theme`: "auto" (default) follows the document theme — black mark on light
+//   surfaces, white mark on dark. Pin "dark"/"light" only when the surface under
+//   it is pinned too (a specimen plate, a permanently dark hero).
 // `animated` (boolean): when true, sub-label fades + wordmark nudges up smoothly when sub is set.
 //   Use `animated` for nav lockups that morph on hover. Static lockups (footer, sub-cards) leave it off.
+function useDocTheme() {
+  const [mode, setMode] = React.useState('light');
+  React.useEffect(() => {
+    const root = document.documentElement;
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    const read = () => {
+      const attr = root.getAttribute('data-theme');
+      setMode(attr && /dark/i.test(attr) || (!attr || attr === 'auto') && mq.matches ? 'dark' : 'light');
+    };
+    read();
+    const mo = new MutationObserver(read);
+    mo.observe(root, {
+      attributes: true,
+      attributeFilter: ['data-theme']
+    });
+    mq.addEventListener('change', read);
+    return () => {
+      mo.disconnect();
+      mq.removeEventListener('change', read);
+    };
+  }, []);
+  return mode;
+}
 function Lockup({
   sub,
-  theme = 'dark',
+  theme = 'auto',
   size = 24,
   animated = false,
   markSrc: markSrcProp,
   style
 }) {
+  const docTheme = useDocTheme();
+  // The prop names the MARK's ink: "light" = white mark, for dark surfaces.
+  const ink = theme === 'auto' ? docTheme === 'dark' ? 'light' : 'dark' : theme;
   // Mark source: an explicit prop, then the host page's asset map
-  // (window.WRLD_ASSETS = { markBlack, markWhite }), then the repo paths.
+  // (window.WRLD_ASSETS = { markBlack, markWhite }: the design system's
+  // previews point these at its uploaded SVG marks), then the repo paths.
   const assetMap = typeof window !== 'undefined' && window.WRLD_ASSETS || {};
-  const markSrc = markSrcProp || (theme === 'light' ? assetMap.markWhite : assetMap.markBlack) || (theme === 'light' ? '../../assets/logos/wrld-mark-white.png' : '../../assets/logos/wrld-mark-black.png');
-  const fg = theme === 'light' ? '#fff' : '#000';
-  const subFg = theme === 'light' ? '#a1a1aa' : '#52525b';
+  const markSrc = markSrcProp || (ink === 'light' ? assetMap.markWhite : assetMap.markBlack) || (ink === 'light' ? '../../assets/logos/wrld-mark-white.png' : '../../assets/logos/wrld-mark-black.png');
+  const fg = ink === 'light' ? '#fff' : '#000';
+  const subFg = ink === 'light' ? '#a1a1aa' : '#52525b';
   const hasSub = !!sub;
 
   // Animated mode: text column has a fixed reserved height (wordmark + sub line) and

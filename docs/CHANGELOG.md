@@ -21,6 +21,10 @@ All notable changes to the WRLD Design System are documented here. This project 
   falling back to `../../assets/logos/wrld-mark-{black,white}.png`, so the kit renders its mark inside the Design
   System artifact (where the logos are uploads, not files) and any host page that keeps the marks elsewhere.
 - **`Header` in dark mode.** The sticky bar's background was `rgba(255,255,255,.85)`; now `color-mix` on `--bg`.
+- **`Lockup` follows the document theme.** `theme` defaults to `auto`: black mark on light surfaces, white on
+  dark, read from `data-theme` (any value containing `dark`, so the Design System frame's `root-dark` counts) or the
+  OS preference. Pin `dark`/`light` only where the surface is pinned too. Ported from the artifact's copy, where
+  it had lived since the September clean-up; `_ds_bundle.js` carries it.
 
 ### Added (earlier)
 
