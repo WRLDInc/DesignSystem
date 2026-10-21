@@ -150,9 +150,13 @@ Rules that change with this direction:
   their light values, so a dark page or a dark frame only darkens the desk
   around the sheet. Never undo that for a dark paper.
 - One accent voice on paper: `--wrld-accent-primary` on section numbers, arrow
-  bullets, the one highlighted tile or tier (label, inset rule, math line) and
-  the recommended comparison column. Never a fill, never body text, no status
-  colours. The client's mark keeps its own colours.
+  bullets, the one highlighted tile or tier (its label and inset rule) and the
+  recommended comparison column's header. Never a fill, never body text, no
+  status colours. Accent never carries data on its own: `#007fee` on paper
+  measures 3.98:1, under AA 4.5:1 for small text (the brand's open call on
+  accent-as-text, see the README caveats), so it sits only on labels and
+  numbers that repeat what the black text beside them says. Money, deltas and
+  the tier math stay in ink. The client's mark keeps its own colours.
 - Numbers that carry money are mono; the arithmetic that reaches a price is
   shown (`wq-tier-math`), never implied.
 

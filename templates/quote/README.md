@@ -19,7 +19,9 @@ values. Real client documents are produced outside this repo.
 1. Copy `proposal.html`, `index.html` or `tiered.html` next to your working files. Link
    `https://wrld.design/templates/quote/quote.css`, or vendor `quote.css` with
    `styles.css`, `tokens/`, `colors_and_type.css` and `fonts/` in the same
-   relative layout.
+   relative layout. The marks are relative too: `../../assets/logos/wrld-tech-black.png`
+   (running head) and `../../assets/logos/wrld-mark-black.svg` (brand row); keep
+   that layout or point the two `src` attributes at `https://wrld.design/assets/logos/…`.
 2. Replace the reference number, client, contact, dates, line items, totals
    and the breakdown line. Add the client's logo inside `.wq-client`: wide
    marks (3:1+) at the default 22px, `is-mid` for 1.5:1 to 3:1, `is-square`

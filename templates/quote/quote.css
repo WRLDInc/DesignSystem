@@ -278,7 +278,11 @@ html.wq body { margin: 0; padding: var(--wrld-space-8) var(--wrld-space-4); }
    document title; a brand row under it pairs the client's mark with the
    starburst + "WRLD / QUOTE" stack. Section numbers, arrow bullets and
    the one highlighted tile or tier carry the accent: the only colour on
-   paper besides the client's own mark. Accent never fills a surface.
+   paper besides the client's own mark. Accent never fills a surface, and it
+   never carries data on its own: it sits on labels and numbers that repeat
+   what the black text beside them says, because #007fee on paper measures
+   3.98:1 (under AA 4.5:1 for small text; the brand's open call on accent
+   text, see README caveats). Money and deltas stay in ink.
    ============================================================ */
 
 /* ---------- Running head, wordmark form ---------- */
@@ -359,9 +363,10 @@ html.wq body { margin: 0; padding: var(--wrld-space-8) var(--wrld-space-4); }
 .wq-tiers.is-flush { gap: 1px; background: var(--wrld-border); border: var(--wrld-border-hairline) solid var(--wrld-border); }
 .wq-tiers.is-flush .wq-tier { border: 0; border-radius: 0; background: var(--wrld-bg-subtle); gap: 6px; }
 .wq-tier-math { font-family: var(--wrld-font-mono, var(--font-mono)); font-size: var(--wq-fs-micro); line-height: 1.6; color: var(--wrld-fg-muted); margin-top: auto; padding-top: var(--wrld-space-2); }
-.wq-tier.is-highlight .wq-tier-math { color: var(--wrld-accent-primary); }
+.wq-tier.is-highlight .wq-tier-math { color: var(--wrld-fg); }
 .wq-table.is-compare th { font-family: var(--wrld-font-display, var(--font-display)); font-weight: var(--wrld-fw-semibold); color: var(--wrld-fg); border-bottom-color: var(--wrld-fg); }
-.wq-table.is-compare th.is-accent, .wq-table.is-compare td.is-accent { color: var(--wrld-accent-primary); }
+.wq-table.is-compare th.is-accent { color: var(--wrld-accent-primary); }
+.wq-table.is-compare td.is-accent { color: var(--wrld-fg); font-weight: var(--wrld-fw-medium); }
 .wq-table.is-compare td { border-bottom-color: var(--wrld-border); }
 .wq-table.is-compare td.is-strong { font-weight: var(--wrld-fw-medium); color: var(--wrld-fg); }
 .wq-table.is-compare .is-mono { font-family: var(--wrld-font-mono, var(--font-mono)); font-size: 0.75rem; }
