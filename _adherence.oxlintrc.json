@@ -73,12 +73,12 @@
         "message": "<Header> doesn't accept that prop. Declared props: activeRoute, onNavigate."
       },
       {
-        "selector": "JSXOpeningElement[name.name='Lockup'] > JSXAttribute > JSXIdentifier[name!=/^(?:sub|theme|size|animated|style|key|ref|className|style|children)$/]",
-        "message": "<Lockup> doesn't accept that prop. Declared props: sub, theme, size, animated, style."
+        "selector": "JSXOpeningElement[name.name='Lockup'] > JSXAttribute > JSXIdentifier[name!=/^(?:sub|theme|size|animated|markSrc|style|key|ref|className|style|children)$/]",
+        "message": "<Lockup> doesn't accept that prop. Declared props: sub, theme, size, animated, markSrc, style."
       },
       {
-        "selector": "JSXOpeningElement[name.name='Lockup'] > JSXAttribute[name.name='theme'] > Literal[value!=/^(?:dark|light)$/]",
-        "message": "<Lockup> theme must be one of 'dark' | 'light'."
+        "selector": "JSXOpeningElement[name.name='Lockup'] > JSXAttribute[name.name='theme'] > Literal[value!=/^(?:auto|dark|light)$/]",
+        "message": "<Lockup> theme must be one of 'auto' | 'dark' | 'light'."
       },
       {
         "selector": "JSXOpeningElement[name.name='RunHistoryRun'] > JSXAttribute > JSXIdentifier[name!=/^(?:status|summary|duration|time|key|ref|className|style|children)$/]",

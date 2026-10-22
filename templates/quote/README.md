@@ -9,16 +9,19 @@ before producing a client document.
 | `quote.css` | The framework. Every `wq-` block, built on `--wrld-*` tokens, with the `@page` and print rules. Imports `../../styles.css` for tokens and self-hosted fonts. |
 | `index.html` | Reference managed services agreement: cover and letter, service overview, inclusions, coverage facts, retainer, line-item pricing, total band, onboarding fee, rate card, security stack, billing and payment terms, signatures. Seven sheets. |
 | `tiered.html` | Reference one-page good / better / best quote with a comparison table and acceptance line. |
+| `proposal.html` | Reference proposal on the proposal direction (`docs/QUOTE_DESIGN.md` §2.2): wordmark head, brand row with the client mark and the WRLD / QUOTE stack, glance tiles, accent section numbers, line items with totals, flush tiers, comparison table. Two sheets. |
 
-Both references use a fictional client (Northbend Logistics) and sample
+All three references use a fictional client (Northbend Logistics) and sample
 values. Real client documents are produced outside this repo.
 
 ## Use it
 
-1. Copy `index.html` (or `tiered.html`) next to your working files. Link
+1. Copy `proposal.html`, `index.html` or `tiered.html` next to your working files. Link
    `https://wrld.design/templates/quote/quote.css`, or vendor `quote.css` with
    `styles.css`, `tokens/`, `colors_and_type.css` and `fonts/` in the same
-   relative layout.
+   relative layout. The marks are relative too: `../../assets/logos/wrld-tech-black.png`
+   (running head) and `../../assets/logos/wrld-mark-black.svg` (brand row); keep
+   that layout or point the two `src` attributes at `https://wrld.design/assets/logos/…`.
 2. Replace the reference number, client, contact, dates, line items, totals
    and the breakdown line. Add the client's logo inside `.wq-client`: wide
    marks (3:1+) at the default 22px, `is-mid` for 1.5:1 to 3:1, `is-square`

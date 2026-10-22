@@ -6,6 +6,28 @@ All notable changes to the WRLD Design System are documented here. This project 
 
 ### Added
 
+- **Quote framework, the proposal direction.** From the PMGS technology business review (Curtis, August 2026), now the
+  default for documents that review, quote and recommend in one piece: wordmark running head, a brand row pairing the
+  client's mark with the starburst + `WRLD / QUOTE` stack, strong meta strip, glance tiles, accent section numbers with
+  right labels, arrow list, phases, line items with a ruled totals row, flush tiers with one highlighted recommendation,
+  comparison table, `Confidential` foot and a `wq-doc` flowing variant. Reference `templates/quote/proposal.html`;
+  `docs/QUOTE_DESIGN.md` §2.2. `assets/logos/wrld-mark-black.svg` (the official vector starburst) joins the logo set.
+
+### Fixed
+
+- **Paper pinned light.** `.wq-sheet` and `.wq-doc` pin the semantic tokens to their light values so a dark page or
+  the Design System artifact's dark frame no longer tints quote text near-white on white paper.
+- **`Lockup` mark path.** Takes a `markSrc` prop and reads `window.WRLD_ASSETS = { markBlack, markWhite }` before
+  falling back to `../../assets/logos/wrld-mark-{black,white}.png`, so the kit renders its mark inside the Design
+  System artifact (where the logos are uploads, not files) and any host page that keeps the marks elsewhere.
+- **`Header` in dark mode.** The sticky bar's background was `rgba(255,255,255,.85)`; now `color-mix` on `--bg`.
+- **`Lockup` follows the document theme.** `theme` defaults to `auto`: black mark on light surfaces, white on
+  dark, read from `data-theme` (any value containing `dark`, so the Design System frame's `root-dark` counts) or the
+  OS preference. Pin `dark`/`light` only where the surface is pinned too. Ported from the artifact's copy, where
+  it had lived since the September clean-up; `_ds_bundle.js` carries it.
+
+### Added (earlier)
+
 - **Email signatures.** `email/signature.py` generates four signature directions (split stack, ledger line, signal
   strip, minimal mark) per person into `email/signatures/<person>/`, plus a review page at
   `email/dist/signatures.html`. Inline styles only, PNG lockups and the mark tile hotlinked from
