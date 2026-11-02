@@ -1,0 +1,68 @@
+<!doctype html>
+<!-- @dsCard group="Agents" name="Search overlay" subtitle="⌘K dialog · Search + Ask WRLD.AI tabs · instance chips · every state annotated" viewport="700x690" -->
+<html data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="_shared.css">
+<style>
+  .n{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:var(--fg);color:var(--bg);font:700 10px/1 var(--font-body);flex:none}
+  .dlg{background:var(--bg-elevated);border:1px solid color-mix(in srgb,#d4d4d8 82%,#007fee 18%);border-radius:8px;box-shadow:0 26px 80px -32px rgb(0 127 238 / .28),0 12px 32px rgb(0 0 0 / .12);overflow:hidden;position:relative}
+  .hd{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 10px}
+  .eb{font:11px var(--font-mono);letter-spacing:.1em;color:var(--fg-muted)}
+  .hd h2{margin:2px 0 0;font:600 20px/1.05 var(--font-display);letter-spacing:-.02em;color:var(--fg)}
+  .ib{width:34px;height:34px;border:1px solid #d4d4d8;border-radius:4px;display:inline-flex;align-items:center;justify-content:center;color:var(--fg);background:transparent}
+  .ib.hot{color:#007fee;border-color:#007fee;box-shadow:0 10px 40px -8px rgb(0 127 238 / .22)}
+  .tabs{display:flex;gap:8px;padding:0 16px;border-bottom:1px solid var(--border)}
+  .tab{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;font:15px/1.2 var(--font-body);color:var(--fg-muted);border:1px solid transparent;border-bottom:0;border-radius:4px 4px 0 0}
+  .tab.on{color:var(--fg);border-color:color-mix(in srgb,#d4d4d8 78%,#007fee 22%);background:var(--bg-elevated);margin-bottom:-1px;padding-bottom:9px}
+  .tab i{width:22px;height:22px;border:1px solid currentColor;border-radius:4px;display:inline-flex;align-items:center;justify-content:center;font-style:normal}
+  .q{margin:12px 16px 8px;display:flex;align-items:center;gap:10px;padding:9px 12px;border:1px solid #007fee;border-radius:4px;outline:3px solid rgb(0 127 238 / .28);font:14px var(--font-body);color:var(--fg);background:#fff}
+  .q .kbd{margin-left:auto;font:11px var(--font-mono);color:var(--fg-subtle);border:1px solid var(--border);border-radius:3px;padding:1px 5px}
+  .res{padding:0 16px 8px;display:flex;flex-direction:column;gap:4px}
+  .r{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:8px 10px;border-radius:4px}
+  .r.hot{background:var(--bg-muted)}
+  .r .t{grid-column:1;grid-row:1;font:500 14px/1.3 var(--font-body);color:var(--fg)}
+  .r .u{font:11px var(--font-mono);color:var(--fg-subtle);grid-column:1}
+  .r .d{font:13px/1.4 var(--font-body);color:var(--fg-muted);grid-column:1}
+  .chip{grid-column:2;grid-row:1/span 3;align-self:start;font:10px var(--font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--fg-muted);border:1px solid var(--border);border-radius:3px;padding:2px 6px;white-space:nowrap}
+  .ft{display:flex;justify-content:space-between;padding:10px 16px;border-top:1px solid var(--border);font:12px var(--font-body);color:var(--fg-muted)}
+  .ft kbd{font-family:var(--font-mono)}
+  .side{display:flex;flex-direction:column;gap:8px;font:12px/1.45 var(--font-body);color:var(--fg-muted)}
+  .side div{display:flex;gap:8px;align-items:flex-start}
+  .side b{color:var(--fg);font-weight:500}
+  .state{display:flex;gap:8px;flex-wrap:wrap}
+  .state span{font:11px var(--font-mono);border:1px solid var(--border);border-radius:3px;padding:3px 6px;color:var(--fg-muted)}
+  .state span.bad{border-color:#ef4444;color:#ef4444}
+</style></head>
+<body><div class="card">
+  <div class="label-row"><div class="eyebrow">Search overlay</div><div class="meta">docs/AI_SEARCH_AGENTS.md §5 · search.wrld.ai · snippet v0.0.40 · accent on hover/focus only</div></div>
+  <div class="row" style="gap:18px;align-items:flex-start">
+    <div class="dlg" style="flex:1;min-width:400px">
+      <div class="hd">
+        <div><div class="eb">Search · Discover · Ask</div><h2>WRLD.AI</h2></div>
+        <div style="display:flex;gap:8px;align-items:center"><span class="n">3</span>
+          <span class="ib"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg></span>
+          <span class="ib hot"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></span>
+        </div>
+      </div>
+      <div class="tabs"><span class="n" style="align-self:center">4</span>
+        <span class="tab on"><i><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></i>Search</span>
+        <span class="tab"><i><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M12 7v6M9 10h6"/></svg></i>Ask WRLD.AI</span>
+      </div>
+      <div class="q"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>managed IT<span class="kbd">⌘K</span></div>
+      <div class="res"><span class="n" style="position:absolute;right:14px;margin-top:6px">6</span>
+        <div class="r hot"><div class="t">Managed IT that is explicitly not break-fix</div><span class="chip">wrld.tech</span><div class="u">wrld.tech/services</div><div class="d">24/7 monitoring, patching and proactive infrastructure care.</div></div>
+        <div class="r"><div class="t">How WRLD.Support tickets are prioritised</div><span class="chip">help</span><div class="u">help.wrld.tech/articles/priority</div><div class="d">Priority SLA line for covered clients, response targets by severity.</div></div>
+        <div class="r"><div class="t">Onboarding checklist for managed endpoints</div><span class="chip">help</span><div class="u">help.wrld.tech/articles/onboarding</div><div class="d">What we install, what we monitor, what you keep control of.</div></div>
+      </div>
+      <div class="ft"><span>Answers from WRLD content. Check sources before acting.</span><span><kbd>Esc</kbd> to close</span><span class="n" style="position:absolute;right:14px;bottom:10px">7</span></div>
+    </div>
+    <div class="side" style="flex:0 0 200px">
+      <div><span class="n">1</span><span><b>Trigger</b> — 40 px round icon button in the nav tools, ⌘K / Ctrl K, <code style="font:11px var(--font-mono)">aria-keyshortcuts</code>.</span></div>
+      <div><span class="n">2</span><span><b>Dialog</b> — native <code style="font:11px var(--font-mono)">&lt;dialog&gt;</code>, min(820px, 100vw − 1.25rem), radius 8, border-strong + 18 % accent, bg 92 % + blur.</span></div>
+      <div><span class="n">3</span><span><b>Heading</b> — eyebrow mono, WRLD.AI display 20/600, expand + close (hover: accent).</span></div>
+      <div><span class="n">4</span><span><b>Tabs</b> — Search · Ask WRLD.AI; open-bottomed selected tab rests on the rule.</span></div>
+      <div><span class="n">5</span><span><b>Notice</b> — <code style="font:11px var(--font-mono)">role=status</code> row for loading / outage / retry.</span></div>
+      <div><span class="n">6</span><span><b>Result row</b> — title 14/500 · URL mono 11 · description 13 · instance chip (merged namespace results stay attributable).</span></div>
+      <div><span class="n">7</span><span><b>Footer</b> — sources disclaimer + Esc hint.</span></div>
+      <div class="state" style="margin-top:4px"><span>Loading WRLD.AI…</span><span>No matching pages</span><span class="bad">Search is temporarily unavailable</span><span>Try again · Talk to WRLD</span></div>
+    </div>
+  </div>
+</div></body></html>

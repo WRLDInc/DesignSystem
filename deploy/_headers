@@ -229,6 +229,56 @@
 # -----------------------------------------------------------------------------
 
 # -----------------------------------------------------------------------------
+# Agent discovery — Link headers on the homepage (RFC 8288, RFC 9727 §3).
+#
+# The rule path is exactly `/`, which matches the root document only — the
+# scanners that look for these (isitagentready.com and friends) fetch the
+# homepage, and a site-wide `/*` would bolt four Link headers onto every font
+# and PNG for nothing. Each `Link:` line below is a separate header instance;
+# the asset layer joins duplicate names with a comma, which RFC 8288 defines
+# as equivalent to separate header fields, so either form is valid on the
+# wire. Verified with `wrangler dev` that `/` matches the root and that
+# `/styleguide/` does NOT pick these up.
+#
+# Sets no Cache-Control and no Content-Type, so it cannot collide with any
+# rule above.
+# -----------------------------------------------------------------------------
+/
+  Link: </.well-known/api-catalog>; rel="api-catalog"
+  Link: </openapi.json>; rel="service-desc"; type="application/json"
+  Link: </llms.txt>; rel="service-doc"; type="text/plain"
+  Link: </llms.txt>; rel="describedby"; type="text/plain"
+
+# -----------------------------------------------------------------------------
+# Agent discovery — well-known documents.
+#
+# Both files are EXTENSIONLESS on purpose: RFC 9727 and RFC 9728 fix the path
+# names, and Cloudflare attaches no Content-Type at all to an extensionless
+# asset (verified for /LICENSE above), so setting one here appends to nothing.
+# The catalog MUST be application/linkset+json — a scanner treats plain JSON
+# at that path as a miss.
+# -----------------------------------------------------------------------------
+/.well-known/api-catalog
+  Content-Type: application/linkset+json; charset=utf-8
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+
+/.well-known/oauth-protected-resource
+  Content-Type: application/json; charset=utf-8
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+
+# -----------------------------------------------------------------------------
+# /auth.md is the one Markdown file that has to be served AS Markdown — the
+# Auth.md convention reads it as such. It also matches the `/*.md` rule above,
+# which sets text/plain, so the header is unset first (bang, then a space)
+# and re-set; without the unset the two values would be comma-joined into a
+# malformed Content-Type. This rule sits after `/*.md` deliberately: the
+# unset only removes what an EARLIER rule has already applied.
+# -----------------------------------------------------------------------------
+/auth.md
+  ! Content-Type
+  Content-Type: text/markdown; charset=utf-8
+
+# -----------------------------------------------------------------------------
 # Keep build preview hostnames out of search results. VERIFIED WORKING.
 #
 # wrld.design is the only canonical origin, but preview_urls is enabled in

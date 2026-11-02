@@ -1,0 +1,69 @@
+<!doctype html>
+<!-- @dsCard group="Documents" name="Quote & agreement" subtitle="printable Letter framework · running head with client mark · line items · inverted total band · signatures" viewport="700x560" -->
+<html data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="_shared.css">
+<style>
+  /* Paper stays white in either theme: the document is the artifact. */
+  .q-wrap { display: grid; grid-template-columns: 318px 1fr; gap: 24px; align-items: start; }
+  .q-paper { position: relative; background: var(--mono-0); color: var(--mono-950); border: 1px solid var(--border); border-radius: 4px; box-shadow: var(--shadow-sm); padding: 18px 20px; display: flex; flex-direction: column; gap: 11px; font-family: var(--font-body); font-size: 7px; line-height: 1.5; }
+  .q-head, .q-foot { display: flex; justify-content: space-between; align-items: center; font-family: var(--font-mono); font-size: 5.5px; letter-spacing: .06em; color: var(--mono-500); }
+  .q-head { padding-bottom: 6px; border-bottom: 1px solid var(--mono-200); }
+  .q-foot { padding-top: 5px; border-top: 1px solid var(--mono-200); }
+  .q-head img { height: 10px; display: block; }
+  .q-client { font-family: var(--font-display); font-weight: 600; font-size: 6.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--mono-950); }
+  .q-eyebrow { font-size: 5.5px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--mono-600); }
+  .q-title { font-family: var(--font-display); font-weight: 700; font-size: 17px; letter-spacing: -0.02em; line-height: 1.08; }
+  .q-chips { display: flex; gap: 4px; }
+  .q-chip { font-family: var(--font-mono); font-size: 5px; letter-spacing: .08em; text-transform: uppercase; border: 1px solid var(--mono-300); border-radius: 999px; padding: 1px 5px; color: var(--mono-600); }
+  .q-chip.solid { background: var(--mono-950); border-color: var(--mono-950); color: var(--mono-0); }
+  .q-meta { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; padding: 5px 0; border-top: 1px solid var(--mono-200); border-bottom: 1px solid var(--mono-200); }
+  .q-label { font-family: var(--font-mono); font-size: 4.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--mono-500); display: block; }
+  .q-val { font-weight: 500; font-size: 6px; }
+  .q-sec { display: flex; gap: 5px; align-items: baseline; padding-bottom: 3px; border-bottom: 1px solid var(--mono-200); }
+  .q-num { font-family: var(--font-mono); font-size: 5.5px; color: var(--mono-500); }
+  .q-h2 { font-family: var(--font-display); font-weight: 600; font-size: 10px; letter-spacing: -0.02em; }
+  .q-table { width: 100%; border-collapse: collapse; font-size: 6px; }
+  .q-table th { text-align: left; font-family: var(--font-mono); font-weight: 400; font-size: 4.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--mono-500); border-bottom: 1px solid var(--mono-300); padding: 0 4px 3px 0; }
+  .q-table td { padding: 3px 4px 3px 0; border-bottom: 1px solid var(--mono-100); color: var(--mono-600); }
+  .q-table td:first-child { color: var(--mono-950); font-weight: 500; }
+  .q-table .n { text-align: right; font-family: var(--font-mono); }
+  .q-table .b { color: var(--mono-950); font-weight: 700; }
+  .q-total { display: flex; justify-content: space-between; align-items: center; background: var(--mono-950); color: var(--mono-50); border-radius: 4px; padding: 8px 10px; }
+  .q-total .q-label { color: var(--mono-400); }
+  .q-sum { font-family: var(--font-display); font-weight: 700; font-size: 14px; letter-spacing: -0.03em; }
+  .q-sign { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .q-line { border-top: 1px solid var(--mono-500); margin-top: 12px; padding-top: 2px; font-family: var(--font-mono); font-size: 4.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--mono-500); }
+  [data-pin] { position: relative; }
+  [data-pin]::before { content: attr(data-pin); position: absolute; left: -27px; top: 0; width: 14px; height: 14px; border-radius: 50%; background: var(--fg); color: var(--bg); font-family: var(--font-mono); font-size: 8px; line-height: 14px; text-align: center; }
+  .legend { display: flex; flex-direction: column; gap: 0; font-size: 12px; }
+  .legend li { display: grid; grid-template-columns: 22px 1fr; gap: 8px; padding: 7px 0; border-bottom: 1px solid var(--border); list-style: none; color: var(--fg-muted); line-height: 1.45; }
+  .legend { padding: 0; margin: 0; }
+  .legend b { color: var(--fg); font-weight: 500; display: block; }
+  .legend code { font-size: 10.5px; }
+  .legend .k { font-family: var(--font-mono); font-size: 11px; color: var(--fg-subtle); }
+</style></head>
+<body><div class="card">
+  <div class="label-row"><div class="eyebrow">Quote &amp; agreement</div><div class="meta">templates/quote · docs/QUOTE_DESIGN.md</div></div>
+  <div class="q-wrap">
+    <div class="q-paper" aria-label="Miniature quote page">
+      <div class="q-head" data-pin="1"><img src="../assets/logos/wrld-tech-black.png" alt="WRLD.TECH"><span>Q-2026-SAMPLE &nbsp;×&nbsp; <span class="q-client">Northbend Logistics</span></span></div>
+      <span class="q-eyebrow" data-pin="2">Managed IT &amp; cybersecurity agreement</span>
+      <span class="q-title">Northbend Logistics</span>
+      <div class="q-chips"><span class="q-chip solid">Essential tier</span><span class="q-chip">Partner pricing</span><span class="q-chip">Month to month</span></div>
+      <div class="q-meta"><div><span class="q-label">Prepared for</span><span class="q-val">Dana Whitfield</span></div><div><span class="q-label">Prepared by</span><span class="q-val">Curtis Carney</span></div><div><span class="q-label">Issued</span><span class="q-val">Oct 6, 2026</span></div><div><span class="q-label">Term</span><span class="q-val">Month to month</span></div></div>
+      <div class="q-sec" data-pin="3"><span class="q-num">04</span><span class="q-h2">Pricing summary</span></div>
+      <table class="q-table" data-pin="4"><thead><tr><th>Device category</th><th class="n">Qty</th><th class="n">Rate / mo</th><th class="n">Monthly</th></tr></thead>
+        <tbody><tr><td>MacBook</td><td class="n">12</td><td class="n">$118.00</td><td class="n b">$1,416.00</td></tr><tr><td>Windows laptop</td><td class="n">6</td><td class="n">$104.00</td><td class="n b">$624.00</td></tr><tr><td>Hexnode MDM</td><td class="n">Flat</td><td class="n">$130.00</td><td class="n b">$130.00</td></tr><tr><td>DevOps retainer</td><td class="n">16 hrs</td><td class="n">$1,600</td><td class="n b">$1,600.00</td></tr></tbody></table>
+      <div class="q-total" data-pin="5"><span class="q-label">Monthly recurring total</span><span class="q-sum">$3,770.00</span></div>
+      <div class="q-sign" data-pin="6"><div><span class="q-label" style="color:var(--mono-950)">Client</span><div class="q-line">Signature</div></div><div><span class="q-label" style="color:var(--mono-950)">WRLD Inc. · DBA WRLD Tech Co.</span><div class="q-line">Signature</div></div></div>
+      <div class="q-foot"><span>WRLD Inc. [DBA WRLD Tech Co.]</span><span>helpdesk@wrld.tech · 469.299.9598</span><span>04 / 07</span></div>
+    </div>
+    <ul class="legend">
+      <li><span class="k">1</span><span><b>Running head</b>WRLD.TECH lockup, doc reference in mono, × the client's mark. No client file: their name as uppercase type.</span></li>
+      <li><span class="k">2</span><span><b>Cover</b>Eyebrow names the document type; the title is the client. Chips for tier, pricing and term; four-up meta strip.</span></li>
+      <li><span class="k">3</span><span><b>Section</b>Mono number + Montserrat 600 heading on a hairline. Sentence case.</span></li>
+      <li><span class="k">4</span><span><b>Line items</b>Mono numerals, right-aligned; the monthly column is the only bold one.</span></li>
+      <li><span class="k">5</span><span><b>Total band</b>The one inverted moment, near-black on paper, like the site's CTA band. One per document.</span></li>
+      <li><span class="k">6</span><span><b>Signatures</b>Both parties, signature + printed name &amp; title + date. Legal entity is WRLD Inc.</span></li>
+    </ul>
+  </div>
+</div></body></html>

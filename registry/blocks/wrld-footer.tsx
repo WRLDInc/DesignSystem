@@ -70,9 +70,9 @@ export const WRLD_FOOTER_COLUMNS: WrldFooterColumn[] = [
       { label: "Hosting", href: "https://wrld.host" },
       { label: "Design", href: "https://wrld.design" },
       { label: "AI", href: "https://wrld.ai" },
-      { label: "Managed IT", href: "https://services.wrld.tech" },
-      { label: "Support", href: "https://support.wrld.tech" },
-      { label: "Press", href: "https://wrld.press" },
+      { label: "Managed IT", href: "https://wrld.tech/services" },
+      { label: "Support", href: "https://wrld.support" },
+      { label: "Help", href: "https://wrld.help" },
     ],
   },
   {

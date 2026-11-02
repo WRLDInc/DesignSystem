@@ -1,0 +1,50 @@
+{
+  "linkset": [
+    {
+      "anchor": "https://wrld.design/",
+      "service-desc": [
+        { "href": "https://wrld.design/openapi.json", "type": "application/json" }
+      ],
+      "service-doc": [
+        { "href": "https://wrld.design/README.md", "type": "text/plain" },
+        { "href": "https://wrld.design/llms.txt", "type": "text/plain" }
+      ],
+      "describedby": [
+        { "href": "https://wrld.design/llms.txt", "type": "text/plain" }
+      ],
+      "status": [
+        { "href": "https://wrld.design/_ds_manifest.json", "type": "application/json" }
+      ]
+    },
+    {
+      "anchor": "https://wrld.design/registry/",
+      "service-desc": [
+        { "href": "https://wrld.design/openapi.json", "type": "application/json" }
+      ],
+      "service-doc": [
+        { "href": "https://wrld.design/docs/21ST_PUBLISHING.md", "type": "text/plain" }
+      ],
+      "describedby": [
+        { "href": "https://wrld.design/registry/manifest.json", "type": "application/json" }
+      ]
+    },
+    {
+      "anchor": "https://wrld.design/auth.md",
+      "service-doc": [
+        { "href": "https://wrld.design/docs/LOGIN_DESIGN.md", "type": "text/plain" }
+      ],
+      "describedby": [
+        { "href": "https://wrld.design/.well-known/oauth-protected-resource", "type": "application/json" }
+      ]
+    },
+    {
+      "anchor": "https://search.wrld.ai/",
+      "service-doc": [
+        { "href": "https://wrld.design/docs/AI_SEARCH_AGENTS.md", "type": "text/plain" }
+      ],
+      "describedby": [
+        { "href": "https://wrld.design/docs/AI_SEARCH_AGENTS.md", "type": "text/plain" }
+      ]
+    }
+  ]
+}
