@@ -9,8 +9,22 @@ change is a contract change for every row below.
 | wrld.tech (rebuild) | `WRLDInc/wrld.tech` | `styles.css`, fonts, logos | `Header`, `Hero`, `ServicesGrid`, `ValuesStrip`, `CTA`, `Footer` | Flagship marketing kit |
 | WRLD.one | `WRLDInc/wrld.one` | `tokens/tokens.css`, `registry/theme/wrld.css` | `WrldButton`, `WrldStatCard`, `WrldTopBar` | Reads Better Stack for its own status strip |
 | WRLD.AI dashboard | `WRLDInc/CentralizeWRLD` | `registry/theme/wrld.css` | `WrldSidebar`, `WrldTopBar`, `WrldStatCard`, `WrldAgentList`, `WrldAgentDetail`, `WrldRunHistory`, `WrldHelpButton` | shadcn host |
-| **PulseWRLD** — public services status | `WRLDInc/publicServicesStatus-web` | `styles.css`, favicons, `wrld-mark-white.png` | `WrldTopBar`, `WrldEyebrow`, `WrldStatCard`; local stand-ins for a status pill and an uptime bar | Cloudflare Worker at a `*.wrld.tech` subdomain (name pending). Needs two new atoms — see below. |
 | **calendar.wrld.tech** — Trafft booking site | this repo, [`integrations/trafft/`](../integrations/trafft/README.md) | `fonts/Ubuntu-*.ttf`, `fonts/UbuntuMono-Regular.ttf`, `assets/logos/wrld-tech-white.png` (dark theme) — hotlinked from wrld.design; tokens are inlined in `custom.css` | None — Trafft's Nuxt / Element Plus components themed through its own CSS variables | Custom CSS + JS pasted into the admin's Custom Code fields. A token change needs a re-paste; renaming a listed font or logo breaks the live booking site. Sub-brand wrld.tech. |
+| **PulseWRLD** — public services status | `WRLDInc/publicServicesStatus-web` | `styles.css`, favicons, `wrld-mark-white.png` | `WrldTopBar`, `WrldEyebrow`, `WrldStatCard`; local stand-ins for a status pill and an uptime bar | Cloudflare Worker `pulsewrld` at <https://pulse.wrld.tech> (name decided 2026-09-06). Needs two new atoms — see below. |
+| WRLD.Tel — business VoIP landing | `WRLDInc/wrld.tel` | `styles.css` (tokens + type + fonts), favicons, `wrld-mark-{black,white}.png` | Static HTML on the `wrld-tech` kit patterns: pill header, hero, card grid, closing CTA band, footer | Cloudflare Pages at https://wrld.tel; portal at dash.wrld.tel |
+
+## Shared search endpoint
+
+Every row above may also call the WRLD AI Search namespace endpoint
+(`https://search.wrld.ai`) from the browser, which means its apex and preview
+hosts must be in the endpoint's **authorized hosts**. Rules, the read-append-
+write flow and the overlay spec are in [`AI_SEARCH_AGENTS.md`](AI_SEARCH_AGENTS.md).
+
+| Consumer | Calls the endpoint | Origin in authorized hosts (2026-09-30) |
+| --- | --- | --- |
+| wrld.tech | via its same-origin proxy `/api/ai-search`, which sends `Origin: https://wrld.tech` | `wrld.tech` (exact; the wildcards in the list do not match on preflight) |
+| wrld.design | directly (assets-only Worker), `#aiDialog` | **pending** — `wrld.design` not listed, and the `*.wrldtech.workers.dev` wildcard does not match, so previews show the unavailable state too |
+| WRLD.one, WRLD.AI dashboard | `WrldSearchDialog` from the registry | `*.wrld.ai` yes; add the portal host when it adopts the dialog |
 
 ## Requested atoms
 

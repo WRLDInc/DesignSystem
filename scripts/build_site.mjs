@@ -31,6 +31,7 @@ import {
   statSync,
   writeFileSync,
 } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { dirname, join, normalize, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -73,6 +74,10 @@ const PUBLISH = [
   'preview',
   'ui_kits',
 
+  // Printable document templates (quote / agreement). Their CSS imports
+  // ../../styles.css, so the tree has to keep this depth.
+  'templates',
+
   // Component bundle consumed by the ui_kit index pages, plus its manifest.
   '_ds_bundle.js',
   '_ds_manifest.json',
@@ -88,6 +93,12 @@ const PUBLISH = [
   'docs',
   'README.md',
   'LICENSE',
+
+  // The agent skill. Served at /SKILL.md so that the Agent Skills discovery
+  // index (generated below, with a digest) can point at an on-origin copy.
+  // Its relative references (README.md, colors_and_type.css, fonts/, …) all
+  // resolve because the deployed tree mirrors the repo layout.
+  'SKILL.md',
 ];
 
 /** Paths inside a published directory that must be skipped. */
@@ -100,6 +111,7 @@ const EXCLUDE = new Set([
 
 const log = (...a) => console.log(...a);
 const rel = (p) => relative(REPO, p).split(sep).join('/');
+const isFile = (p) => existsSync(p) && statSync(p).isFile();
 
 /** Every file under a directory, recursively. */
 const walkSync = (dir) => {
@@ -148,7 +160,8 @@ if (missingFromAllowlist.length) {
 }
 
 // ---------------------------------------------------------------------------
-// 3. Overlay the web root (landing page, 404, _headers, _redirects, robots)
+// 3. Overlay the web root (landing page, 404, _headers, robots, llms.txt,
+//    auth.md, openapi.json and the .well-known discovery documents)
 // ---------------------------------------------------------------------------
 if (!existsSync(OVERLAY)) {
   console.error(`Build failed — missing web-root overlay directory: ${rel(OVERLAY)}`);
@@ -220,6 +233,154 @@ const sitemap = [
 writeFileSync(join(DIST, 'sitemap.xml'), sitemap);
 
 // ---------------------------------------------------------------------------
+// 3d. Agent discovery.
+//
+// The Agent Skills discovery index (cloudflare/agent-skills-discovery-rfc
+// v0.2.0) needs a SHA-256 digest of the skill file it points at. Hand-
+// maintaining that digest guarantees it goes stale on the first SKILL.md
+// edit, so it is computed here from the copy that actually ships.
+//
+// The static discovery documents come from deploy/ and are checked for
+// presence, so removing one from the overlay fails the build instead of
+// silently 404ing a path other tooling has learned to fetch.
+// ---------------------------------------------------------------------------
+const skillPath = join(DIST, 'SKILL.md');
+// SKILL.md reaches dist/ only through PUBLISH above. If it is ever dropped
+// from that list, fail here with a message rather than an ENOENT from the
+// digest read below — the index would otherwise silently point at a 404.
+if (!isFile(skillPath)) {
+  console.error('Build failed — dist/SKILL.md is missing. Keep SKILL.md in PUBLISH; the agent-skills index digests it.');
+  process.exit(1);
+}
+const skillDigest = createHash('sha256').update(readFileSync(skillPath)).digest('hex');
+const skillFront = readFileSync(skillPath, 'utf8').match(/^---\n([\s\S]*?)\n---/)?.[1] ?? '';
+const skillName = skillFront.match(/^name:\s*(.+)$/m)?.[1]?.trim() ?? 'wrld-design';
+const skillDescription =
+  skillFront.match(/^description:\s*(.+)$/m)?.[1]?.trim() ??
+  'Generate well-branded interfaces and assets for WRLD.';
+if (!/^[a-z0-9-]+$/.test(skillName)) {
+  console.error(`Build failed — SKILL.md name "${skillName}" is not lowercase alphanumeric + hyphens.`);
+  process.exit(1);
+}
+
+const agentSkillsDir = join(DIST, '.well-known', 'agent-skills');
+mkdirSync(agentSkillsDir, { recursive: true });
+writeFileSync(
+  join(agentSkillsDir, 'index.json'),
+  JSON.stringify(
+    {
+      $schema: 'https://schemas.agentskills.io/discovery/0.2.0/schema.json',
+      skills: [
+        {
+          name: skillName,
+          type: 'skill-md',
+          description: skillDescription,
+          url: `${SITE_ORIGIN}/SKILL.md`,
+          digest: `sha256:${skillDigest}`,
+        },
+      ],
+    },
+    null,
+    2
+  ) + '\n'
+);
+
+const DISCOVERY_FILES = [
+  'robots.txt',
+  'llms.txt',
+  'auth.md',
+  'openapi.json',
+  join('.well-known', 'api-catalog'),
+  join('.well-known', 'oauth-protected-resource'),
+  join('.well-known', 'agent-skills', 'index.json'),
+];
+const missingDiscovery = DISCOVERY_FILES.filter((f) => !isFile(join(DIST, f)));
+if (missingDiscovery.length) {
+  console.error('\nBuild failed — agent discovery document(s) missing from dist/:');
+  for (const m of missingDiscovery) console.error(`  - ${m}`);
+  console.error('\nRestore the file under deploy/ (or the generator above).');
+  process.exit(1);
+}
+// robots.txt must carry a Content-Signal line — that is the whole point of
+// the file's preamble, and a merge that drops it would be invisible otherwise.
+if (!/^Content-Signal:[ \t]*\S/m.test(readFileSync(join(DIST, 'robots.txt'), 'utf8'))) {
+  console.error('Build failed — deploy/robots.txt has no Content-Signal directive.');
+  process.exit(1);
+}
+// Every JSON discovery document must parse; a stray comma here 404s nothing
+// and breaks every consumer.
+for (const f of ['openapi.json', join('.well-known', 'api-catalog'), join('.well-known', 'oauth-protected-resource')]) {
+  try {
+    JSON.parse(readFileSync(join(DIST, f), 'utf8'));
+  } catch (e) {
+    console.error(`Build failed — ${f} is not valid JSON: ${e.message}`);
+    process.exit(1);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 3e. WRLD Help — the Gleap widget, same project and loader as wrld.one and
+//     WRLD.host, so a visitor gets the one support inbox across the network.
+//
+// Injected here rather than hand-pasted into each page: styleguide/index.html
+// is re-synced from the canonical Claude Design project, which would silently
+// drop a hand edit, and a list in one place is what keeps the next page from
+// shipping without it.
+//
+// Full pages only. Deliberately NOT injected into:
+//   preview/*    cards iframed into /system and Craft docs — a launcher in
+//                every 200px card is noise, and /system already carries one
+//   templates/*  printable quotes and agreements; a launcher has no place on
+//                paper or in a client-facing proposal link
+// The snippet also bails when framed, so a full page embedded elsewhere does
+// not stack a second launcher on its host.
+//
+// The key is Gleap's public browser SDK key (already served on wrld.one and
+// WRLD.host). Never put a Gleap admin secret here.
+// ---------------------------------------------------------------------------
+const GLEAP_SDK_KEY = 'GwUBVVrc0r6XgEthA41dwFXeev3mGB3p';
+const GLEAP_PAGES = [
+  'index.html',
+  '404.html',
+  join('system', 'index.html'),
+  join('styleguide', 'index.html'),
+  ...readdirSync(join(DIST, 'ui_kits'))
+    .map((kit) => join('ui_kits', kit, 'index.html'))
+    .filter((p) => isFile(join(DIST, p))),
+];
+const GLEAP_MARKER = '<!-- wrld-help:gleap -->';
+const gleapSnippet = `${GLEAP_MARKER}
+<script>
+  if (window.self === window.top) {
+    window.addEventListener('load', function () {
+      var s = document.createElement('script');
+      s.src = 'https://sdk.gleap.io/latest/index.js';
+      s.async = true;
+      s.onload = function () {
+        if (window.Gleap) window.Gleap.initialize('${GLEAP_SDK_KEY}');
+      };
+      document.head.appendChild(s);
+    });
+  }
+</script>
+`;
+
+for (const page of GLEAP_PAGES) {
+  const p = join(DIST, page);
+  if (!isFile(p)) {
+    console.error(`Build failed — Gleap page ${page} is missing from dist/. Update GLEAP_PAGES.`);
+    process.exit(1);
+  }
+  const html = readFileSync(p, 'utf8');
+  if (html.includes(GLEAP_MARKER)) continue;
+  if (!html.includes('</body>')) {
+    console.error(`Build failed — ${page} has no </body>; cannot inject the Gleap widget.`);
+    process.exit(1);
+  }
+  writeFileSync(p, html.replace(/<\/body>(?![\s\S]*<\/body>)/, `${gleapSnippet}</body>`));
+}
+
+// ---------------------------------------------------------------------------
 // 4. Verify: every local reference in the shipped tree must resolve
 //    *inside dist*. This is the gate that makes the allowlist safe to edit.
 // ---------------------------------------------------------------------------
@@ -231,7 +392,6 @@ const REF_RE =
 const isExternal = (u) =>
   /^(?:[a-z][a-z0-9+.-]*:|\/\/)/i.test(u) || u.startsWith('#') || u.startsWith('{{');
 
-const isFile = (p) => existsSync(p) && statSync(p).isFile();
 
 /**
  * Resolve a path the way Cloudflare's asset layer actually does under
@@ -318,6 +478,7 @@ log(`  files           ${copiedFiles}`);
 log(`  total size      ${mb(copiedBytes)} MB`);
 log(`  local refs OK   ${resolvedRefs}`);
 log(`  external hosts  ${[...externalHosts].sort().join(', ') || 'none'}`);
+log(`  agent skills    ${skillName} sha256:${skillDigest.slice(0, 12)}…`);
 
 // Cloudflare static-asset limits: 20,000 files, 25 MiB per file.
 const LIMIT_FILES = 20000;

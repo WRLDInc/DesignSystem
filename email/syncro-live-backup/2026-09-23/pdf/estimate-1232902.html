@@ -1,0 +1,562 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+	<title>Project Estimate</title>
+	<style type="text/css">
+    html, body {
+      font-family: Arial, "Arial Unicode", "Arial Unicode MS", Helvetica, sans-serif;
+      font-size: 12px;
+      line-height: 16px;
+      word-wrap: break-word;
+    }
+
+    .print-container {
+      clear: both;
+      padding: 0px 40px 0px 40px;
+      z-index: 0;
+    }
+
+    .clearb {
+      clear: both;
+    }
+
+    .invheader {
+      min-height: 230px;
+      position: relative;
+    }
+
+    .invheader-upper {
+      z-index: 10;
+      position: relative;
+      margin-left: 0.20in;
+      min-height: 90px;
+    }
+
+    .invheader-lower {
+      clear: both;
+      margin-top: 20px;
+      margin-left: 0.20in;
+      min-height: 100px;
+    }
+
+    .invheader-address-account {
+      float: left;
+      width: 300px;
+      margin-bottom: 20px;
+    }
+
+    .invheader-logo {
+      float: right;
+    }
+
+    .invheader-logo-container {
+      width: 250px;
+      height: 90px;
+      float: right;
+    }
+
+    .invheader-address-client {
+      float: left;
+      width: 300px;
+      padding-bottom: 20px;
+    }
+
+    .invheader-invoicedetails {
+      float: right;
+      width: 300px;
+      padding-bottom: 20px;
+      padding-left: 20px;
+      page-break-inside: avoid;
+    }
+
+    .invheader-invoicedetails table {
+      width: 100%;
+    }
+
+    .invbody {
+      clear: both;
+      position: relative;
+      overflow: auto;
+    }
+
+    .invheader,
+    .invheader th,
+    .invbody,
+    .invbody .description,
+    .invstub th,
+    .invheader-invoicedetails th,
+    .attachment-header th {
+      font-family: Arial, "Arial Unicode", "Arial Unicode MS", Helvetica, sans-serif;
+      font-size: 12px;
+      line-height: 18px;
+      text-align: left;
+    }
+
+    .invheader-logo {
+      text-align: center;
+      font-size: 11px;
+      line-height: 12px;
+    }
+
+    .invheader-invoicedetails table th {
+      width: 50%;
+      font-weight: normal;
+      white-space: nowrap;
+      text-align: left;
+    }
+
+    .invheader-invoicedetails table td {
+      text-align: right;
+      font-family: Arial, "Arial Unicode", "Arial Unicode MS", Helvetica, sans-serif;
+      font-size: 12px;
+      line-height: 18px;
+    }
+
+    .invheader-invoicedetails th, .invheader-invoicedetails td {
+      padding: 0px 5px;
+    }
+
+    .invheader-invoicedetails-balance th, .invheader-invoicedetails-balance td {
+      background-color: #e5e5e5;
+      border-top: solid 1px #c7c7c7;
+      border-bottom: solid 1px #c7c7c7;
+      padding: 0px;
+      font-weight: bold;
+    }
+
+    .invheader-invoicedetails .invheader-invoicedetails-balance th {
+      border-left: solid 1px #c7c7c7;
+    }
+
+    .invheader-invoicedetails .invheader-invoicedetails-balance td {
+      border-right: solid 1px #c7c7c7;
+    }
+
+    .invheader-invoicedetails .invheader-invoicedetails-balance th div {
+      border-left: solid 1px #f1f1f1;
+      border-top: solid 1px #f1f1f1;
+      padding: 3px 5px;
+    }
+
+    .invheader-invoicedetails .invheader-invoicedetails-balance td div {
+      border-top: solid 1px #f1f1f1;
+      padding: 3px 5px;
+    }
+
+    /* TABLE */
+    .invbody-items {
+      width: 100%;
+      margin-bottom: 20px;
+    }
+
+    .invbody-items td {
+      vertical-align: top;
+      padding: 3px 0px 3px 2px;
+      border-bottom: solid 1px #e5e5e5;
+    }
+
+    .invbody-items thead {
+      font-weight: bold;
+      page-break-after: avoid;
+    }
+
+    .invbody-items tbody {
+      page-break-before: avoid;
+      vertical-align: top;
+    }
+
+    .invbody-items th {
+      background-color: #e3e3e3;
+      line-height: normal;
+      border-top: solid 1px #c7c7c7;
+      border-bottom: solid 1px #c7c7c7;
+      vertical-align: top;
+    }
+
+    .invbody-items th div {
+      padding: 5px 0;
+    }
+
+    .invbody-items th.first {
+      border-left: solid 1px #c7c7c7;
+    }
+
+    .invbody-items th.last {
+      border-right: solid 1px #c7c7c7;
+    }
+
+    /* ITEMS TABLE */
+    .invbody-items thead .item {
+      border-left: solid 1px #f1f1f1;
+      border-top: solid 1px #f1f1f1;
+      padding-left: 5px;
+      text-align: left;
+    }
+
+    .invbody-items tbody .item {
+      padding-left: 5px;
+      text-align: left;
+    }
+
+    .invbody-items thead .description {
+      border-top: solid 1px #f1f1f1;
+      text-align: left;
+    }
+
+    .invbody-items thead .unitcost {
+      border-top: solid 1px #f1f1f1;
+      text-align: right;
+    }
+
+    .invbody-items tbody .unitcost {
+      text-align: right;
+    }
+
+    .invbody-items thead .quantity {
+      border-top: solid 1px #f1f1f1;
+      text-align: right;
+      padding-right: 5px;
+    }
+
+    .invbody-items tbody .quantity {
+      text-align: right;
+      padding-right: 5px;
+    }
+
+    .invbody-items thead .linetotal {
+      border-top: solid 1px #f1f1f1;
+      text-align: right;
+      padding-right: 5px;
+    }
+
+    .invbody-items tbody .linetotal {
+      text-align: right;
+      padding-right: 5px;
+    }
+
+    /* SUMMARY TABLE */
+    .invbody-summary {
+      page-break-inside: avoid;
+      clear: both;
+      width: 100%;
+      border-top: solid 3px #e3e3e3;
+      padding-top: 10px;
+      margin-bottom: 12px;
+    }
+
+    .invbody-summary th {
+      font-weight: normal;
+      text-align: left;
+    }
+
+    .invbody-summary td {
+      text-align: right;
+    }
+
+    .invbody-summary th, .invbody-summary td {
+      padding: 0px 5px;
+    }
+
+    .invbody-summary-paid td, .invbody-summary-paid th {
+      padding-bottom: 3px;
+    }
+
+    .invbody-summary-subtotal td, .invbody-summary-subtotal th {
+      padding-top: 3px;
+    }
+
+    .invbody-summary-total td, .invbody-summary-total th {
+      background-color: #e5e5e5;
+      border-top: solid 1px #c7c7c7;
+      border-bottom: solid 1px #c7c7c7;
+      padding: 0px;
+    }
+
+    .invbody-summary-total th {
+      border-left: solid 1px #c7c7c7;
+    }
+
+    .invbody-summary-total td {
+      border-right: solid 1px #c7c7c7;
+    }
+
+    .invbody-summary .invbody-summary-total th div {
+      border-left: solid 1px #f1f1f1;
+      border-top: solid 1px #f1f1f1;
+      padding: 3px 5px;
+    }
+
+    .invbody-summary .invbody-summary-total td div {
+      border-top: solid 1px #f1f1f1;
+      padding: 3px 5px;
+    }
+
+    /* ESTIMATE BADGE */
+    .estimate-header {
+      background-color: #e3e3e3;
+      border: solid 1px #c7c7c7;
+      padding: 8px 12px;
+      margin: 15px 0 12px 0;
+      text-align: center;
+      page-break-inside: avoid;
+    }
+
+    .estimate-header h2 {
+      margin: 0;
+      padding: 0;
+      font-size: 14px;
+      font-weight: bold;
+      color: #333333;
+      letter-spacing: 1px;
+    }
+
+    /* PAYMENT SECTION - Cleaner, more compact */
+    .info-section {
+      border: solid 1px #c7c7c7;
+      border-left: solid 3px #0066cc;
+      padding: 8px 10px;
+      margin: 10px 0;
+      page-break-inside: avoid;
+      background-color: #f8f9fa;
+    }
+
+    .info-section h3 {
+      margin: 0 0 6px 0;
+      padding: 0;
+      font-size: 12px;
+      font-weight: bold;
+      color: #0066cc;
+    }
+
+    .info-section p {
+      margin: 4px 0;
+      font-size: 11px;
+      line-height: 15px;
+      color: #333333;
+    }
+
+    .info-section ul {
+      margin: 6px 0 6px 18px;
+      padding: 0;
+      list-style: disc;
+    }
+
+    .info-section li {
+      margin: 3px 0;
+      font-size: 11px;
+      line-height: 15px;
+      color: #333333;
+    }
+
+    .info-section strong {
+      color: #0066cc;
+    }
+
+    .info-section a {
+      color: #0066cc;
+      text-decoration: none;
+      border-bottom: 1px dotted #0066cc;
+    }
+
+    /* DEPOSIT HIGHLIGHT BOX */
+    .deposit-highlight {
+      background-color: #fff3cd;
+      border: solid 1px #ffc107;
+      border-left: solid 3px #ffc107;
+      padding: 6px 8px;
+      margin: 8px 0;
+      font-size: 11px;
+      line-height: 15px;
+      color: #856404;
+    }
+
+    .deposit-highlight strong {
+      color: #856404;
+    }
+
+    /* COMPACT LIST STYLE */
+    .compact-list {
+      margin: 6px 0;
+      padding: 0;
+    }
+
+    .compact-list div {
+      padding: 3px 0;
+      font-size: 11px;
+      line-height: 15px;
+      border-bottom: solid 1px #e5e5e5;
+    }
+
+    .compact-list div:last-child {
+      border-bottom: none;
+    }
+
+    /* DISCLAIMER */
+    .disclaimer {
+      font-size: 10px;
+      line-height: 14px;
+      color: #666666;
+      margin: 10px 0;
+      padding: 8px;
+      background-color: #f8f9fa;
+      border-left: solid 2px #999999;
+    }
+
+    .disclaimer strong {
+      color: #333333;
+      font-size: 11px;
+    }
+
+    @media print {
+      .ms-editor-squiggler {
+        display:none !important;
+      }
+    }
+	</style>
+</head>
+<body>
+<div class="print-container">
+
+<!-- HEADER -->
+<div class="invheader">
+  <div class="invheader-upper">
+    <div class="invheader-address-account">
+      {{account_street}}<br />
+      {{account_city}}, {{account_state}} {{account_zip}}<br />
+      {{account_website}}<br />
+      {{account_phone}}
+    </div>
+
+    <div class="invheader-logo-container">
+      <div>{{estimate_paid_stamp}}</div>
+      <div class="invheader-logo" dir="rtl">
+        <img src="/__location_logo_url__.png" style="max-height:80px; max-width:200px" alt="Company Logo" />
+      </div>
+    </div>
+  </div>
+
+  <div class="invheader-lower">
+    <div class="invheader-address-client">
+      {{customer_business_name_or_customer_full_name}}<br />
+      {{customer_billing_address}} {{customer_billing_address2}}<br />
+      {{customer_billing_city}}, {{customer_billing_state}} {{customer_billing_zip}}
+    </div>
+
+    <div class="invheader-invoicedetails">
+      <table cellspacing="0">
+        <tbody>
+          <tr>
+            <th>Estimate #</th>
+            <td>{{estimate_number}}</td>
+          </tr>
+          <tr>
+            <th>Estimate Date</th>
+            <td>{{estimate_date}}</td>
+          </tr>
+          <tr class="invheader-invoicedetails-balance">
+            <th><div>Total</div></th>
+            <td><div>{{estimate_total}}</div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ITEMS TABLE -->
+<div class="invbody">
+  <table cellspacing="0" class="invbody-items">
+    <thead>
+      <tr>
+        <th class="first"><div class="item">Item</div></th>
+        <th><div class="description">Description</div></th>
+        <th><div class="unitcost">Unit Cost</div></th>
+        <th><div class="quantity">Quantity</div></th>
+        <th class="last"><div class="linetotal">Line Total</div></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{estimate_line_items_table}}
+    </tbody>
+  </table>
+
+  <!-- ESTIMATE HEADER -->
+  <div class="estimate-header">
+    <h2>THIS IS AN ESTIMATE</h2>
+  </div>
+
+  <!-- SUMMARY -->
+  <div class="invbody-summary">
+    <div class="invheader-invoicedetails">
+      <table cellspacing="0">
+        <tbody>
+          <tr>
+            <th style="width: 150px;"><strong>Subtotal</strong></th>
+            <td style="width: 120px;"><strong>{{estimate_subtotal}}</strong></td>
+          </tr>
+          <tr class="invbody-summary-paid">
+            <th style="width: 150px;">{{tax_label}}</th>
+            <td style="width: 120px;">{{estimate_tax}}</td>
+          </tr>
+          <tr class="invbody-summary-total">
+            <th style="width: 150px;"><div><strong>Estimate Total</strong></div></th>
+            <td style="width: 120px;"><div><strong>{{estimate_total}}</strong></div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- CUSTOM MESSAGE -->
+  <div style="margin: 10px 0; font-size: 11px; line-height: 16px;">
+    {{estimate_message}}
+  </div>
+
+  <!-- DEPOSIT & PAYMENT INSTRUCTIONS -->
+  <div class="info-section">
+    <h3>Deposit & Payment Instructions</h3>
+    
+    <div class="deposit-highlight">
+      <strong>Deposit Required:</strong> 50% of total estimate OR full cost of hardware (whichever is greater). This ensures materials can be ordered and resources allocated for your project.
+    </div>
+    
+    <p><strong>Payment Options:</strong></p>
+    <div class="compact-list">
+      <div><strong>Quick Pay:</strong> <a href="https://wrld.tech/quick-pay" target="_blank">wrld.tech/quick-pay</a> (Reference Estimate #{{estimate_number}})</div>
+      <div><strong>ACH Transfer:</strong> Contact <a href="mailto:billing@wrld.tech">billing@wrld.tech</a> or {{account_phone}} for instructions</div>
+      <div><strong>Check:</strong> Payable to WRLD Technologies | Mail to: {{account_street}}, {{account_city}}, {{account_state}} {{account_zip}}</div>
+    </div>
+    
+    <p style="font-size: 10px; margin-top: 6px; color: #666;"><em>Work begins upon deposit receipt. Balance due upon completion.</em></p>
+  </div>
+
+  <!-- ESTIMATE TERMS -->
+  <div class="info-section">
+    <h3>Estimate Terms & Conditions</h3>
+    <ul>
+      <li><strong>Valid for 30 days</strong> from estimate date</li>
+      <li><strong>Scope:</strong> Pricing based on specifications above; changes may affect cost/timeline</li>
+      <li><strong>Hardware:</strong> Ordered immediately upon deposit receipt</li>
+      <li><strong>Final Invoice:</strong> Provided upon completion; re-approval required if changes exceed 20%</li>
+    </ul>
+    
+    <p style="margin-top: 6px;"><strong>Deposit Examples:</strong></p>
+    <div class="compact-list">
+      <div>$10,000 total | $3,000 hardware = <strong>$5,000 deposit</strong> (50%)</div>
+      <div>$10,000 total | $6,500 hardware = <strong>$6,500 deposit</strong> (hardware cost)</div>
+    </div>
+  </div>
+
+  <!-- DISCLAIMER -->
+  <div class="disclaimer">
+    <strong>Disclaimer:</strong> This is an estimate only. Final invoice will be provided after project completion. This estimate will be re-approved if pricing or timeframe changes more than 20%. Thank you!
+  </div>
+
+  <div class="clearb"></div>
+</div>
+
+</div>
+</body>
+</html>

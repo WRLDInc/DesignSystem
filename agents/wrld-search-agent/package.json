@@ -1,0 +1,21 @@
+{
+  "name": "wrld-search-agent",
+  "private": true,
+  "description": "Reference Cloudflare McpAgent for WRLD projects — search WRLD content over AI Search. Copy, rename, pin versions on first install.",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "latest",
+    "agents": "latest",
+    "zod": "latest"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "latest",
+    "typescript": "latest",
+    "wrangler": "latest"
+  }
+}

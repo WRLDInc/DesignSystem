@@ -304,6 +304,81 @@ that matters — previews suppressed, apex indexable. If a future edit ever
 makes that rule stop firing, the fallback is setting `preview_urls` to
 `false` and giving up per-branch review URLs.
 
+### Agent discovery checks
+
+Added in 0.5.0. These verify the surfaces that isitagentready.com and similar
+scanners look for; all were run against `wrangler dev` before the first deploy
+and must be re-run live after any `_headers` or `deploy/` change.
+
+```bash
+# 8. Content signals present, and ONLY under the wildcard group.
+curl -s https://wrld.design/robots.txt | grep -i '^Content-Signal'
+
+# 9. Link headers on the root document only.
+curl -sI https://wrld.design/            | grep -i '^link'        # four rel values
+curl -sI https://wrld.design/styleguide/ | grep -ic '^link'       # expect 0
+
+# 10. Extensionless well-known files carry the right Content-Type.
+curl -sI https://wrld.design/.well-known/api-catalog              | grep -i content-type   # application/linkset+json
+curl -sI https://wrld.design/.well-known/oauth-protected-resource | grep -i content-type   # application/json
+
+# 11. auth.md is Markdown, not the /*.md text/plain fallback, and has its H1.
+curl -sI https://wrld.design/auth.md | grep -i content-type       # text/markdown
+curl -s  https://wrld.design/auth.md | head -1                    # "# wrld.design auth.md"
+
+# 12. The generated skills index digest matches the served SKILL.md.
+curl -s https://wrld.design/.well-known/agent-skills/index.json | grep digest
+curl -s https://wrld.design/SKILL.md | sha256sum
+
+# 13. The authorization server the PRM advertises still publishes metadata
+#     with the SAME issuer string (trailing slash included).
+curl -s https://auth.wrld.tech/.well-known/oauth-authorization-server | grep -o '"issuer":"[^"]*"'
+
+# 14. WRLD.AI overlay (0.6.0): the namespace endpoint must accept this origin
+#     (browser CORS) and the pinned snippet must load. A missing
+#     access-control-allow-origin here is the "temporarily unavailable" state.
+curl -si -X OPTIONS https://search.wrld.ai/search -H 'Origin: https://wrld.design' \
+  -H 'Access-Control-Request-Method: POST' | grep -i access-control-allow-origin
+curl -sI https://search.wrld.ai/assets/v0.0.40/search-snippet.es.js | grep -i -E '^HTTP|content-type'
+curl -s https://wrld.design/ | grep -c 'id="aiDialog"'                # expect 1
+
+# 15. End to end.
+curl -s -X POST https://isitagentready.com/api/scan -H 'content-type: application/json' \
+  -d '{"url":"https://wrld.design"}' | python3 -c 'import json,sys; d=json.load(sys.stdin)["checks"]; \
+  [print(g, k, v["status"]) for g in d for k, v in d[g].items() if isinstance(v, dict) and "status" in v]'
+```
+
+Expected after 0.5.0, verified on the branch preview
+(`ridgeclcode-quirky-volta-449zlt-wrlddesign.wrldtech.workers.dev`):
+`botAccessControl.contentSignals`, `discoverability.linkHeaders`,
+`discovery.apiCatalog`, `discovery.agentSkills` and `discovery.authMd` all
+`pass`. `authMd` passes on the strength of the self-contained flow in
+`auth.md` ("Auth.md support detected (anonymous)"); the scanner also
+follows PRM → authorization server looking for an `agent_auth` block in the
+**authorization server's** metadata, which the `auth.wrld.tech` tenant does
+not publish and an assets-only Worker cannot add. If a WRLD-controlled
+authorization server (CentralizeWRLD's planned `id.wrld.tech`) ever
+publishes that block, point `authorization_servers` at it and the check
+upgrades from the self-contained path to the metadata path.
+
+`discovery.oauthProtectedResource` passes only on the apex: the scanner
+requires `resource` to equal the scanned origin, and the document says
+`https://wrld.design`, so it reports "resource mismatch" on a `workers.dev`
+preview. That is correct behaviour, not a bug — re-check on the apex after
+merge.
+
+Still failing, and out of this Worker's hands:
+
+- `discovery.oauthDiscovery` — expects `/.well-known/openid-configuration`
+  on the scanned origin. The design system is not an authorization server;
+  mirroring another issuer's metadata here would violate RFC 8414's issuer
+  rule, so it stays 404 deliberately.
+- `discoverability.dnsAid` (DNSSEC on the zone's DNS-AID records),
+  `contentAccessibility.markdownNegotiation` (Cloudflare's "Markdown for
+  Agents" zone setting), `discovery.mcpServerCard` and
+  `discovery.a2aAgentCard` (the design system is not an MCP server or an
+  agent).
+
 ### Five things that were wrong until they were tested
 
 Every one of these passed a reading of the docs and failed a real request.

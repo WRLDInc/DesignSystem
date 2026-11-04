@@ -1,13 +1,43 @@
 // Canonical WRLD lockup. Mark + wordmark + optional right-aligned sub-brand label.
 // `sub` can be a string (always shown) or null/undefined (hidden).
+// `theme`: "auto" (default) follows the document theme — black mark on light
+//   surfaces, white mark on dark. Pin "dark"/"light" only when the surface under
+//   it is pinned too (a specimen plate, a permanently dark hero).
 // `animated` (boolean): when true, sub-label fades + wordmark nudges up smoothly when sub is set.
 //   Use `animated` for nav lockups that morph on hover. Static lockups (footer, sub-cards) leave it off.
-export function Lockup({ sub, theme = 'dark', size = 24, animated = false, style }) {
-  const markSrc = theme === 'light'
-    ? '../../assets/logos/wrld-mark-white.png'
-    : '../../assets/logos/wrld-mark-black.png';
-  const fg = theme === 'light' ? '#fff' : '#000';
-  const subFg = theme === 'light' ? '#a1a1aa' : '#52525b';
+function useDocTheme() {
+  const [mode, setMode] = React.useState('light');
+  React.useEffect(() => {
+    const root = document.documentElement;
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    const read = () => {
+      const attr = root.getAttribute('data-theme');
+      // No attribute = the light theme (tokens.css declares :root light); only an
+      // explicit "auto" follows the OS preference.
+      setMode((attr && /dark/i.test(attr)) || (attr === 'auto' && mq.matches) ? 'dark' : 'light');
+    };
+    read();
+    const mo = new MutationObserver(read);
+    mo.observe(root, { attributes: true, attributeFilter: ['data-theme'] });
+    mq.addEventListener('change', read);
+    return () => { mo.disconnect(); mq.removeEventListener('change', read); };
+  }, []);
+  return mode;
+}
+
+export function Lockup({ sub, theme = 'auto', size = 24, animated = false, markSrc: markSrcProp, style }) {
+  const docTheme = useDocTheme();
+  // The prop names the MARK's ink: "light" = white mark, for dark surfaces.
+  const ink = theme === 'auto' ? (docTheme === 'dark' ? 'light' : 'dark') : theme;
+  // Mark source: an explicit prop, then the host page's asset map
+  // (window.WRLD_ASSETS = { markBlack, markWhite }: the design system's
+  // previews point these at its uploaded SVG marks), then the repo paths.
+  const assetMap = (typeof window !== 'undefined' && window.WRLD_ASSETS) || {};
+  const markSrc = markSrcProp
+    || (ink === 'light' ? assetMap.markWhite : assetMap.markBlack)
+    || (ink === 'light' ? '../../assets/logos/wrld-mark-white.png' : '../../assets/logos/wrld-mark-black.png');
+  const fg = ink === 'light' ? '#fff' : '#000';
+  const subFg = ink === 'light' ? '#a1a1aa' : '#52525b';
   const hasSub = !!sub;
 
   // Animated mode: text column has a fixed reserved height (wordmark + sub line) and

@@ -42,7 +42,7 @@ export function WrldCta({
   buttonLabel = "Start a conversation →",
   href,
   onClick,
-  contact = "ridge@wrld.tech · Dallas, TX",
+  contact = "helpdesk@wrld.tech | 469.299.9598",
   style,
   ...rest
 }: WrldCtaProps) {

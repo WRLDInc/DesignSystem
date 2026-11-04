@@ -165,7 +165,7 @@ export function Header({ activeRoute, onNavigate }) {
         onMouseLeave={scheduleClose}
         style={{
           position: 'sticky', top: 0, zIndex: 100,
-          background: 'rgba(255,255,255,0.85)',
+          background: 'color-mix(in srgb, var(--bg) 85%, transparent)',
           backdropFilter: 'blur(12px)',
           borderBottom: '1px solid var(--border)',
           paddingBottom: showSubmenu ? submenuSlotH : 0,
@@ -267,7 +267,7 @@ export function Header({ activeRoute, onNavigate }) {
   // Narrow layout (unchanged).
   return (
     <header style={{
-      position: 'sticky', top: 0, zIndex: 100, background: 'rgba(255,255,255,0.95)',
+      position: 'sticky', top: 0, zIndex: 100, background: 'color-mix(in srgb, var(--bg) 95%, transparent)',
       backdropFilter: 'blur(12px)', borderBottom: '1px solid var(--border)',
     }}>
       <div style={{ height: 56, display: 'flex', alignItems: 'center', padding: '0 16px', gap: 12 }}>
