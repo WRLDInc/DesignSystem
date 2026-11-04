@@ -6,6 +6,14 @@ All notable changes to the WRLD Design System are documented here. This project 
 
 ### Added
 
+- **Email signatures, round 2.** `email/signature.py` adds two signal-strip designs with a human-written badge
+  (outlined tag in the body, or under the lockup on the ink band; accent only on the Lucide icon) and makes social
+  links selectable on all six designs: text, Lucide line icons, or ink tiles. Every variant now carries the
+  confidentiality statement and WRLD.one in place of WRLD.AI. The Directory CTA is an accent `#007fee` button, and
+  both CTAs carry `utm_campaign`, `utm_content` (design) and `utm_term` (person). Radius is 3px on small controls,
+  capped at 4px; the starburst tile gets 5px of ink padding. Icons are PNGs in `assets/email/signature/`, built by
+  `email/signature_icons.py` from Lucide 0.544 (last release with brand glyphs) and Simple Icons (X).
+
 - **Quote framework, the proposal direction.** From the PMGS technology business review (Curtis, August 2026), now the
   default for documents that review, quote and recommend in one piece: wordmark running head, a brand row pairing the
   client's mark with the starburst + `WRLD / QUOTE` stack, strong meta strip, glance tiles, accent section numbers with

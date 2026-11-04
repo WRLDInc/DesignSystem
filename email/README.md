@@ -17,10 +17,13 @@ Platform tags were verified against the live Syncro editor on 2026-09-22 (see `t
 ## Signatures
 
 ```
-py -3 email/signature.py   # writes email/signatures/<person>/<direction>.html and email/dist/signatures.html
+py -3 email/signature.py        # writes email/signatures/<person>/<design>/<social>[-<badge icon>].html and email/dist/signatures.html
+py -3 email/signature_icons.py  # re-rasterizes assets/email/signature/*.png (needs lucide-static@0.544.0, simple-icons, rsvg-convert)
 ```
 
-Four directions: `split-stack`, `ledger-line`, `signal-strip`, `minimal-mark`. Add a person to `PEOPLE` and rerun. Review page: https://claude.ai/artifact/LBvcbQ2caXfDCmzENVE3GN
+Six designs: `signal-strip-v2-body` and `signal-strip-v2-band` (human-written badge in the body or under the logo), plus `split-stack`, `ledger-line`, `signal-strip`, `minimal-mark`. Each renders with `text`, `line` (Lucide) or `tile` (ink) social links; the two badge designs also take a badge icon (`user-pen`, `signature`, `pen-line`, `fingerprint`). Every variant carries the confidentiality statement, WRLD.one, and an accent Directory CTA with `utm_campaign` / `utm_content` (design) / `utm_term` (person). Corners: 3px on small controls, 4px cap. Add a person to `PEOPLE` and rerun. Review page: https://claude.ai/artifact/LBvcbQ2caXfDCmzENVE3GN
+
+The same layouts ship to client mailboxes from `WRLDInc/EmailBrandingWRLD` (`templates/wrld-signatures.mjs`, images on emailsig.wrld.tech). Change both together.
 
 `shots.py` needs Playwright (`py -3 -m pip install playwright && py -3 -m playwright install chromium`).
 
