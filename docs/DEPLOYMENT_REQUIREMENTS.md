@@ -60,6 +60,17 @@ Rules:
 
   The `script-src` hosts are the ones `js.hs-scripts.com/4824142.js` loads as of
   2026-11-22; re-check them if HubSpot adds a feature to the portal.
+
+  A page that also **embeds a HubSpot form or survey** needs HubSpot's form
+  hosts on top of the table, per its
+  [domain security guidance](https://knowledge.hubspot.com/domains-and-urls/ssl-and-domain-security-in-hubspot):
+
+  | Directive | Add |
+  | --- | --- |
+  | `script-src` | `https://*.hsforms.net https://*.hsforms.com` |
+  | `img-src` | `https://*.hsforms.net https://*.hsforms.com` |
+  | `frame-src` (and `child-src`, if the policy sets it) | `https://*.hsforms.net https://*.hsforms.com` |
+  | `connect-src` | `https://*.hsforms.com` (already in the table above) |
 - **Consent:** where the site runs a consent manager (wrld.tech runs GetTerms),
   the embed sits after it so the CMP can classify and hold it.
 
