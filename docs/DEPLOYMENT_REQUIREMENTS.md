@@ -72,7 +72,9 @@ Rules:
   | `frame-src` (and `child-src`, if the policy sets it) | `https://*.hsforms.net https://*.hsforms.com` |
   | `connect-src` | `https://*.hsforms.com` (already in the table above) |
 - **Consent:** where the site runs a consent manager (wrld.tech runs GetTerms),
-  the embed sits after it so the CMP can classify and hold it.
+  the embed sits after it, and the CMP's third-party script blocking is turned
+  on, so HubSpot is held until the visitor consents. Placement alone does not
+  hold it; check 5 below proves it.
 
 Verify after deploy. The loader should appear exactly once per page:
 
@@ -89,8 +91,13 @@ In DevTools > Network, with consent granted where a CMP runs:
 3. A `track.hubspot.com/__ptq.gif` request returns 200. That beacon is the page
    view; without it nothing is recorded.
 4. The console shows no CSP violation for a HubSpot host.
+5. **Sites with a CMP only, before consent:** in a fresh private window (no
+   cookies), load the page and do not touch the banner. The Network panel shows
+   no request to any HubSpot host and Application > Cookies shows no
+   `hubspotutk`, `__hstc` or `__hssc`. Then accept, and checks 1–4 pass. See
+   GetTerms' [blocking verification guide](https://support.getterms.io/article/56-how-to-verify-your-cookie-banner-is-blocking-scripts-correctly).
 
-A row moves to **live** only when all four pass. If the beacon is missing on a
+A row moves to **live** only when every applicable check passes. If the beacon is missing on a
 domain where 1–2 pass, check that the domain is listed under Settings >
 Tracking & Analytics > Tracking code in HubSpot.
 
