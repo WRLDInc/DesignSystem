@@ -157,7 +157,8 @@ reason).
 | wrld.host | WHMCS, Lagom2 theme | manual | Add the WHMCS hook above on the server |
 | wrld.support | Zapier Interfaces | manual | Add through Interfaces settings if the plan allows custom code |
 | wrld.press | WordPress | manual | Answers automated checks with 403; confirm in wp-admin |
-| status.wrld.host, wrld.services | Hosted status pages | manual | Optional: status pages carry no forms |
+| status.wrld.host | Better Stack status page | manual | Add through the status page's custom head/tracking setting, if the plan allows |
+| wrld.services | Hosted status page (Next.js on Vercel) | manual | Confirm the provider, then add through its custom head/tracking setting |
 | wrld.dev | `WRLDInc/wrld-dev` | excluded | Deliberately scriptless developer landing (CSP `default-src 'none'`) |
 
 ## Out of scope
