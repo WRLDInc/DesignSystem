@@ -94,7 +94,7 @@ reason).
 | wrld.one | `WRLDInc/wrld.one` | [PR open](https://github.com/WRLDInc/wrld.one/pull/50) | `src/layouts/BaseLayout.astro`, behind `firstPartyOnly` |
 | wrld.domains | `WRLDInc/wrld.domains_quick` | [PR open](https://github.com/WRLDInc/wrld.domains_quick/pull/23) | `index.html` |
 | pulse.wrld.tech | `WRLDInc/publicServicesStatus-web` | [PR open](https://github.com/WRLDInc/publicServicesStatus-web/pull/10) | Every page in `public/` |
-| wrld.design | `WRLDInc/DesignSystem` | PR open | Injected by `scripts/build_site.mjs` into the same full pages as Gleap |
+| wrld.design | `WRLDInc/DesignSystem` | [PR open](https://github.com/WRLDInc/DesignSystem/pull/45) | Injected by `scripts/build_site.mjs` into the same full pages as Gleap |
 | wrld.host | WHMCS, Lagom2 theme | manual | Add the WHMCS hook above on the server |
 | wrld.support | Zapier Interfaces | manual | Add through Interfaces settings if the plan allows custom code |
 | wrld.press | WordPress | manual | Answers automated checks with 403; confirm in wp-admin |
