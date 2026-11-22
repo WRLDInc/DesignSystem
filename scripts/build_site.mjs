@@ -410,15 +410,13 @@ for (const p of walkSync(DIST).filter((f) => f.endsWith('.html'))) {
   const page = relative(DIST, p).split(sep).join('/');
   if (HUBSPOT_EXCLUDED.some((dir) => page.startsWith(dir))) continue;
   const html = readFileSync(p, 'utf8');
-  // A page that already carries a loader keeps it only if it is WRLD's:
-  // another portal or a broken src would silently send nothing to 4824142,
-  // and a second loader would double-count.
-  if (/\bid\s*=\s*["']?hs-script-loader\b/.test(html)) {
-    if (!html.includes('js.hs-scripts.com/4824142.js')) {
-      console.error(`Build failed — ${page} has an hs-script-loader that is not portal 4824142.`);
-      process.exit(1);
-    }
-    continue;
+  // dist/ is wiped at the start of the build, so a loader here was pasted into
+  // the source. This step is the only place the loader may come from: a
+  // hand-placed copy would skip the frame guard (and could be another portal
+  // or a broken src), and keeping both would double-count.
+  if (/hs-script-loader|js\.hs-scripts\.com/.test(html)) {
+    console.error(`Build failed — ${page} already has a HubSpot loader. Remove it; build_site.mjs injects the embed.`);
+    process.exit(1);
   }
   if (!html.includes('</head>')) {
     console.error(`Build failed — ${page} has no </head>; cannot inject the HubSpot embed.`);
