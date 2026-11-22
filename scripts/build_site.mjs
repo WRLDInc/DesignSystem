@@ -382,17 +382,20 @@ for (const page of GLEAP_PAGES) {
 
 // ---------------------------------------------------------------------------
 // 3f. HubSpot embed — required on every public WRLD site
-//     (docs/DEPLOYMENT_REQUIREMENTS.md). Same full pages as the Gleap widget,
-//     injected for the same reason, and kept out of preview/* and templates/*
-//     for the same reason. The snippet is HubSpot's own, verbatim.
+//     (docs/DEPLOYMENT_REQUIREMENTS.md). Every shipped page gets it except
+//     preview/* and templates/*, excluded for the same reasons as the Gleap
+//     widget. Pages are discovered rather than listed, so a new full page
+//     cannot ship without it. The snippet is HubSpot's own, verbatim.
 // ---------------------------------------------------------------------------
 const HUBSPOT_SNIPPET = `<!-- Start of HubSpot Embed Code -->
 <script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/4824142.js"></script>
 <!-- End of HubSpot Embed Code -->
 `;
+const HUBSPOT_EXCLUDED = ['preview/', 'templates/'];
 
-for (const page of GLEAP_PAGES) {
-  const p = join(DIST, page);
+for (const p of walkSync(DIST).filter((f) => f.endsWith('.html'))) {
+  const page = relative(DIST, p).split(sep).join('/');
+  if (HUBSPOT_EXCLUDED.some((dir) => page.startsWith(dir))) continue;
   const html = readFileSync(p, 'utf8');
   if (html.includes('id="hs-script-loader"')) continue;
   if (!html.includes('</head>')) {

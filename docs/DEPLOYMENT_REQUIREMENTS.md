@@ -62,7 +62,7 @@ Rules:
 Verify after deploy. The loader should appear exactly once per page:
 
 ```sh
-curl -sL https://example.wrld.tech/ | grep -c 'js.hs-scripts.com/4824142.js'
+curl -sL https://example.wrld.tech/ | grep -oF 'js.hs-scripts.com/4824142.js' | wc -l
 ```
 
 Then open the page with DevTools: `js.hs-scripts.com/4824142.js` loads with a
@@ -72,10 +72,27 @@ Then open the page with DevTools: `js.hs-scripts.com/4824142.js` loads with a
 
 | Platform | Where the snippet goes |
 | --- | --- |
-| WHMCS (wrld.host, Lagom2 theme) | A hook, so theme updates cannot drop it: `includes/hooks/wrld_hubspot.php` returning the snippet from `add_hook('ClientAreaHeadOutput', 1, function ($vars) { return '…snippet…'; });` |
+| WHMCS (wrld.host, Lagom2 theme) | The hook below, so theme updates cannot drop it. It skips signed-in clients, keeping the client area out of scope. |
 | WordPress | The HubSpot plugin connected to portal 4824142, or the theme's header via a child theme. Not both: two loaders double-count. |
 | Mintlify | A `.js` file in the content root; Mintlify injects every one site-wide. |
 | Hosted tools (Zapier Interfaces, Better Stack status pages) | The tool's own custom head/tracking setting, where the plan offers one. Log the site as pending until it is confirmed. |
+
+WHMCS, `includes/hooks/wrld_hubspot.php`:
+
+```php
+<?php
+// HubSpot embed for public WHMCS pages only (docs/DEPLOYMENT_REQUIREMENTS.md).
+add_hook('ClientAreaHeadOutput', 1, function ($vars) {
+    // ClientAreaHeadOutput runs on every client-area page; signed-in account
+    // pages are out of scope, so they get nothing.
+    if (!empty($vars['loggedin'])) {
+        return '';
+    }
+    return '<!-- Start of HubSpot Embed Code -->'
+        . '<script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/4824142.js"></script>'
+        . '<!-- End of HubSpot Embed Code -->';
+});
+```
 
 ## Deployment baseline log
 
