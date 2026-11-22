@@ -4,6 +4,10 @@ Who links the tokens, type, and components served from <https://wrld.design>,
 and what each depends on. Keep this current: a token rename or a `_headers`
 change is a contract change for every row below.
 
+Every consumer that is a public site must also meet
+[`DEPLOYMENT_REQUIREMENTS.md`](DEPLOYMENT_REQUIREMENTS.md) (HubSpot embed), and
+has a row in its baseline log.
+
 | Consumer | Repo | What it links | Components used | Notes |
 | --- | --- | --- | --- | --- |
 | wrld.tech (rebuild) | `WRLDInc/wrld.tech` | `styles.css`, fonts, logos | `Header`, `Hero`, `ServicesGrid`, `ValuesStrip`, `CTA`, `Footer` | Flagship marketing kit |

@@ -381,6 +381,51 @@ for (const page of GLEAP_PAGES) {
 }
 
 // ---------------------------------------------------------------------------
+// 3f. HubSpot embed — required on every public WRLD site
+//     (docs/DEPLOYMENT_REQUIREMENTS.md). Every shipped page gets it except
+//     preview/* and templates/*, excluded for the same reasons as the Gleap
+//     widget. Pages are discovered rather than listed, so a new full page
+//     cannot ship without it. /system lazy-loads every ui_kits/* page in an
+//     iframe, so the loader is built at runtime behind the same top-level
+//     check as Gleap: a framed card must not count as a second page view.
+//     The tag it creates is HubSpot's, attribute for attribute.
+// ---------------------------------------------------------------------------
+const HUBSPOT_SNIPPET = `<!-- Start of HubSpot Embed Code -->
+<script>
+  if (window.self === window.top) {
+    var hs = document.createElement('script');
+    hs.type = 'text/javascript';
+    hs.id = 'hs-script-loader';
+    hs.async = true;
+    hs.defer = true;
+    hs.src = '//js.hs-scripts.com/4824142.js';
+    document.head.appendChild(hs);
+  }
+</script>
+<!-- End of HubSpot Embed Code -->
+`;
+const HUBSPOT_EXCLUDED = ['preview/', 'templates/'];
+
+for (const p of walkSync(DIST).filter((f) => f.endsWith('.html'))) {
+  const page = relative(DIST, p).split(sep).join('/');
+  if (HUBSPOT_EXCLUDED.some((dir) => page.startsWith(dir))) continue;
+  const html = readFileSync(p, 'utf8');
+  // dist/ is wiped at the start of the build, so a loader here was pasted into
+  // the source. This step is the only place the loader may come from: a
+  // hand-placed copy would skip the frame guard (and could be another portal
+  // or a broken src), and keeping both would double-count.
+  if (/hs-script-loader|js\.hs-scripts\.com/.test(html)) {
+    console.error(`Build failed — ${page} already has a HubSpot loader. Remove it; build_site.mjs injects the embed.`);
+    process.exit(1);
+  }
+  if (!html.includes('</head>')) {
+    console.error(`Build failed — ${page} has no </head>; cannot inject the HubSpot embed.`);
+    process.exit(1);
+  }
+  writeFileSync(p, html.replace('</head>', `${HUBSPOT_SNIPPET}</head>`));
+}
+
+// ---------------------------------------------------------------------------
 // 4. Verify: every local reference in the shipped tree must resolve
 //    *inside dist*. This is the gate that makes the allowlist safe to edit.
 // ---------------------------------------------------------------------------

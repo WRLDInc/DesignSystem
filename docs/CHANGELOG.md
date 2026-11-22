@@ -6,6 +6,12 @@ All notable changes to the WRLD Design System are documented here. This project 
 
 ### Added
 
+- **Deployment requirements and baseline log.** `docs/DEPLOYMENT_REQUIREMENTS.md` sets what every public WRLD site
+  ships with. R1 is the HubSpot embed code (portal `4824142`), verbatim, once in the shared layout, with rules for
+  Astro (`is:inline`), client-side routing, preview gates, CSP hosts and consent. The same file logs each site's
+  status. wrld.design now carries the embed: `scripts/build_site.mjs` injects it into the same full pages as the Gleap
+  widget. `SKILL.md` and the README point new deployments at it.
+
 - **Email signatures, round 2.** `email/signature.py` adds two signal-strip designs with a human-written badge
   (outlined tag in the body, or under the lockup on the ink band; accent only on the Lucide icon) and makes social
   links selectable on all six designs: text, Lucide line icons, or ink tiles. Every variant now carries the
