@@ -385,10 +385,23 @@ for (const page of GLEAP_PAGES) {
 //     (docs/DEPLOYMENT_REQUIREMENTS.md). Every shipped page gets it except
 //     preview/* and templates/*, excluded for the same reasons as the Gleap
 //     widget. Pages are discovered rather than listed, so a new full page
-//     cannot ship without it. The snippet is HubSpot's own, verbatim.
+//     cannot ship without it. /system lazy-loads every ui_kits/* page in an
+//     iframe, so the loader is built at runtime behind the same top-level
+//     check as Gleap: a framed card must not count as a second page view.
+//     The tag it creates is HubSpot's, attribute for attribute.
 // ---------------------------------------------------------------------------
 const HUBSPOT_SNIPPET = `<!-- Start of HubSpot Embed Code -->
-<script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/4824142.js"></script>
+<script>
+  if (window.self === window.top) {
+    var hs = document.createElement('script');
+    hs.type = 'text/javascript';
+    hs.id = 'hs-script-loader';
+    hs.async = true;
+    hs.defer = true;
+    hs.src = '//js.hs-scripts.com/4824142.js';
+    document.head.appendChild(hs);
+  }
+</script>
 <!-- End of HubSpot Embed Code -->
 `;
 const HUBSPOT_EXCLUDED = ['preview/', 'templates/'];

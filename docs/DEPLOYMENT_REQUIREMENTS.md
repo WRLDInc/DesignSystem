@@ -41,6 +41,10 @@ Rules:
   (`setPath` then `trackPageView`). `WRLDInc/docs/hubspot.js` is the reference.
 - **Previews:** where a layout already keeps third parties off previews and admin
   views (wrld.one's `firstPartyOnly`), put HubSpot behind the same gate.
+- **Pages that are also iframed:** when a site frames its own pages (wrld.design's
+  `/system` loads every UI kit in an iframe), create the same tag at runtime only
+  when `window.self === window.top`, so a framed copy does not count a second
+  page view. `scripts/build_site.mjs` is the reference.
 - **Content Security Policy:** a site with a CSP must allow HubSpot, or the tag
   silently does nothing. With a nonce and `'strict-dynamic'` (wrld.email), stamp
   the nonce on the loader tag and its child scripts are trusted; the other
@@ -131,7 +135,7 @@ reason).
 | wrld.one | `WRLDInc/wrld.one` | [PR open](https://github.com/WRLDInc/wrld.one/pull/50) | `src/layouts/BaseLayout.astro`, behind `firstPartyOnly` |
 | wrld.domains | `WRLDInc/wrld.domains_quick` | [PR open](https://github.com/WRLDInc/wrld.domains_quick/pull/23) | `index.html` |
 | pulse.wrld.tech | `WRLDInc/publicServicesStatus-web` | [PR open](https://github.com/WRLDInc/publicServicesStatus-web/pull/10) | Every page in `public/` |
-| wrld.design | `WRLDInc/DesignSystem` | [PR open](https://github.com/WRLDInc/DesignSystem/pull/45) | Injected by `scripts/build_site.mjs` into the same full pages as Gleap |
+| wrld.design | `WRLDInc/DesignSystem` | [PR open](https://github.com/WRLDInc/DesignSystem/pull/45) | Injected by `scripts/build_site.mjs` into every page except `preview/*` and `templates/*`, top-level only |
 | wrld.host | WHMCS, Lagom2 theme | manual | Add the WHMCS hook above on the server |
 | wrld.support | Zapier Interfaces | manual | Add through Interfaces settings if the plan allows custom code |
 | wrld.press | WordPress | manual | Answers automated checks with 403; confirm in wp-admin |
