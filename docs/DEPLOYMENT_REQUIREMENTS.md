@@ -65,8 +65,19 @@ Verify after deploy. The loader should appear exactly once per page:
 curl -sL https://example.wrld.tech/ | grep -oF 'js.hs-scripts.com/4824142.js' | wc -l
 ```
 
-Then open the page with DevTools: `js.hs-scripts.com/4824142.js` loads with a
-200 and the console shows no CSP violation for a HubSpot host.
+Then confirm tracking actually fires, per HubSpot's
+[troubleshooting steps](https://knowledge.hubspot.com/reports/how-do-i-know-if-my-hubspot-tracking-code-is-working).
+In DevTools > Network, with consent granted where a CMP runs:
+
+1. `js.hs-scripts.com/4824142.js` returns 200.
+2. `js.hs-analytics.net/analytics/…/4824142.js` loads (the loader pulls it in).
+3. A `track.hubspot.com/__ptq.gif` request returns 200. That beacon is the page
+   view; without it nothing is recorded.
+4. The console shows no CSP violation for a HubSpot host.
+
+A row moves to **live** only when all four pass. If the beacon is missing on a
+domain where 1–2 pass, check that the domain is listed under Settings >
+Tracking & Analytics > Tracking code in HubSpot.
 
 ### Platforms without a repo
 
@@ -84,8 +95,13 @@ WHMCS, `includes/hooks/wrld_hubspot.php`:
 // HubSpot embed for public WHMCS pages only (docs/DEPLOYMENT_REQUIREMENTS.md).
 add_hook('ClientAreaHeadOutput', 1, function ($vars) {
     // ClientAreaHeadOutput runs on every client-area page; signed-in account
-    // pages are out of scope, so they get nothing.
-    if (!empty($vars['loggedin'])) {
+    // pages are out of scope, so they get nothing. The hook's documented
+    // parameters do not promise `loggedin`, so ask the session directly too.
+    $signedIn = !empty($vars['loggedin'])
+        || !empty($_SESSION['uid'])
+        || (class_exists('\WHMCS\Authentication\CurrentUser')
+            && (new \WHMCS\Authentication\CurrentUser())->user());
+    if ($signedIn) {
         return '';
     }
     return '<!-- Start of HubSpot Embed Code -->'
@@ -93,6 +109,10 @@ add_hook('ClientAreaHeadOutput', 1, function ($vars) {
         . '<!-- End of HubSpot Embed Code -->';
 });
 ```
+
+After installing it, check both states: view source on a signed-out public
+page (the loader appears once) and on a signed-in account page such as
+`clientarea.php` (it appears zero times).
 
 ## Deployment baseline log
 

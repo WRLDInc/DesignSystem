@@ -397,7 +397,16 @@ for (const p of walkSync(DIST).filter((f) => f.endsWith('.html'))) {
   const page = relative(DIST, p).split(sep).join('/');
   if (HUBSPOT_EXCLUDED.some((dir) => page.startsWith(dir))) continue;
   const html = readFileSync(p, 'utf8');
-  if (html.includes('id="hs-script-loader"')) continue;
+  // A page that already carries a loader keeps it only if it is WRLD's:
+  // another portal or a broken src would silently send nothing to 4824142,
+  // and a second loader would double-count.
+  if (/\bid\s*=\s*["']?hs-script-loader\b/.test(html)) {
+    if (!html.includes('js.hs-scripts.com/4824142.js')) {
+      console.error(`Build failed — ${page} has an hs-script-loader that is not portal 4824142.`);
+      process.exit(1);
+    }
+    continue;
+  }
   if (!html.includes('</head>')) {
     console.error(`Build failed — ${page} has no </head>; cannot inject the HubSpot embed.`);
     process.exit(1);
