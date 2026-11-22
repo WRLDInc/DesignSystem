@@ -381,6 +381,28 @@ for (const page of GLEAP_PAGES) {
 }
 
 // ---------------------------------------------------------------------------
+// 3f. HubSpot embed — required on every public WRLD site
+//     (docs/DEPLOYMENT_REQUIREMENTS.md). Same full pages as the Gleap widget,
+//     injected for the same reason, and kept out of preview/* and templates/*
+//     for the same reason. The snippet is HubSpot's own, verbatim.
+// ---------------------------------------------------------------------------
+const HUBSPOT_SNIPPET = `<!-- Start of HubSpot Embed Code -->
+<script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/4824142.js"></script>
+<!-- End of HubSpot Embed Code -->
+`;
+
+for (const page of GLEAP_PAGES) {
+  const p = join(DIST, page);
+  const html = readFileSync(p, 'utf8');
+  if (html.includes('id="hs-script-loader"')) continue;
+  if (!html.includes('</head>')) {
+    console.error(`Build failed — ${page} has no </head>; cannot inject the HubSpot embed.`);
+    process.exit(1);
+  }
+  writeFileSync(p, html.replace('</head>', `${HUBSPOT_SNIPPET}</head>`));
+}
+
+// ---------------------------------------------------------------------------
 // 4. Verify: every local reference in the shipped tree must resolve
 //    *inside dist*. This is the gate that makes the allowlist safe to edit.
 // ---------------------------------------------------------------------------

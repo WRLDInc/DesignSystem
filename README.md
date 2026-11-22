@@ -280,6 +280,7 @@ WRLD.Tech Design System/
 ├── scripts/build_21st_theme.mjs      ← generates registry/theme/wrld.css from tokens/tokens.css
 ├── scripts/publish_21st.mjs          ← manifest-driven publisher for the 21st.dev team library
 ├── docs/CLOUDFLARE_DEPLOY.md         ← how wrld.design is built and deployed
+├── docs/DEPLOYMENT_REQUIREMENTS.md   ← what every public WRLD site ships with (HubSpot embed) + baseline log
 └── docs/21ST_PUBLISHING.md           ← how components reach the 21st.dev team library
 ```
 
@@ -297,6 +298,11 @@ link the token files directly from that origin (CORS is open):
 any published file references an asset that didn't make it. `npm run serve`
 previews the result. Full setup, the exact dashboard build settings, and the
 runbook are in [`docs/CLOUDFLARE_DEPLOY.md`](docs/CLOUDFLARE_DEPLOY.md).
+
+Every public WRLD site, this one included, must meet the deployment
+requirements in [`docs/DEPLOYMENT_REQUIREMENTS.md`](docs/DEPLOYMENT_REQUIREMENTS.md)
+(currently: the HubSpot embed code). The same file is the deployment baseline
+log, one row per site.
 
 ### Agent-readable surfaces
 

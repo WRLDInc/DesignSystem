@@ -36,3 +36,4 @@ If the user invokes this skill without any other guidance, ask them what they wa
 - **No emoji as iconography.** Use Lucide (CDN: `unpkg.com/lucide@latest`) at 1.5px stroke, monochrome, `currentColor`. Unicode arrows (→, ↗) are fine inline.
 - **Sentence case for everything** — UI labels, headings, buttons, slide titles. No Title Case, no ALL CAPS except for eyebrow microtype.
 - **The starburst mark** is the brand's hero geometric element. Use it as logo, favicon, or ornamental texture — but always at intentional sizes, never decoratively scattered.
+- **Public WRLD sites ship the deployment baseline.** Any WRLD-owned site customers browse or fill forms on carries the HubSpot embed (portal `4824142`) in its shared layout, verbatim, and gets a row in the baseline log. Never on client sites or signed-in portals. See `docs/DEPLOYMENT_REQUIREMENTS.md`.
